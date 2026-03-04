@@ -1,49 +1,33 @@
-import { useState } from "react";
-import "./Sidebar.css";
+import React from 'react';
+import '../../styles/sidebar.css'; 
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
-  const [active, setActive] = useState("Dashboard");
-
-  const links = [
-    "Dashboard",
-    "Productos",
-    "Categorías",
-    "Pedidos",
-    "Usuarios",
+const Sidebar = () => {
+  const menuItems = [
+    { name: 'Dashboard', icon: '📈', active: true },
+    { name: 'Productes', icon: '🎁', active: false },
+    { name: 'Categories', icon: '📚', active: false },
+    { name: 'Packs', icon: '🏰', active: false },
+    { name: 'Característiques', icon: '⭐', active: false },
+    { name: 'Usuaris', icon: '👥', active: false },
   ];
 
   return (
-    <div className={`sidebar ${!isOpen ? "closed" : ""}`}>
-      
+    <aside className="sidebar">
       <div className="sidebar-header">
-        {isOpen && (
-          <h2 className="sidebar-title">
-            Serrallería Solidària
-          </h2>
-        )}
-
-        <button
-          className="toggle-btn"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          ☰
-        </button>
+        <h2>Serralleria Solidària</h2>
       </div>
-
-      <ul className="sidebar-list">
-        {links.map((link) => (
-          <li
-            key={link}
-            className={`sidebar-item ${
-              active === link ? "active" : ""
-            }`}
-            onClick={() => setActive(link)}
-          >
-            {isOpen ? link : link.charAt(0)}
-          </li>
-        ))}
-      </ul>
-    </div>
+      <nav className="sidebar-nav">
+        <ul>
+          {menuItems.map((item, index) => (
+            <li key={index} className={item.active ? 'active' : ''}>
+              <span className="icon">{item.icon}</span>
+              <span className="text">{item.name}</span>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
   );
-}
+};
+
+export default Sidebar;
