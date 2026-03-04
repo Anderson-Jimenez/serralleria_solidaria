@@ -1,21 +1,49 @@
-function Sidebar() {
+import { useState } from "react";
+import "./Sidebar.css";
+
+export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(true);
+  const [active, setActive] = useState("Dashboard");
+
+  const links = [
+    "Dashboard",
+    "Productos",
+    "Categorías",
+    "Pedidos",
+    "Usuarios",
+  ];
+
   return (
-    <div style={{
-      width: "200px",
-      background: "#111",
-      color: "#fff",
-      minHeight: "100vh",
-      padding: "20px"
-    }}>
-      <h3>Mi Tienda</h3>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        <li>Dashboard</li>
-        <li>Productos</li>
-        <li>Pedidos</li>
-        <li>Usuarios</li>
+    <div className={`sidebar ${!isOpen ? "closed" : ""}`}>
+      
+      <div className="sidebar-header">
+        {isOpen && (
+          <h2 className="sidebar-title">
+            Serrallería Solidària
+          </h2>
+        )}
+
+        <button
+          className="toggle-btn"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          ☰
+        </button>
+      </div>
+
+      <ul className="sidebar-list">
+        {links.map((link) => (
+          <li
+            key={link}
+            className={`sidebar-item ${
+              active === link ? "active" : ""
+            }`}
+            onClick={() => setActive(link)}
+          >
+            {isOpen ? link : link.charAt(0)}
+          </li>
+        ))}
       </ul>
     </div>
   );
 }
-
-export default Sidebar;
