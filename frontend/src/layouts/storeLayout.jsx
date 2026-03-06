@@ -1,11 +1,15 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/sidebar";
-import Header from "../components/header";
+//import Header from "../components/header";
+//import Footer from "../components/footer";
 
 function StoreLayout() {
   return (
-    <Outlet/>
+    <div>
+      <main>
+        <Outlet />
+      </main>
+    </div>
   );
 }
-//Outlet es basicamente donde se renderiza que contenido es, osea, si es contenido del dashboard, de la pagina productos...
-export default StoreLayout; 
+
+export default StoreLayout;
