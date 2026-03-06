@@ -1,16 +1,7 @@
 import React from 'react';
-import '../styles/sidebar.css'; 
+import '../styles/sidebar.css';
 
 const Sidebar = () => {
-  const menuItems = [
-    { name: 'Dashboard', icon: '📈', active: true },
-    { name: 'Productes', icon: '🎁', active: false },
-    { name: 'Categories', icon: '📚', active: false },
-    { name: 'Packs', icon: '🏰', active: false },
-    { name: 'Característiques', icon: '⭐', active: false },
-    { name: 'Usuaris', icon: '👥', active: false },
-  ];
-
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
@@ -18,12 +9,24 @@ const Sidebar = () => {
       </div>
       <nav className="sidebar-nav">
         <ul>
-          {menuItems.map((item, index) => (
-            <li key={index} className={item.active ? 'active' : ''}>
-              <span className="icon">{item.icon}</span>
-              <span className="text">{item.name}</span>
-            </li>
-          ))}
+          <li className="active">
+            <a href="#dashboard"><span className="text">dashboard</span></a>
+          </li>
+          <li>
+            <a href="#productes"><span className="text">productes</span></a>
+          </li>
+          <li>
+            <a href="#categories"><span className="text">categories</span></a>
+          </li>
+          <li>
+            <a href="#packs"><span className="text">packs</span></a>
+          </li>
+          <li>
+            <a href="#caracteristiques"><span className="text">caracteristiques</span></a>
+          </li>
+          <li>
+            <a href="#usuaris"><span className="text">usuaris</span></a>
+          </li>
         </ul>
       </nav>
     </aside>

@@ -4,14 +4,16 @@ import Header from "../components/header";
 
 function AdminLayout() {
   return (
-    <div style={{ display: "flex" }}>
+    <main style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <Sidebar />
-      <div style={{ flex: 1 }}>
+      <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, backgroundColor: "#F8F3F0" }}>
         <Header />
-        <Outlet />
+        <div style={{ padding: "30px", flex: 1 }}>
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
-//Outlet es basicamente donde se renderiza que contenido es, osea, si es contenido del dashboard, de la pagina productos...
-export default AdminLayout; 
+
+export default AdminLayout;

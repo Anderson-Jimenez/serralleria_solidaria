@@ -1,13 +1,9 @@
-import Sidebar from "../../components/sidebar";
-import Header from "../../components/header";
-
 function Dashboard() {
   return (
-    <div style={{ display: "flex" }}>
-        <h2>si, el outlet ha funcionao</h2>
-
+    <div className="dashboard-content">
+      <h2 style={{ color: "#444", fontSize: "24px" }}>Resum de vendes</h2>
+      
     </div>
   );
 }
-
 export default Dashboard;
