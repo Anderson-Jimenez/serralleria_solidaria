@@ -12,17 +12,20 @@ class CategorySeeder extends Seeder
         DB::table('categories')->insert([
             [
                 'code' => 'CAT001',
-                'name' => 'Eines',
+                'name' => 'Cilindres',
+                'description' => 'Cilindres de diferents tipus i mides',
                 'status' => 1
             ],
             [
                 'code' => 'CAT002',
-                'name' => 'Accessoris',
+                'name' => 'Escut',
+                'description' => 'Escuts de seguretat per a portes',
                 'status' => 1
             ],
             [
                 'code' => 'CAT003',
-                'name' => 'Seguretat',
+                'name' => 'Segon pany',
+                'description' => 'Segons panys de seguretat',
                 'status' => 1
             ]
         ]);
