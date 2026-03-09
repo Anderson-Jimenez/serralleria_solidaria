@@ -15,27 +15,41 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'status' => 'boolean',
+                'code' => 'required|string|unique:categories,code|max:255'
+            ]);
+
+            $category = Category::create($validated);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $category,
+                'message' => 'Categoria creada correctament'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error en crear la categoria',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        return Category::findOrFail($id);
     }
 
     /**
@@ -49,9 +63,13 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $category = Category::findOrFail($id); //Busca la categoria por la id mandada por react, si no la encuentra da error 404 ;D
+
+        $category->update($request->all()); //actualiza con todos los datos mandados por el form de react.
+
+        return $category;
     }
 
     /**
@@ -59,6 +77,7 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->delete();    
     }
 }

@@ -1,0 +1,44 @@
+@use '../mixins';
+@use '../variables';
+
+.flex-column{
+    @include mixins.flex-column;
+}
+
+.edit-form{
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+
+    h1{
+        color: variables.$color-title;
+        margin: 5px 0;
+    }
+    h3{
+        color: variables.$color-text-body;
+        margin: 5px 0;
+    }
+    form *{
+        margin: 5px 0;
+    }
+    form .w50{
+        width: 50%;
+    }
+    form input[type="text"], form input[type="number"], form textarea, form select{
+        padding: 10px;
+        border: solid 1px rgba(0, 0, 0, 0.199);
+        border-radius: 5px;
+    }
+    form .flex{
+        gap: 20px;
+    }
+    form input[type="submit"]{
+        padding: 10px;
+        background-color: variables.$color-accent;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin: 20px 0;
+        cursor: pointer;
+    }
+}
