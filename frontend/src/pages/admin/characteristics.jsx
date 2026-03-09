@@ -1,21 +1,22 @@
 function Characteristics() {
   return (
     <div className="dashboard-content">
+      <h1>Caracteristiques</h1>
       <div className="caracteristics-content">
         <div className="table-container">
+
+          <div className="tableFilters">
+            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..."/>
+                
+            <select name="" id="">
+
+            </select> 
+               
+            <button>Afegir Seguretat +</button>
+          </div>
+
           <table>
             <thead>
-              
-              <tr className="tableFilters">
-                <td colSpan={2}> <input type="text" name="" id="" /> </td>
-                <td> 
-                  <select name="" id="">
-
-                  </select> 
-                </td>
-                <td><button>Afegir Seguretat +</button></td>
-              </tr>
-
               <tr>
                 <th><input type="checkbox" /></th>
                 <th>ID</th>
@@ -37,6 +38,15 @@ function Characteristics() {
           </table>
         </div>
         <div className="table-container">
+          <div className="tableFilters">
+            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..."/>
+                
+            <select name="" id="">
+
+            </select> 
+               
+            <button>Afegir Tipus +</button>
+          </div>
           <table>
             <thead>
               <tr>

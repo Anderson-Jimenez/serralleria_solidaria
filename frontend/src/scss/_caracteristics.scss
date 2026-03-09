@@ -11,9 +11,25 @@ $color-accent: #ff6b35; // El taronja del teu botó
 }
 
 .tableFilters{
-    padding: 10px;
-    input, select, button{
-        width: 90%;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $color-border;
+
+    @include mixins.flex-spacebetween;
+
+    select{
+        width: 24%;
+        @include mixins.dropdown-filters-tables;
+    }
+    
+    input{
+        width: 48%;
+        @include mixins.search-bar-tables;
+    }
+
+    button{
+        width: 24%;
+        @include mixins.button-orange;
     }
 }
 
@@ -28,6 +44,8 @@ $color-accent: #ff6b35; // El taronja del teu botó
         width: 100%;
         border-collapse: collapse;
         font-family: sans-serif;
+
+        
 
         thead {
             tr {

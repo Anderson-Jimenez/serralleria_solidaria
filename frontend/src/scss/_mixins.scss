@@ -1,3 +1,8 @@
+$color-orange: #FF6126;
+$color-border: #f0f0f0;
+$color-text-grey: #a0a0a0;
+
+
 @mixin flex-center{
     display: flex;
     justify-content: center;
@@ -7,4 +12,29 @@
 @mixin flex-spacebetween{
     display: flex;
     justify-content: space-between;
+}
+
+@mixin button-orange{
+    background-color: $color-orange;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+}
+
+@mixin dropdown-filters-tables{
+    color: $color-text-grey;
+    background-color: white;
+    border: $color-border solid 1px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+@mixin search-bar-tables{
+    color: $color-text-grey;
+    background-color: white;
+    border: $color-border solid 1px;
+    padding: 10px;
+    border-radius: 10px;
 }
