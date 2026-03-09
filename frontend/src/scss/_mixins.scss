@@ -1,13 +1,10 @@
-@mixin table{
-    background-color: white;
-    border: solid 1px;
-    border-color: rgba(0, 0, 0, 0.199);
-    border-radius: 20px;
-    padding: 20px;
-}
-
 @mixin flex-center{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@mixin flex-spacebetween{
+    display: flex;
+    justify-content: space-between;
 }
