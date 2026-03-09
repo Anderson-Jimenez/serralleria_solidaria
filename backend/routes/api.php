@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CharacteristicController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
@@ -19,3 +20,5 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 */
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('products', ProductController::class);
+Route::apiResource( 'characteristics', CharacteristicController::class);
+

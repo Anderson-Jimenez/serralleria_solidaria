@@ -11,11 +11,15 @@ import CategoriesIndex from "./pages/admin/categories/index";
 import CategoriesCreate from "./pages/admin/categories/create";
 import CategoriesEdit from "./pages/admin/categories/edit";
 
+//Characteristics
+import CharacteristicsIndex from "./pages/admin/characteristics/index";
+import CharacteristicsCreate from "./pages/admin/characteristics/create";
+import CharacteristicsEdit from "./pages/admin/characteristics/edit";
+
 import ProductsIndex from "./pages/admin/products/index";
 import ProductsCreate from "./pages/admin/products/create";
 import ProductsEdit from "./pages/admin/products/edit";
 
-import Characteristics from "./pages/admin/characteristics";
 import Packs from "./pages/admin/packs";
 
 //import Users from "./pages/admin/users";
@@ -44,8 +48,13 @@ function App() {
           <Route path="edit/:id" element={<ProductsEdit />}/>
         </Route>
 
+        <Route path="characteristics">
+          <Route index element={<CharacteristicsIndex />} />
+          <Route path="create" element={<CharacteristicsCreate />} />
+          <Route path="edit/:id" element={<CharacteristicsEdit />} />
+        </Route>
+
         <Route path="packs" element={<Packs />} />
-        <Route path="characteristics" element={<Characteristics />} />
       </Route>
 
     </Routes>
