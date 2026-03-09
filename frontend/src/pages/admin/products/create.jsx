@@ -31,7 +31,7 @@ function ProductsCreate() {
                 description,
                 stock,
                 highlighted_img: highlightedImg,
-                price, // Asegúrate de que el backend espere 'price' o '€'
+                price,
                 discount,
                 highlighted,
                 category_id: categoryId,
