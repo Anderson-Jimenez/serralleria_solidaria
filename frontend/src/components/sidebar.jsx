@@ -1,6 +1,7 @@
 import React from 'react';
-import '../styles/sidebar.css';
+import '../scss/app.scss';
 import { Link } from "react-router-dom";
+
 const Sidebar = () => {
   return (
     <aside className="sidebar">
