@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('characteristics', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type')->nullable();
+            $table->string('type');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

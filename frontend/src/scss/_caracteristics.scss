@@ -27,9 +27,10 @@ $color-accent: #ff6b35;
         @include mixins.search-bar-tables;
     }
 
-    button{
+    a{
         width: 24%;
         @include mixins.button-orange;
+        @include mixins.flex-center;
     }
 }
 
@@ -38,7 +39,7 @@ $color-accent: #ff6b35;
     border-radius: 8px;
     border: 1px solid $color-border;
     padding: 1rem;
-    width: 47%;
+    width: 100%;
 
     table {
         width: 100%;
