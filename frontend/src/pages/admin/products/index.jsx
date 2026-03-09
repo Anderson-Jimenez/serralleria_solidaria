@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function Products() {
+function ProductsIndex() {
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchProducts();
-    fetchCategories();
   }, []);
 
   const fetchProducts = () => {
@@ -18,31 +16,8 @@ function Products() {
       .catch(error => console.error(error));
   };
 
-  const fetchCategories = () => {
-    fetch("http://localhost:8000/api/categories")
-      .then(response => response.json())
-      .then(data => setCategories(data))
-      .catch(error => console.error(error));
-  };
 
-  const getCategoryName = (categoryId) => {
-    const category = categories.find(cat => cat.id === categoryId);
-    return category ? category.name : 'Sense categoria';
-  };
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(price);
-  };
-
-  // Filtrar productos por término de búsqueda
-  const filteredProducts = products.filter(product => 
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
 
   return (
     <div className="dashboard-content">
@@ -56,12 +31,7 @@ function Products() {
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input 
-              type="text" 
-              placeholder="Cerca productes per nom, codi o descripció..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <input type="text"  placeholder="Cerca productes per nom, codi o descripció..." />
           </div>
           <Link to="/admin/products/create">
             <button className="add-button">+ Afegeix Producte</button>
@@ -83,8 +53,8 @@ function Products() {
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
+            {products.length > 0 ? (
+              products.map((product) => (
                 <tr key={product.id}>
                   <td>{product.code}</td>
                   <td>{product.name}</td>
@@ -95,12 +65,12 @@ function Products() {
                         product.description) 
                       : "-"}
                   </td>
-                  <td>{formatPrice(product.price)}</td>
+                  <td>{product.price}</td>
                   <td>{product.stock}</td>
-                  <td>{getCategoryName(product.category_id)}</td>
+                  <td>{product.category_id}</td>
                   <td>
-                    <span className={`badge ${product.product_type === 'fisic' ? 'badge-physical' : 'badge-digital'}`}>
-                      {product.product_type === 'fisic' ? 'Físic' : 'Digital'}
+                    <span className={`badge`}>
+                      {product.product_type}
                     </span>
                   </td>
                   <td>
@@ -132,4 +102,4 @@ function Products() {
   );
 }
 
-export default Products;
+export default ProductsIndex;
