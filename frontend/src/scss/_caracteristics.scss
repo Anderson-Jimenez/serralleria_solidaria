@@ -4,7 +4,7 @@ $color-border: #f0f0f0;
 $color-text-header: #a0a0a0;
 $color-text-body: #666;
 $color-bg-container: #ffffff;
-$color-accent: #ff6b35; // El taronja del teu botó
+$color-accent: #ff6b35;
 
 .caracteristics-content{
     @include mixins.flex-spacebetween;

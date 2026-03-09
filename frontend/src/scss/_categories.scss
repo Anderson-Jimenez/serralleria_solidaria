@@ -1,0 +1,42 @@
+@use 'mixins';
+@use 'variables';
+
+.add-button{
+    @include mixins.add-color;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.space-between{
+    display: flex;
+    justify-content: space-between;
+}
+.pb-10{
+    padding-bottom: 10px;
+}
+.mb-10{
+    margin-bottom: 10px;
+}
+.border-bottom{
+    border-bottom: solid 1px variables.$color-border;
+}
+.dashboard-title{
+    color: variables.$color-title;
+    font-size: 1.8rem;
+    margin: 10px 0 5px 0;
+    margin-bottom: 5px;
+}
+.dashboard-subtitle{
+    font-weight: 500;
+    font-size: 1.20rem;
+    margin:0 0 20px 0;
+    color: variables.$color-text-body;
+}
+.status-active{
+    @include mixins.status-color(1);
+}
+
+.status-inactive{
+    @include mixins.status-color(0);
+}
