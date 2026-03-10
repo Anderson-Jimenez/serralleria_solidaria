@@ -58,8 +58,6 @@ function Categories() {
                 <td className="actions">
                   <Link to={`/admin/categories/edit/${category.id}`}><button className="edit-button">Edita</button></Link>
                   <button className="deactivate-button">Desactiva</button>
-                  
-                  <button className="delete-button" action={`/admin/categories/delete/${category.id}`}>Elimina</button>
                 </td>
 
               </tr>

@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\CharacteristicController;
+use App\Http\Controllers\CharacteristicTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductInPackController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -20,5 +22,8 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 */
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('products', ProductController::class);
-Route::apiResource( 'characteristics', CharacteristicController::class);
+Route::apiResource('characteristics', CharacteristicController::class);
+Route::apiResource('characteristicTypes', CharacteristicTypeController::class);
+Route::apiResource('packs', ProductInPackController::class);
+
 

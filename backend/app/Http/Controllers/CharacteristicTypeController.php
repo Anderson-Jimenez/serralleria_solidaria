@@ -1,24 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Characteristic;
-use App\Models\CharacteristicType;
-use Illuminate\Http\Request;
 
-class CharacteristicController extends Controller
+use Illuminate\Http\Request;
+use App\Models\CharacteristicType;
+
+class CharacteristicTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {   
-        $characteristics = Characteristic::all();
-        $characteristicTypes = CharacteristicType::all();
-
-        return response()->json([
-            'characteristics' => $characteristics,
-            'characteristicTypes' => $characteristicTypes
-        ]);
+    {
+        //
     }
 
     /**
@@ -36,22 +30,21 @@ class CharacteristicController extends Controller
     {
         try {
             $validated = $request->validate([
-                'description' => 'nullable|string',
-                'characteristic_type_id' => 'required|exists:characteristic_types,id',
+                'type' => 'required|string|max:255',
             ]);
 
-            $characteristic = Characteristic::create($validated);
+            $characteristicType = CharacteristicType::create($validated);
             
             return response()->json([
                 'success' => true,
-                'data' => $characteristic,
-                'message' => 'Caracteristica creada correctament'
+                'data' => $characteristicType,
+                'message' => 'Tipus de Caracteristica creada correctament'
             ], 201);
             
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'error en crear la categoria',
+                'message' => 'error en crear el tipus',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -62,8 +55,7 @@ class CharacteristicController extends Controller
      */
     public function show(string $id)
     {
-        return Characteristic::findOrFail($id);
-
+        //
     }
 
     /**
@@ -77,21 +69,20 @@ class CharacteristicController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
-        $characteristic = Characteristic::findOrFail($id); 
+        $characteristicType = CharacteristicType::findOrFail($id); 
 
-        $characteristic->update($request->all());
+        $characteristicType->update($request->all());
 
-        return $characteristic;
+        return $characteristicType;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
-        $characteristic = Characteristic::findOrFail($id);
-        $characteristic->delete();
+        //
     }
 }
