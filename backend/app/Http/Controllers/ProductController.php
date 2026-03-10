@@ -28,7 +28,29 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'status' => 'boolean',
+                'code' => 'required|string|unique:categories,code|max:255'
+            ]);
+
+            $category = Category::create($validated);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $category,
+                'message' => 'Categoria creada correctament'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error en crear la categoria',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

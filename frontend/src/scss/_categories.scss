@@ -9,8 +9,7 @@
     cursor: pointer;
 }
 .space-between{
-    display: flex;
-    justify-content: space-between;
+    @include mixins.flex-spacebetween;
 }
 .pb-10{
     padding-bottom: 10px;
