@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save } from "lucide-react";
 
 function ProductsCreate() {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("general");
 
+    // Estados
     const [code, setCode] = useState("");
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -17,56 +19,37 @@ function ProductsCreate() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         fetch("http://localhost:8000/api/products", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
             body: JSON.stringify({
-                code,
-                name,
-                description,
-                stock,
+                code, name, description, stock,
                 highlighted_img: highlightedImg,
-                price,
-                discount,
-                highlighted,
+                price, discount, highlighted,
                 category_id: categoryId,
                 product_type: "simple"
             })
         })
-        .then(async res => {
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(JSON.stringify(errorData));
-            }
-            return res.json();
-        })
-        .then(data => {
-            console.log('Producto creado:', data);
-            navigate("/admin/products");
-        })
-        .catch(err => {
-            console.error('Error detallado:', err);
-        });
+        .then(res => res.ok ? navigate("/admin/products") : null)
+        .catch(err => console.error(err));
     };
 
     return (
-        <div className="product-admin-container">
-            <div className="admin-header">
+        <div className="dashboard-content">
+            <div className="space-between mb-10">
                 <h1 className="dashboard-title">Crear nou producte</h1>
-                <button className="cancel-button" onClick={() => navigate("/admin/products")}>Cancelar</button>
+                <button className="action-icon" onClick={() => navigate("/admin/products")}>
+                    <ArrowLeft size={18} />
+                    <span>Tornar</span>
+                </button>
             </div>
 
             <form onSubmit={handleSubmit} className="product-data-box">
                 <div className="data-box-header">
                     <div className="title-section">
-                        <h2>Datos del producto —</h2>
-
+                        <h2>Dades del producte</h2>
                         <select value="simple" readOnly>
-                            <option value="simple">Producto simple</option>
+                            <option value="simple">Producte simple</option>
                         </select>
                     </div>
                 </div>
@@ -75,16 +58,16 @@ function ProductsCreate() {
                     <nav className="data-sidebar">
                         <ul>
                             <li className={activeTab === 'general' ? 'active' : ''} onClick={() => setActiveTab('general')}>
-                                General
+                                <Info size={18} /> <span className="text">General</span>
                             </li>
                             <li className={activeTab === 'inventario' ? 'active' : ''} onClick={() => setActiveTab('inventario')}>
-                                Inventario
+                                <Box size={18} /> <span className="text">Inventari</span>
                             </li>
                             <li className={activeTab === 'avanzado' ? 'active' : ''} onClick={() => setActiveTab('avanzado')}>
-                                Avanzado
+                                <Settings size={18} /> <span className="text">Avançat</span>
                             </li>
                             <li className={activeTab === 'imagenes' ? 'active' : ''} onClick={() => setActiveTab('imagenes')}>
-                                Imatges
+                                <ImageIcon size={18} /> <span className="text">Imatges</span>
                             </li>
                         </ul>
                     </nav>
@@ -93,7 +76,7 @@ function ProductsCreate() {
                         {activeTab === 'general' && (
                             <section className="tab-panel">
                                 <div className="form-group">
-                                    <label>Nom del producte</label>
+                                    <label>Nom</label>
                                     <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
                                 </div>
                                 <div className="form-group">
@@ -114,11 +97,11 @@ function ProductsCreate() {
                         {activeTab === 'inventario' && (
                             <section className="tab-panel">
                                 <div className="form-group">
-                                    <label>Codi </label>
+                                    <label>Codi</label>
                                     <input type="text" value={code} onChange={(e) => setCode(e.target.value)} required />
                                 </div>
                                 <div className="form-group">
-                                    <label>Stock actual</label>
+                                    <label>Stock</label>
                                     <input type="number" value={stock} onChange={(e) => setStock(e.target.value)} />
                                 </div>
                             </section>
@@ -143,7 +126,10 @@ function ProductsCreate() {
                 </div>
 
                 <div className="data-box-footer">
-                    <button type="submit" className="save-button">Guardar Producte</button>
+                    <button type="submit" className="save-button">
+                        <Save size={18} />
+                        <span>Guardar Producte</span>
+                    </button>
                 </div>
             </form>
         </div>
