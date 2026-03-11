@@ -9,8 +9,8 @@ class Characteristic extends Model
     protected $table = "characteristics";
     protected $fillable = ['description','characteristic_type_id'];
 
-    public function characteristicType(){
-        return $this->belongsTo(CharacteristicType::class);
+    public function type(){
+        return $this->belongsTo(CharacteristicType::class,'characteristic_type_id');
     }
 
 }

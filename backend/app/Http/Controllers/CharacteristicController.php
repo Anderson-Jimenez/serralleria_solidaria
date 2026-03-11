@@ -12,7 +12,7 @@ class CharacteristicController extends Controller
      */
     public function index()
     {   
-        $characteristics = Characteristic::all();
+        $characteristics = Characteristic::with('type')->get();
         $characteristicTypes = CharacteristicType::all();
 
         return response()->json([
@@ -63,7 +63,6 @@ class CharacteristicController extends Controller
     public function show(string $id)
     {
         return Characteristic::findOrFail($id);
-
     }
 
     /**

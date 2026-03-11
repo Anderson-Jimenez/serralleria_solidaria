@@ -6,14 +6,14 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class CharacteristicTypeSeeder extends Seeder
+class C1haracteristicTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('characteristics')->insert([
+        DB::table('characteristic_types')->insert([
             [
                 'type' => 'Premium',
             ],

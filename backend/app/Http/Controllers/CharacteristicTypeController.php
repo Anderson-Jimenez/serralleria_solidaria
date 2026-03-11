@@ -12,7 +12,7 @@ class CharacteristicTypeController extends Controller
      */
     public function index()
     {
-        //
+        return CharacteristicType::all();
     }
 
     /**
@@ -55,7 +55,7 @@ class CharacteristicTypeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return CharacteristicType::findOrFail($id);
     }
 
     /**
@@ -81,8 +81,9 @@ class CharacteristicTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $characteristic = CharacteristicType::findOrFail($id);
+        $characteristic->delete();
     }
 }
