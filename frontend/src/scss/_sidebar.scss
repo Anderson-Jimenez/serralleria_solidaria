@@ -1,69 +1,74 @@
 .sidebar {
     width: 20%;
     height: 100vh;
-    background-color: #4a4541; /* Marró fosc de la imatge */
+    background-color: #4a4541; // Marró fosc original
     color: white;
     display: flex;
     flex-direction: column;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: sticky;
+    top: 0;
 }
-.flex{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+
 .sidebar-header {
-    padding: 20px;
+    padding: 25px 20px;
     background-color: #5c5754;
     margin-bottom: 10px;
+
+    h2 {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 0;
+        text-align: center;
+        letter-spacing: 0.5px;
+    }
 }
 
-.sidebar-header h2 {
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin: 0;
-}
+.sidebar-nav {
+    ul {
+        list-style: none;
+        padding: 0 15px;
+        margin: 0;
 
-.sidebar-nav ul {
-    list-style: none;
-    padding: 0 15px;
-    margin: 0;
-}
+        li {
+            margin-bottom: 4px;
+            a {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 15px;
+                color: #d1d1d1;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                
+                svg {
+                    opacity: 0.7;
+                    transition: opacity 0.3s;
+                }
 
-.sidebar-nav li{
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    color: #d1d1d1;
-    border-radius: 10;
-}
-.sidebar-nav li a{
-    color: inherit;
-    text-decoration: none;
-    width: 100%;
-}
-.sidebar-nav li:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-}
+                .text {
+                    font-size: 0.95rem;
+                    font-weight: 500;
+                    text-transform: capitalize;
+                }
 
-/* L'estat actiu amb el taronja de la imatge */
-.sidebar-nav li.active {
-    background-color: #ff6333; 
-    color: white;
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.1);
+                    color: white;
+                    svg { opacity: 1; }
+                }
+                &.active {
+                    background-color: #ff6333; // Taronja original
+                    color: white;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    
+                    svg {
+                        opacity: 1;
+                        stroke-width: 2.5px; // Un poco más de grosor al estar activo
+                    }
+                }
+            }
+        }
+    }
 }
-
-.sidebar-nav .icon {
-    margin-right: 15px;
-    font-size: 1.1rem;
-}
-
-.sidebar-nav .text {
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-

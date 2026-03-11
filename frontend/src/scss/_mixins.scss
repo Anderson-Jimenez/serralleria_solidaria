@@ -21,17 +21,41 @@ $color-text-grey: #a0a0a0;
     display: flex;
     flex-direction: row;
 }
-@mixin status-color($status){
+@mixin status-color($status) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px; // Más redondeado tipo "pill"
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+
     @if $status == 1 {
-        border-radius: 12px;
-        padding: 5px 10px;
-        background-color: #4CAF50;
-        color: white;
+        background-color: #e6f7ed; // Verde muy suave
+        color: #1a7f37;           // Verde oscuro para contraste
+        border: 1px solid rgba(#1a7f37, 0.1);
+        
+        &::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background-color: #1a7f37;
+            border-radius: 50%;
+        }
     } @else {
-        border-radius: 12px;
-        padding: 5px 10px;
-        background-color: #f44336;
-        color: white;
+        background-color: #ffebe9; // Rojo muy suave
+        color: #d73a49;           // Rojo oscuro
+        border: 1px solid rgba(#d73a49, 0.1);
+
+        &::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background-color: #d73a49;
+            border-radius: 50%;
+        }
     }
 }
 

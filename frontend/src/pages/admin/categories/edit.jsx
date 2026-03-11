@@ -61,8 +61,6 @@ function CategoriesEdit(){
                         </select>
                     </div>
                 </div>
-                <label htmlFor="code">Codi: </label>
-                <input type="text" value={code} onChange={(e) => setCode(e.target.value)} />
 
                 <label htmlFor="description">Descripció: </label>
                 <textarea value={description} onChange={(e) => setDescription(e.target.value)}/>

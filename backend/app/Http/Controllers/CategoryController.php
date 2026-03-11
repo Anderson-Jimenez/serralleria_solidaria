@@ -24,7 +24,6 @@ class CategoryController extends Controller
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'status' => 'boolean',
-                'code' => 'required|string|unique:categories,code|max:255'
             ]);
 
             $category = Category::create($validated);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Search, Plus, Pencil, Trash2, Power } from "lucide-react";
 
 function Categories() {
 
@@ -14,58 +15,89 @@ function Categories() {
 
   return (
     <div className="dashboard-content">
+
       <h1 className="dashboard-title">Gestió de Categories</h1>
       <h3 className="dashboard-subtitle">Administra les categories d'un producte</h3>
-    
-      <div className="table-container">
-        <div className="space-between pb-10 mb-10 border-bottom">
-          <div className="search-container">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="search-icon">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" placeholder="Cerca Categories..." />
+
+      <div className="caracteristics-content">
+        <div className="table-container">
+
+          <div className="tableFilters">
+
+            <div className="search-box">
+              <Search size={18}/>
+              <input type="text" placeholder="Cerca categories..." />
+            </div>
+
+            <select>
+              <option value="">Tots els estats</option>
+              <option value="1">Actiu</option>
+              <option value="0">Inactiu</option>
+            </select>
+
+            <Link to="/admin/categories/create" className="add-button">
+              <Plus size={18}/>
+              <span>Afegir categoria</span>
+            </Link>
+
           </div>
-          <Link to="/admin/categories/create"><button className="add-button">+ Afegeix Categoria</button></Link>
-        </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Codí</th>
-              <th>Nom</th>
-              <th>Descripció</th>
-              <th>Estat</th>
-              <th>Accions</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            {categories.map((category) => (
-              <tr key={category.id}>
-                <td>{category.code}</td>
-
-                <td>{category.name}</td>
-
-                <td className="description">
-                  {category.description ?? "-"}
-                </td>
-
-                <td>
-                  <span className={category.status === 1 ? "status-active" : "status-inactive"}>{category.status === 1 ? "Actiu" : "Inactiu"}</span>
-                </td>
-
-                <td className="actions">
-                  <Link to={`/admin/categories/edit/${category.id}`}><button className="edit-button">Edita</button></Link>
-                  <button className="deactivate-button">Desactiva</button>
-
-                </td>
-
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Descripció</th>
+                <th>Estat</th>
+                <th>Accions</th>
               </tr>
-            ))}
+            </thead>
 
-          </tbody>
-        </table>
+            <tbody>
+
+              {categories.map((category) => (
+                <tr key={category.id}>
+
+                  <td>{category.id}</td>
+
+                  <td>{category.name}</td>
+
+                  <td className="description">
+                    {category.description ?? "-"}
+                  </td>
+
+                  <td>
+                    <span className={category.status === 1 ? "status-active" : "status-inactive"}>
+                      {category.status === 1 ? "Actiu" : "Inactiu"}
+                    </span>
+                  </td>
+
+                  <td className="actions">
+
+                    <Link
+                      to={`/admin/categories/edit/${category.id}`}
+                      className="action-icon edit"
+                    >
+                      <Pencil size={18}/>
+                    </Link>
+
+                    <button className="action-icon power">
+                      <Power size={18} className="mr-8"/> {category.status === 1 ? "Desactivar" : "Activar"}
+                    </button>
+
+                    <button className="action-icon delete">
+                      <Trash2 size={18}/>
+                    </button>
+
+                  </td>
+
+                </tr>
+              ))}
+
+            </tbody>
+          </table>
+
+        </div>
       </div>
     </div>
   );

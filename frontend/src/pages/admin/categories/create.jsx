@@ -8,7 +8,6 @@ function CategoriesCreate(){
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [status, setStatus] = useState(1);
-    const [code, setCode] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -23,7 +22,6 @@ function CategoriesCreate(){
                 name,
                 description,
                 status,
-                code
             })
         })
         .then(async res => {
@@ -64,9 +62,6 @@ function CategoriesCreate(){
                         </select>
                     </div>
                 </div>
-
-                <label htmlFor="code">Codi: </label>
-                <input type="text" value={code} onChange={(e) => setCode(e.target.value)} />
 
                 <label htmlFor="description">Descripció: </label>
                 <textarea value={description} onChange={(e) => setDescription(e.target.value)}/>
