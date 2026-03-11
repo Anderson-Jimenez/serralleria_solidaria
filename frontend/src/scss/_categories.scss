@@ -40,3 +40,60 @@
 .status-inactive{
     @include mixins.status-color(0);
 }
+
+.search-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.add-button{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    svg {
+        display: block;
+        stroke-width: 2px;
+    }
+
+    &:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-1px);
+    }
+
+    &.edit {
+        color: #ff6b35;
+        &:hover { background-color: rgba(#ff6b35, 0.1); }
+    }
+
+    &.power {
+        color: #666;
+        &:hover { color: #2ecc71; background-color: rgba(#2ecc71, 0.1); }
+    }
+
+    &.delete {
+        color: #e74c3c;
+        &:hover { background-color: rgba(#e74c3c, 0.1); }
+    }
+}
+.mr-8{
+    margin-right: 8px;
+}

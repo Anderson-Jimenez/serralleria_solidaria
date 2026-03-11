@@ -40,6 +40,7 @@ $color-accent: #ff6b35;
     border: 1px solid $color-border;
     padding: 1rem;
     width: 100%;
+    overflow-x: auto;
 
     table {
         width: 100%;
@@ -55,7 +56,7 @@ $color-accent: #ff6b35;
 
             th {
                 padding: 12px 15px;
-                text-align: left;
+                text-align: center;
                 color: $color-text-header;
                 font-size: 0.85rem;
                 font-weight: 500;
@@ -83,35 +84,13 @@ $color-accent: #ff6b35;
                 color: $color-text-body;
                 font-size: 0.9rem;
                 vertical-align: middle;
+                text-align: center;
 
-                // Estil per a la descripció (que sembla Lorem Ipsum gris)
                 &.description {
                     color: #999;
                     max-width: 300px;
-                    white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                }
-
-                // Estil per a les icones d'acció (editar/eliminar)
-                .actions {
-                    @include mixins.flex-center; // Fem servir el teu mixin
-                    gap: 10px;
-
-                    button {
-                        background: none;
-                        border: none;
-                        cursor: pointer;
-                        padding: 5px;
-
-                        &.edit {
-                            color: $color-accent;
-                        }
-
-                        &.delete {
-                            color: #e74c3c;
-                        }
-                    }
                 }
             }
         }

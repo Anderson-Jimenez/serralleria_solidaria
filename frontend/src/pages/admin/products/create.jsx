@@ -10,7 +10,7 @@ function ProductsCreate() {
     const [description, setDescription] = useState("");
     const [stock, setStock] = useState(0);
     const [highlightedImg, setHighlightedImg] = useState("");
-    const [price, setPrice] = useState(0); // Columna "€"
+    const [price, setPrice] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [highlighted, setHighlighted] = useState(0);
     const [categoryId, setCategoryId] = useState("");
