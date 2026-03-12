@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('characteristics', function (Blueprint $table) {
             $table->id();
             $table->string('description')->nullable();
+            $table->boolean('status')->default(true);
             $table->foreignId('characteristic_type_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
