@@ -13,7 +13,8 @@ import CategoriesEdit from "./pages/admin/categories/edit";
 
 //Characteristics
 import CharacteristicsIndex from "./pages/admin/characteristics/index";
-import CharacteristicsCreate from "./pages/admin/characteristics/create";
+import CharacteristicsCreate from "./pages/admin/characteristics/createCharacteristic";
+import CharacteristicsTypeCreate from "./pages/admin/characteristics/createType";
 import CharacteristicsEdit from "./pages/admin/characteristics/editCharacteristic";
 import CharacteristicsTypeEdit from "./pages/admin/characteristics/editType";
 
@@ -55,9 +56,10 @@ function App() {
 
         <Route path="characteristics">
           <Route index element={<CharacteristicsIndex />} />
-          <Route path="create" element={<CharacteristicsCreate />} />
-          <Route path="edit/:id" element={<CharacteristicsEdit />} />
-          <Route path="edit/:id" element={<CharacteristicsTypeEdit />} />
+          <Route path="createCharacteristic" element={<CharacteristicsCreate />} />
+          <Route path="createType" element={<CharacteristicsTypeCreate />} />
+          <Route path="editCharacteristic/:id" element={<CharacteristicsEdit />} />
+          <Route path="editType/:id" element={<CharacteristicsTypeEdit />} />
         </Route>
 
         <Route path="packs">

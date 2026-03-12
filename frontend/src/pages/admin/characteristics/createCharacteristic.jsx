@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CharacteristicsCreate() {
 
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
 
   const [type, setType] = useState("");
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/characteristicTypes")
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(error => console.error(error));
+
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,7 +55,11 @@ function CharacteristicsCreate() {
 
       <form onSubmit={handleSubmit} className="flex-column">
         <label htmlFor="code">Tipus: </label>
-        <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
+        <select name="characteristic_type_id" onChange={(e) => setType(e.target.value)}>
+          {data.map((type) => (
+            <option value={type.id}>{type.type}</option>
+          ))}
+        </select>
 
         <label htmlFor="description">Descripció: </label>
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} />

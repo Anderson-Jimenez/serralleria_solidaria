@@ -6,7 +6,7 @@ function Characteristics() {
   const [data, setData] = useState({ characteristics: [], characteristicTypes: [] });
   const [id, setId] = useState("");
 
-  const handleDelete = (id) => {
+  const handleDeleteCharacteristic = (id) => {
     fetch(`http://localhost:8000/api/characteristics/${id}`, {
       method: "DELETE",
       headers: {
@@ -14,8 +14,16 @@ function Characteristics() {
         "Accept": "application/json"
       }
     })
+  }
 
-
+  const handleDeleteType = (id) => {
+    fetch(`http://localhost:8000/api/characteristicTypes/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    })
   }
 
   useEffect(() => {
@@ -26,12 +34,12 @@ function Characteristics() {
   }, []);
 
   console.log(data);
-  
+
   return (
-    <div className="dashboard-content">
-      <h1>Tipus</h1>
+    <div className="dashboard-caracteristics">
       <div className="caracteristics-content">
         <div className="table-container">
+          <h1>Tipus</h1>
           <div className="tableFilters">
             <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." />
 
@@ -39,7 +47,7 @@ function Characteristics() {
 
             </select>
 
-            <Link to="/admin/characteristics/create">Afegir Caracteristica +</Link>
+            <Link to="/admin/characteristics/createType">Afegir Tipus +</Link>
 
           </div>
           <table>
@@ -48,7 +56,6 @@ function Characteristics() {
                 <th><input type="checkbox" /></th>
                 <th>ID</th>
                 <th>Tipus</th>
-                <th>Descripció</th>
               </tr>
             </thead>
             <tbody>
@@ -59,8 +66,8 @@ function Characteristics() {
                   <td>{characteristicTypes.type}</td>
 
                   <td className="actions">
-                    <Link to={`/admin/characteristics/edit/${characteristicTypes.id}`}><button className="edit-button">Edita</button></Link>
-                    <button onClick={() => handleDelete(characteristicTypes.id)} className="delete-button">Elimina</button>
+                    <Link to={`/admin/characteristics/editType/${characteristicTypes.id}`}><button className="edit-button">Edita</button></Link>
+                    <button onClick={() => handleDeleteType(characteristicTypes.id)} className="delete-button">Elimina</button>
                   </td>
 
                 </tr>
@@ -70,10 +77,11 @@ function Characteristics() {
         </div>
       </div>
 
-      <h1>Caracteristiques</h1>
 
       <div className="caracteristics-content">
         <div className="table-container">
+          <h1>Caracteristiques</h1>
+
           <div className="tableFilters">
             <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." />
 
@@ -81,7 +89,7 @@ function Characteristics() {
 
             </select>
 
-            <Link to="/admin/characteristics/create">Afegir Caracteristica +</Link>
+            <Link to="/admin/characteristics/createCharacteristic">Afegir Caracteristica +</Link>
 
           </div>
           <table>
@@ -89,8 +97,8 @@ function Characteristics() {
               <tr>
                 <th><input type="checkbox" /></th>
                 <th>ID</th>
-                <th>Tipus</th>
                 <th>Descripció</th>
+                <th>Tipus</th>
               </tr>
             </thead>
             <tbody>
@@ -99,11 +107,11 @@ function Characteristics() {
                   <td><input type="checkbox" /></td>
                   <td>{characteristics.id}</td>
                   <td>{characteristics.description}</td>
-                  <td>{characteristics.characteristics_type_id}</td>
+                  <td>{characteristics.type.type}</td>
 
                   <td className="actions">
-                    <Link to={`/admin/characteristics/edit/${characteristics.id}`}><button className="edit-button">Edita</button></Link>
-                    <button onClick={() => handleDelete(characteristics.id)} className="delete-button">Elimina</button>
+                    <Link to={`/admin/characteristics/editCharacteristic/${characteristics.id}`}><button className="edit-button">Edita</button></Link>
+                    <button onClick={() => handleDeleteCharacteristic(characteristics.id)} className="delete-button">Elimina</button>
                   </td>
 
                 </tr>
