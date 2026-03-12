@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Search, Plus, Pencil, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Search, Plus, Pencil, Trash2, Power } from "lucide-react";
 
 function Characteristics() {
+
+  const navigate = useNavigate();
 
   const [data, setData] = useState({ characteristics: [], characteristicTypes: [] });
   const [id, setId] = useState("");
@@ -15,6 +17,9 @@ function Characteristics() {
         "Accept": "application/json"
       }
     })
+    .then( e => {
+      navigate("/admin/characteristics");
+    })
   }
 
   const handleDeleteType = (id) => {
@@ -24,6 +29,9 @@ function Characteristics() {
         "Content-Type": "application/json",
         "Accept": "application/json"
       }
+    })
+    .then( e => {
+      navigate("/admin/characteristics");
     })
   }
 
@@ -57,6 +65,8 @@ function Characteristics() {
                 <th><input type="checkbox" /></th>
                 <th>ID</th>
                 <th>Tipus</th>
+                <th>Estat</th>
+                <th>Accions</th>
               </tr>
             </thead>
             <tbody>
@@ -65,11 +75,25 @@ function Characteristics() {
                   <td><input type="checkbox" /></td>
                   <td>{characteristicTypes.id}</td>
                   <td>{characteristicTypes.type}</td>
+                  <td>
+                    <span className={characteristicTypes.status === 1 ? "status-active" : "status-inactive"}>
+                      {characteristicTypes.status === 1 ? "Actiu" : "Inactiu"}
+                    </span>
+                  </td>
 
                   <td className="actions">
-                    <Link to={`/admin/characteristics/editType/${characteristicTypes.id}`}><button className="edit-button">Edita</button></Link>
-                    <button onClick={() => handleDeleteType(characteristicTypes.id)} className="delete-button">Elimina</button>
+                    <Link className="action-icon edit" to={`/admin/characteristics/editType/${characteristicTypes.id}`}>
+                      <Pencil size={18}/>
+                    </Link>
+                    <button className="action-icon power">
+                      <Power size={18} className="mr-8"/> {characteristicTypes.status === 1 ? "Desactivar" : "Activar"}
+                    </button>
+                    <button className="action-icon delete" onClick={() => handleDeleteType(characteristicTypes.id)}>
+                      <Trash2 size={18}/>
+                    </button>
                   </td>
+
+                  
 
                 </tr>
               ))}
@@ -100,6 +124,8 @@ function Characteristics() {
                 <th>ID</th>
                 <th>Descripció</th>
                 <th>Tipus</th>
+                <th>Estat</th>
+                <th>Accions</th>
               </tr>
             </thead>
             <tbody>
@@ -109,10 +135,22 @@ function Characteristics() {
                   <td>{characteristics.id}</td>
                   <td>{characteristics.description}</td>
                   <td>{characteristics.type.type}</td>
+                  <td>
+                    <span className={characteristics.status === 1 ? "status-active" : "status-inactive"}>
+                      {characteristics.status === 1 ? "Actiu" : "Inactiu"}
+                    </span>
+                  </td>
 
                   <td className="actions">
-                    <Link to={`/admin/characteristics/editCharacteristic/${characteristics.id}`}><button className="edit-button">Edita</button></Link>
-                    <button onClick={() => handleDeleteCharacteristic(characteristics.id)} className="delete-button">Elimina</button>
+                    <Link className="action-icon edit" to={`/admin/characteristics/editCharacteristic/${characteristics.id}`}>
+                      <Pencil size={18}/>
+                    </Link>
+                    <button className="action-icon power">
+                      <Power size={18} className="mr-8"/> {characteristics.status === 1 ? "Desactivar" : "Activar"}
+                    </button>
+                    <button className="action-icon delete" onClick={() => handleDeleteCharacteristic(characteristics.id)}>
+                      <Trash2 size={18}/>
+                    </button>
                   </td>
                 </tr>
               ))}

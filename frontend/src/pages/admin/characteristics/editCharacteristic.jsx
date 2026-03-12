@@ -4,8 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 function CharacteristicsEdit() {
   const { id } = useParams();
 
-  const [type, setType] = useState("");
-  const [data, setData] = useState("");
+  const [characteristic_type_id, setType] = useState("");
+  const [data, setData] = useState([]);
   const [description, setDescription] = useState("");
 
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function CharacteristicsEdit() {
     fetch(`http://localhost:8000/api/characteristics/${id}`)
       .then(res => res.json())
       .then(data => {
-        setType(data.type);
+        setType(data.characteristic_type_id);
         setDescription(data.description);
       });
   }, [id]);
@@ -35,7 +35,7 @@ function CharacteristicsEdit() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        type,
+        characteristic_type_id,
         description,
       })
     })
@@ -53,6 +53,11 @@ function CharacteristicsEdit() {
 
       <form onSubmit={handleSubmit} className="flex-column">
         <label htmlFor="code">Tipus: </label>
+        <select name="characteristic_type_id" onChange={(e) => setType(e.target.value)}>
+          {data.map((characteristicType) => (
+            characteristicType.id === characteristic_type_id ? <option selected value={characteristicType.id}>{characteristicType.type}</option> : <option value={characteristicType.id}>{characteristicType.type}</option>
+          ))}
+        </select>
 
         <label htmlFor="description">Descripció: </label>
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
