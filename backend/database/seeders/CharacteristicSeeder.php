@@ -16,16 +16,16 @@ class CharacteristicSeeder extends Seeder
     {
         DB::table('characteristics')->insert([
             [
-                'type' => 'Premium',
                 'description' => 'Accés total a totes les funcionalitats i suport 24/7.',
+                'characteristic_type_id' => 1,
             ],
             [
-                'type' => 'Estàndard',
                 'description' => 'Accés limitat a les eines bàsiques de la plataforma.',
+                'characteristic_type_id' => 2,
             ],
             [
-                'type' => 'Demo',
-                'description' => null, 
+                'description' => 'Per exemple',
+                'characteristic_type_id' => 3,
             ],
         ]);
 

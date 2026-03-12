@@ -5,9 +5,19 @@ function CharacteristicsEdit() {
   const { id } = useParams();
 
   const [type, setType] = useState("");
+  const [data, setData] = useState("");
   const [description, setDescription] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/characteristicTypes")
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(error => console.error(error));
+
+  }, []);
+
   useEffect(() => {
     fetch(`http://localhost:8000/api/characteristics/${id}`)
       .then(res => res.json())
@@ -42,8 +52,7 @@ function CharacteristicsEdit() {
       <h3 className="dashboard-subtitle">Modifica les dades de la caracteristica</h3>
 
       <form onSubmit={handleSubmit} className="flex-column">
-        <label htmlFor="type">Tipus: </label>
-        <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
+        <label htmlFor="code">Tipus: </label>
 
         <label htmlFor="description">Descripció: </label>
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} />

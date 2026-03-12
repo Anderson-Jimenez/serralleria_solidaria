@@ -6,6 +6,7 @@ $color-text-body: #666;
 $color-bg-container: #ffffff;
 $color-accent: #ff6b35;
 
+
 .caracteristics-content{
     @include mixins.flex-spacebetween;
 }
@@ -45,9 +46,7 @@ $color-accent: #ff6b35;
     table {
         width: 100%;
         border-collapse: collapse;
-        font-family: sans-serif;
-
-        
+        font-family: sans-serif;      
 
         thead {
             tr {

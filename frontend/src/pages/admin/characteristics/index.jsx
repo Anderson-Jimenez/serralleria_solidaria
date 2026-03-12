@@ -3,95 +3,116 @@ import { Link } from "react-router-dom";
 import { Search, Plus, Pencil, Trash2 } from "lucide-react";
 
 function Characteristics() {
-  const [characteristics, setCharacteristics] = useState([]);
 
-  // Cargar datos
+  const [data, setData] = useState({ characteristics: [], characteristicTypes: [] });
+  const [id, setId] = useState("");
+
+  const handleDeleteCharacteristic = (id) => {
+    fetch(`http://localhost:8000/api/characteristics/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    })
+  }
+
+  const handleDeleteType = (id) => {
+    fetch(`http://localhost:8000/api/characteristicTypes/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    })
+  }
+
   useEffect(() => {
     fetch("http://localhost:8000/api/characteristics")
       .then(response => response.json())
-      .then(data => setCharacteristics(data))
+      .then(data => setData(data))
       .catch(error => console.error(error));
   }, []);
 
-  // Función de borrado con actualización de estado local
-  const handleDelete = (id) => {
-    if (window.confirm("Estàs segur que vols eliminar aquesta característica?")) {
-      fetch(`http://localhost:8000/api/characteristics/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        }
-      })
-      .then(() => {
-        // Filtramos el array para quitar la que acabamos de borrar
-        setCharacteristics(characteristics.filter(item => item.id !== id));
-      })
-      .catch(error => console.error("Error al eliminar:", error));
-    }
-  };
+  console.log(data);
 
   return (
-    <div className="dashboard-content">
-      {/* Títulos con las mismas clases que Categories */}
-      <h1 className="dashboard-title">Característiques</h1>
-      <h3 className="dashboard-subtitle">Administra los atributos técnicos de los productos</h3>
-
+    <div className="dashboard-caracteristics">
       <div className="caracteristics-content">
         <div className="table-container">
-          
+          <h1>Tipus</h1>
           <div className="tableFilters">
-            <div className="search-box">
-              <Search size={18} />
-              <input type="text" placeholder="Cerca característiques..." />
-            </div>
+            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." />
 
-            <select>
-              <option value="">Tots els tipus</option>
-              {/* Aquí podrías mapear tipos únicos si los tienes */}
+            <select name="" id="">
+
             </select>
 
-            <Link to="/admin/characteristics/create" className="add-button">
-              <Plus size={18} />
-              <span>Afegir característica</span>
-            </Link>
-          </div>
+            <Link to="/admin/characteristics/createType">Afegir Tipus +</Link>
 
+          </div>
           <table>
             <thead>
               <tr>
-                <th style={{ width: "40px" }}><input type="checkbox" /></th>
+                <th><input type="checkbox" /></th>
                 <th>ID</th>
                 <th>Tipus</th>
-                <th>Descripció</th>
-                <th className="text-center">Accions</th>
               </tr>
             </thead>
             <tbody>
-              {characteristics.map((item) => (
-                <tr key={item.id}>
+              {data.characteristicTypes.map((characteristicTypes) => (
+                <tr key={characteristicTypes.id}>
                   <td><input type="checkbox" /></td>
-                  <td>{item.id}</td>
-                  <td className="font-semibold">{item.type}</td>
-                  <td className="description">
-                    {item.description || "-"}
-                  </td>
+                  <td>{characteristicTypes.id}</td>
+                  <td>{characteristicTypes.type}</td>
+
                   <td className="actions">
-                    <Link 
-                      to={`/admin/characteristics/edit/${item.id}`} 
-                      className="action-icon edit"
-                      title="Editar"
-                    >
-                      <Pencil size={18} />
-                    </Link>
-                    
-                    <button 
-                      onClick={() => handleDelete(item.id)} 
-                      className="action-icon delete"
-                      title="Eliminar"
-                    >
-                      <Trash2 size={18} />
-                    </button>
+                    <Link to={`/admin/characteristics/editType/${characteristicTypes.id}`}><button className="edit-button">Edita</button></Link>
+                    <button onClick={() => handleDeleteType(characteristicTypes.id)} className="delete-button">Elimina</button>
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <div className="caracteristics-content">
+        <div className="table-container">
+          <h1>Caracteristiques</h1>
+
+          <div className="tableFilters">
+            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." />
+
+            <select name="" id="">
+
+            </select>
+
+            <Link to="/admin/characteristics/createCharacteristic">Afegir Caracteristica +</Link>
+
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox" /></th>
+                <th>ID</th>
+                <th>Descripció</th>
+                <th>Tipus</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.characteristics.map((characteristics) => (
+                <tr key={characteristics.id}>
+                  <td><input type="checkbox" /></td>
+                  <td>{characteristics.id}</td>
+                  <td>{characteristics.description}</td>
+                  <td>{characteristics.type.type}</td>
+
+                  <td className="actions">
+                    <Link to={`/admin/characteristics/editCharacteristic/${characteristics.id}`}><button className="edit-button">Edita</button></Link>
+                    <button onClick={() => handleDeleteCharacteristic(characteristics.id)} className="delete-button">Elimina</button>
                   </td>
                 </tr>
               ))}
