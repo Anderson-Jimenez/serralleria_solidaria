@@ -15,13 +15,28 @@ class C1haracteristicTypeSeeder extends Seeder
     {
         DB::table('characteristic_types')->insert([
             [
-                'type' => 'Premium',
+                'type' => 'Marca',
             ],
             [
-                'type' => 'Estàndard',
+                'type' => 'Doble Embrague',
             ],
             [
-                'type' => 'Demo',
+                'type' => 'Color',
+            ],
+            [
+                'type' => 'Tipus de clau',
+            ],
+            [
+                'type' => 'Duplicat de clau',
+            ],
+            [
+                'type' => 'Tarjeta',
+            ],
+            [
+                'type' => 'Pes',
+            ],
+            [
+                'type' => 'Nivell de Seguretat',
             ],
         ]);
     }
