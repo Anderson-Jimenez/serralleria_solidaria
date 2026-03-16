@@ -4,6 +4,7 @@ import { Search, Plus, Pencil, Eye, Trash2 } from "lucide-react";
 
 function ProductsIndex() {
   const [products, setProducts] = useState([]);
+  const [data, setData] = useState({ characteristics: [], categories: [] });
 
   useEffect(() => {
     fetchProducts();
@@ -12,7 +13,9 @@ function ProductsIndex() {
   const fetchProducts = () => {
     fetch("http://localhost:8000/api/products")
       .then(response => response.json())
-      .then(data => setProducts(data))
+      .then(res => {
+        setProducts(res.products);
+      })
       .catch(error => console.error(error));
   };
 
@@ -32,7 +35,6 @@ function ProductsIndex() {
 
             <select>
               <option value="">Totes les categories</option>
-              {/* Aquí podrías mapear tus categorías reales */}
             </select>
 
             <Link to="/admin/products/create" className="add-button">
@@ -69,7 +71,7 @@ function ProductsIndex() {
                         {product.stock} u.
                       </span>
                     </td>
-                    <td>{product.category?.name || product.category_id}</td>
+                    <td>{product.categories[0]?.name ?? "Sin categoría"}</td>
                     <td>
                       <span className={product.status === 1 ? "status-active" : "status-inactive"}>
                         {product.status === 1 ? "Actiu" : "Inactiu"}
