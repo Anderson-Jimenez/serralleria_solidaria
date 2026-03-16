@@ -13,13 +13,19 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->decimal('cost_price', 10, 2);
+            $table->decimal('sale_price', 10, 2);
             $table->integer('stock')->default(0);
             $table->integer('discount')->nullable();
             $table->boolean('highlighted')->default(false);
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->enum('product_type', ['simple', 'pack']);
+            $table->string('int_size')->nullable();
+            $table->string('ext_size')->nullable();
             $table->boolean('status')->default(true);
+
+
+
             $table->timestamps();
             
             // Índices para búsquedas frecuentes
