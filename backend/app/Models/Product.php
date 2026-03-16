@@ -9,7 +9,7 @@ class Product extends Model
     protected $table = "products";
     protected $fillable = ['code','name','description','cost_price','sale_price','stock','discount','highlighted','product_type','int_size', 'ext_size','status'];
 
-    public function categories(){
+    public function category(){
         return $this->belongsTo(Category::class);
     }
     public function characteristics()
@@ -23,5 +23,8 @@ class Product extends Model
 
     public function product(){
         return $this->belongsToMany(ProductInPack::class, 'product_id');
+    }
+    public function images(){
+        return $this->hasMany(ProductImg::class);
     }
 }

@@ -31,7 +31,6 @@ function ProductsIndex() {
   };
 
   const filterProducts = () => {
-
     let filtered = [...products];
 
     if (search !== "") {
@@ -44,7 +43,7 @@ function ProductsIndex() {
 
     if (selectedCategory !== "") {
       filtered = filtered.filter(product =>
-        product.categories?.some(cat => cat.id == selectedCategory)
+        product.category && product.category.id == selectedCategory
       );
     }
 
@@ -127,9 +126,9 @@ function ProductsIndex() {
                       </span>
                     </td>
 
-                    <td>
-                      {product.categories?.length > 0 ? product.categories[0].name : "Sense categoria"}
-                    </td>
+                  <td>
+                    {product.category ? product.category.name : "Sense categoria"}
+                  </td>
 
                     <td>
                       <span className={product.status === 1 ? "status-active" : "status-inactive"}>

@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Characteristic;
-
+use App\Models\ProductImg;
+use App\Models\ProductCharacteristic;
 class ProductController extends Controller
 {
     /**
@@ -16,7 +17,7 @@ class ProductController extends Controller
     {
         $characteristics = Characteristic::with('type')->get();
         $categories = Category::all();
-        $products = Product::with('categories', 'characteristics')->get();
+        $products = Product::with('category', 'characteristics')->get();
         return response()->json([
             'characteristics' => $characteristics,
             'categories' => $categories,
@@ -39,24 +40,54 @@ class ProductController extends Controller
     {
         try {
             $validated = $request->validate([
+                'code' => 'required|string|unique:products,code|max:255',
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'status' => 'boolean',
-                'code' => 'required|string|unique:categories,code|max:255'
+                'price' => 'required|numeric|min:0',
+                'stock' => 'required|integer|min:0',
+                'discount' => 'nullable|integer|min:0|max:100',
+                'highlighted' => 'boolean',
+                'category_id' => 'nullable|exists:categories,id',
+                'product_type' => 'required|string'
             ]);
 
-            $category = Category::create($validated);
-            
+            $product = Product::create($validated);
+
+            // Guardar características si vienen
+            if ($request->has('characteristics')) {
+                foreach ($request->characteristics as $char) {
+                    if (!empty($char['characteristic_id']) && isset($char['value'])) {
+                        ProductCharacteristic::create([
+                            'product_id' => $product->id,
+                            'characteristic_id' => $char['characteristic_id'],
+                            'value' => $char['value']
+                        ]);
+                    }
+                }
+            }
+
+            // Guardar imágenes
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('products', 'public');
+                    ProductImg::create([
+                        'product_id' => $product->id,
+                        'path' => $path,
+                        'is_primary' => false
+                    ]);
+                }
+            }
+
             return response()->json([
                 'success' => true,
-                'data' => $category,
-                'message' => 'Categoria creada correctament'
+                'data' => $product->load('category', 'characteristics.characteristic', 'images'),
+                'message' => 'Producte creat correctament'
             ], 201);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'error en crear la categoria',
+                'message' => 'Error en crear el producte',
                 'error' => $e->getMessage()
             ], 500);
         }
