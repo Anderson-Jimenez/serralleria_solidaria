@@ -93,4 +93,29 @@ class CharacteristicController extends Controller
         $characteristic = Characteristic::findOrFail($id);
         $characteristic->delete();
     }
+
+    public function changeStatusCharacteristic($id)
+    {
+        try {
+            $characteristic = Characteristic::findOrFail($id); 
+            if ($characteristic->status == 1 ){
+                $characteristic->update(['status' => 0]);
+            }
+            else{
+                $characteristic->update(['status' => 1]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Canvi de estat fet'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error en canviar el estat',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

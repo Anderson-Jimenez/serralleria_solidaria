@@ -9,6 +9,28 @@ function Characteristics() {
   const [data, setData] = useState({ characteristics: [], characteristicTypes: [] });
   const [id, setId] = useState("");
 
+  const changeStatusCharacteristic = (id) => {
+    fetch(`http://localhost:8000/api/characteristics/changeState/${id}`, {
+
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+
+    })
+
+      .then(response => {
+        if (response.ok) {
+          navigate("/admin/characteristics");
+        } else {
+          console.error('Error en la resposta:', response.status);
+        }
+      })
+
+      .catch(error => console.error('Error en la petició:', error));
+      
+  }
+
   const handleDeleteCharacteristic = (id) => {
     fetch(`http://localhost:8000/api/characteristics/${id}`, {
       method: "DELETE",
@@ -17,9 +39,9 @@ function Characteristics() {
         "Accept": "application/json"
       }
     })
-    .then( e => {
-      navigate("/admin/characteristics");
-    })
+      .then(e => {
+        navigate("/admin/characteristics");
+      })
   }
 
   const handleDeleteType = (id) => {
@@ -30,9 +52,9 @@ function Characteristics() {
         "Accept": "application/json"
       }
     })
-    .then( e => {
-      navigate("/admin/characteristics");
-    })
+      .then(e => {
+        navigate("/admin/characteristics");
+      })
   }
 
   useEffect(() => {
@@ -81,17 +103,17 @@ function Characteristics() {
 
                   <td className="actions">
                     <Link className="action-icon edit" to={`/admin/characteristics/editType/${characteristicTypes.id}`}>
-                      <Pencil size={18}/>
+                      <Pencil size={18} />
                     </Link>
                     <button className="action-icon power">
-                      <Power size={18} className="mr-8"/> {characteristicTypes.status === 1 ? "Desactivar" : "Activar"}
+                      <Power size={18} className="mr-8" /> {characteristicTypes.status === 1 ? "Desactivar" : "Activar"}
                     </button>
                     <button className="action-icon delete" onClick={() => handleDeleteType(characteristicTypes.id)}>
-                      <Trash2 size={18}/>
+                      <Trash2 size={18} />
                     </button>
                   </td>
 
-                  
+
 
                 </tr>
               ))}
@@ -139,13 +161,13 @@ function Characteristics() {
 
                   <td className="actions">
                     <Link className="action-icon edit" to={`/admin/characteristics/editCharacteristic/${characteristics.id}`}>
-                      <Pencil size={18}/>
+                      <Pencil size={18} />
                     </Link>
-                    <button className="action-icon power">
-                      <Power size={18} className="mr-8"/> {characteristics.status === 1 ? "Desactivar" : "Activar"}
+                    <button className="action-icon power" onClick={() => changeStatusCharacteristic(characteristics.id)}>
+                      <Power size={18} className="mr-8" /> {characteristics.status === 1 ? "Desactivar" : "Activar"}
                     </button>
                     <button className="action-icon delete" onClick={() => handleDeleteCharacteristic(characteristics.id)}>
-                      <Trash2 size={18}/>
+                      <Trash2 size={18} />
                     </button>
                   </td>
                 </tr>

@@ -21,9 +21,15 @@ Route::post('/categories', [CategoryController::class, 'store']);
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 */
 Route::apiResource('categories', CategoryController::class);
+
 Route::apiResource('products', ProductController::class);
+
 Route::apiResource('characteristics', CharacteristicController::class);
+Route::get('/characteristics/changeState/{id}', [CharacteristicController::class, 'changeStatusCharacteristic']);
+
+
 Route::apiResource('characteristicTypes', CharacteristicTypeController::class);
+
 Route::apiResource('packs', ProductInPackController::class);
 
 
