@@ -62,7 +62,6 @@ function Characteristics() {
           <table>
             <thead>
               <tr>
-                <th><input type="checkbox" /></th>
                 <th>ID</th>
                 <th>Tipus</th>
                 <th>Estat</th>
@@ -72,7 +71,6 @@ function Characteristics() {
             <tbody>
               {data.characteristicTypes.map((characteristicTypes) => (
                 <tr key={characteristicTypes.id}>
-                  <td><input type="checkbox" /></td>
                   <td>{characteristicTypes.id}</td>
                   <td>{characteristicTypes.type}</td>
                   <td>
@@ -120,7 +118,6 @@ function Characteristics() {
           <table>
             <thead>
               <tr>
-                <th><input type="checkbox" /></th>
                 <th>ID</th>
                 <th>Descripció</th>
                 <th>Tipus</th>
@@ -131,7 +128,6 @@ function Characteristics() {
             <tbody>
               {data.characteristics.map((characteristics) => (
                 <tr key={characteristics.id}>
-                  <td><input type="checkbox" /></td>
                   <td>{characteristics.id}</td>
                   <td>{characteristics.description}</td>
                   <td>{characteristics.type.type}</td>

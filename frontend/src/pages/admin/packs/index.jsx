@@ -1,3 +1,4 @@
+import { Eye, Pencil, Power } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -31,7 +32,6 @@ function Packs() {
                     <table>
                         <thead>
                             <tr>
-                                <th><input type="checkbox" /></th>
                                 <th>Codi</th>
                                 <th>Nom</th>
                                 <th>Descripció</th>
@@ -41,27 +41,37 @@ function Packs() {
                                 <th>Resaltat</th>
                                 <th>Categoria</th>
                                 <th>Estat</th>
+                                <th>Accions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {packs.map((pack) => (
                                 <tr key={pack.id}>
-                                    <td><input type="checkbox" /></td>
                                     <td>{pack.code}</td>
                                     <td>{pack.name}</td>
                                     <td>{pack.description}</td>
                                     <td>{pack.price}</td>
                                     <td>{pack.stock}</td>
                                     <td>{pack.discount}</td>
-                                    <td>{pack.highlighted}</td>
+                                    <td>{pack.highlighted === 0 ? "No" : "Si"}</td>
                                     <td>{pack.category_id}</td>
                                     <td><span className={pack.status === 1 ? "status-active" : "status-inactive"}>{pack.status === 1 ? "Actiu" : "Inactiu"}</span></td>
                                     
 
 
                                     <td className="actions">
-                                        <Link to={`/admin/packs/edit/${pack.id}`}><button className="edit-button">Edita</button></Link>
-                                        <Link ><button className="edit-button">Canviar Estat</button></Link>
+                                        <Link 
+                                            className="action-icon" 
+                                            title="Veure"
+                                        >
+                                            <Eye size={18} />
+                                        </Link>
+                                        <button className="action-icon power">
+                                            <Power size={18} className="mr-8"/> {pack.status === 1 ? "Desactivar" : "Activar"}
+                                        </button>
+                                        <Link className="action-icon edit" to={`/admin/packs/edit/${pack.id}`}>
+                                            <Pencil size={18}/>
+                                        </Link>
                                     </td>
 
                                 </tr>
