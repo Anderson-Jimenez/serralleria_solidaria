@@ -13,11 +13,12 @@ import CategoriesEdit from "./pages/admin/categories/edit";
 
 //Characteristics
 import CharacteristicsIndex from "./pages/admin/characteristics/index";
-import CharacteristicsCreate from "./pages/admin/characteristics/createCharacteristic";
-import CharacteristicsTypeCreate from "./pages/admin/characteristics/createType";
-import CharacteristicsEdit from "./pages/admin/characteristics/editCharacteristic";
-import CharacteristicsTypeEdit from "./pages/admin/characteristics/editType";
+import CharacteristicsCreate from "./pages/admin/characteristics/create";
+import CharacteristicsEdit from "./pages/admin/characteristics/edit";
 
+import TypeIndex from "./pages/admin/characteristicTypes/index";
+import TypeCreate from "./pages/admin/characteristicTypes/create";
+import TypeEdit from "./pages/admin/characteristicTypes/edit";
 
 import ProductsIndex from "./pages/admin/products/index";
 import ProductsCreate from "./pages/admin/products/create";
@@ -56,10 +57,14 @@ function App() {
 
         <Route path="characteristics">
           <Route index element={<CharacteristicsIndex />} />
-          <Route path="createCharacteristic" element={<CharacteristicsCreate />} />
-          <Route path="createType" element={<CharacteristicsTypeCreate />} />
-          <Route path="editCharacteristic/:id" element={<CharacteristicsEdit />} />
-          <Route path="editType/:id" element={<CharacteristicsTypeEdit />} />
+          <Route path="create" element={<CharacteristicsCreate />} />
+          <Route path="edit/:id" element={<CharacteristicsEdit />} />
+        </Route>
+
+        <Route path="types">
+          <Route index element={<TypeIndex />} />
+          <Route path="create" element={<TypeCreate />} />
+          <Route path="edit/:id" element={<TypeEdit />} />
         </Route>
 
         <Route path="packs">

@@ -86,4 +86,31 @@ class CharacteristicTypeController extends Controller
         $characteristic = CharacteristicType::findOrFail($id);
         $characteristic->delete();
     }
+
+
+    public function changeStatusTypeCharacteristic($id)
+    {
+        try {
+            $type = CharacteristicType::findOrFail($id); 
+            if ($type->status == 1 ){
+                $type->update(['status' => 0]);
+            }
+            else{
+                $type->update(['status' => 1]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'type' => $type,
+                'message' => 'Canvi de estat fet'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error en canviar el estat',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

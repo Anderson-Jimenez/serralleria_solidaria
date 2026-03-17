@@ -6,9 +6,9 @@ $color-text-body: #666;
 $color-bg-container: #ffffff;
 $color-accent: #ff6b35;
 
-
 .caracteristics-content{
     @include mixins.flex-spacebetween;
+    
 }
 
 .tableFilters{

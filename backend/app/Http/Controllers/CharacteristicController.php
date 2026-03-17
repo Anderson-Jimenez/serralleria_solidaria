@@ -13,11 +13,9 @@ class CharacteristicController extends Controller
     public function index()
     {   
         $characteristics = Characteristic::with('type')->get();
-        $characteristicTypes = CharacteristicType::all();
 
         return response()->json([
             'characteristics' => $characteristics,
-            'characteristicTypes' => $characteristicTypes
         ]);
     }
 
@@ -98,24 +96,19 @@ class CharacteristicController extends Controller
     {
         try {
             $characteristic = Characteristic::findOrFail($id); 
-            if ($characteristic->status == 1 ){
-                $characteristic->update(['status' => 0]);
-            }
-            else{
-                $characteristic->update(['status' => 1]);
-            }
+            $characteristic->status = ($characteristic->status == 1) ? 0 : 1;
+            $characteristic->save();
             
+            $characteristic->load('type'); 
+
             return response()->json([
                 'success' => true,
+                'characteristic' => $characteristic,
                 'message' => 'Canvi de estat fet'
-            ], 201);
-            
+            ], 200);
+        
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'error en canviar el estat',
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
 }

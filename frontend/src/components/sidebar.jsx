@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, Tags, Boxes, Settings2 } from "lucide-react";
+import { LayoutDashboard, Package, Tags, Boxes, Settings2, NotebookText } from "lucide-react";
 import '../scss/app.scss';
 
 const Sidebar = () => {
@@ -42,6 +42,12 @@ const Sidebar = () => {
             <NavLink to="/admin/characteristics" className={({ isActive }) => (isActive ? "active" : "")}>
               <Settings2 size={20} />
               <span className="text">Característiques</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin/types" className={({ isActive }) => (isActive ? "active" : "")}>
+              <NotebookText size={20} />
+              <span className="text">Tipus de Caracteristiques</span>
             </NavLink>
           </li>
         </ul>
