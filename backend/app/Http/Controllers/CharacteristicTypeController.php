@@ -22,6 +22,13 @@ class CharacteristicTypeController extends Controller
     {
         //
     }
+    public function getTypes(){
+        $types=CharacteristicType::with(['characteristic'=>function($query){
+            $query->where('status',1);
+        }])->where('status',1)->get();
+
+        return response()->json($types);
+    }
 
     /**
      * Store a newly created resource in storage.

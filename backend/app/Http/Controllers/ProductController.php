@@ -38,58 +38,54 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $validated = $request->validate([
-                'code' => 'required|string|unique:products,code|max:255',
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'price' => 'required|numeric|min:0',
-                'stock' => 'required|integer|min:0',
-                'discount' => 'nullable|integer|min:0|max:100',
-                'highlighted' => 'boolean',
-                'category_id' => 'nullable|exists:categories,id',
-                'product_type' => 'required|string'
+        try{
+            $validated=$request->validate([
+                'code'=>'required|string|unique:products,code|max:255',
+                'name'=>'required|string|max:255',
+                'description'=>'nullable|string',
+                'price'=>'required|numeric|min:0',
+                'stock'=>'required|integer|min:0',
+                'discount'=>'nullable|integer|min:0|max:100',
+                'highlighted'=>'boolean',
+                'category_id'=>'nullable|exists:categories,id',
+                'product_type'=>'required|string'
             ]);
 
-            $product = Product::create($validated);
+            $product=Product::create($validated);
 
-            // Guardar características si vienen
-            if ($request->has('characteristics')) {
-                foreach ($request->characteristics as $char) {
-                    if (!empty($char['characteristic_id']) && isset($char['value'])) {
-                        ProductCharacteristic::create([
-                            'product_id' => $product->id,
-                            'characteristic_id' => $char['characteristic_id'],
-                            'value' => $char['value']
-                        ]);
-                    }
+            if($request->characteristics){
+                foreach($request->characteristics as $char){
+                    ProductCharacteristic::create([
+                        'product_id'=>$product->id,
+                        'characteristic_id'=>$char['characteristic_id'],
+                        'value'=>$char['value'] ?? true
+                    ]);
                 }
             }
 
-            // Guardar imágenes
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
-                    $path = $image->store('products', 'public');
+            if($request->hasFile('images')){
+                foreach($request->file('images') as $image){
+                    $path=$image->store('products','public');
                     ProductImg::create([
-                        'product_id' => $product->id,
-                        'path' => $path,
-                        'is_primary' => false
+                        'product_id'=>$product->id,
+                        'path'=>$path,
+                        'is_primary'=>false
                     ]);
                 }
             }
 
             return response()->json([
-                'success' => true,
-                'data' => $product->load('category', 'characteristics.characteristic', 'images'),
-                'message' => 'Producte creat correctament'
-            ], 201);
+                'success'=>true,
+                'data'=>$product->load('category','characteristics.characteristic','images'),
+                'message'=>'Producte creat correctament'
+            ],201);
 
-        } catch (\Exception $e) {
+        }catch(\Exception $e){
             return response()->json([
-                'success' => false,
-                'message' => 'Error en crear el producte',
-                'error' => $e->getMessage()
-            ], 500);
+                'success'=>false,
+                'message'=>'Error en crear el producte',
+                'error'=>$e->getMessage()
+            ],500);
         }
     }
 

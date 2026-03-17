@@ -25,5 +25,5 @@ Route::apiResource('products', ProductController::class);
 Route::apiResource('characteristics', CharacteristicController::class);
 Route::apiResource('characteristicTypes', CharacteristicTypeController::class);
 Route::apiResource('packs', ProductInPackController::class);
-
+Route::get('/characteristic-types',[CharacteristicTypeController::class,'getTypes']);
 
