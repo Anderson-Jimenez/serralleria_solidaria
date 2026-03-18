@@ -33,5 +33,5 @@ Route::get('/characteristicTypes/changeState/{id}', [CharacteristicTypeControlle
 
 
 Route::apiResource('packs', ProductInPackController::class);
-
+Route::get('/characteristic-types',[CharacteristicTypeController::class,'getTypes']);
 

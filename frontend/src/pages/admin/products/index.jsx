@@ -1,118 +1,184 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Plus, Pencil, Eye, Trash2 } from "lucide-react";
+import { Search, Plus, Pencil, Power, Trash2 } from "lucide-react";
 
 function ProductsIndex() {
+
   const [products, setProducts] = useState([]);
-  const [data, setData] = useState({ characteristics: [], categories: [] });
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    filterProducts();
+  }, [search, selectedCategory, products]);
 
   const fetchProducts = () => {
     fetch("http://localhost:8000/api/products")
       .then(response => response.json())
       .then(res => {
         setProducts(res.products);
+        setFilteredProducts(res.products);
+        setCategories(res.categories);
       })
       .catch(error => console.error(error));
   };
 
+  const filterProducts = () => {
+    let filtered = [...products];
+
+    if (search !== "") {
+      filtered = filtered.filter(product =>
+        product.name?.toLowerCase().includes(search.toLowerCase()) ||
+        product.code?.toLowerCase().includes(search.toLowerCase()) ||
+        product.description?.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (selectedCategory !== "") {
+      filtered = filtered.filter(product =>
+        product.category && product.category.id == selectedCategory
+      );
+    }
+
+    setFilteredProducts(filtered);
+  };
+
   return (
     <div className="dashboard-content">
-      <h1 className="dashboard-title">Gestió de Productes</h1>
+
+      <h1 className="dashboard-title">Gestió de productes</h1>
       <h3 className="dashboard-subtitle">Administra els productes del catàleg</h3>
-    
+
       <div className="caracteristics-content">
         <div className="table-container">
-          
+
           <div className="tableFilters">
+
             <div className="search-box">
               <Search size={18} />
-              <input type="text" placeholder="Cerca per nom, codi o descripció..." />
+              <input
+                type="text"
+                placeholder="Cerca per nom, codi o descripció..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
 
-            <select>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
               <option value="">Totes les categories</option>
+
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+
             </select>
 
             <Link to="/admin/products/create" className="add-button">
               <Plus size={18} />
               <span>Afegir producte</span>
             </Link>
+
           </div>
 
           <table>
+
             <thead>
               <tr>
                 <th>Codi</th>
                 <th>Nom</th>
-                <th>Descripció</th>
                 <th>Preu</th>
-                <th>Stock</th>
+                <th>Estoc</th>
                 <th>Categoria</th>
                 <th>Estat</th>
                 <th className="text-center">Accions</th>
               </tr>
             </thead>
+
             <tbody>
-              {products.length > 0 ? (
-                products.map((product) => (
+
+              {filteredProducts.length > 0 ? (
+
+                filteredProducts.map(product => (
+
                   <tr key={product.id}>
+
                     <td className="font-semibold">{product.code}</td>
+
                     <td>{product.name}</td>
-                    <td className="description">
-                      {product.description ?? "-"}
-                    </td>
+
                     <td>{product.price}€</td>
+
                     <td>
                       <span className={product.stock < 5 ? "text-danger" : ""}>
                         {product.stock} u.
                       </span>
                     </td>
-                    <td>{product.categories[0]?.name ?? "Sin categoría"}</td>
+
+                  <td>
+                    {product.category ? product.category.name : "Sense categoria"}
+                  </td>
+
                     <td>
                       <span className={product.status === 1 ? "status-active" : "status-inactive"}>
                         {product.status === 1 ? "Actiu" : "Inactiu"}
                       </span>
                     </td>
+
                     <td className="actions">
-                      <Link 
-                        to={`/admin/products/view/${product.id}`} 
-                        className="action-icon" 
-                        title="Veure"
-                      >
-                        <Eye size={18} />
-                      </Link>
-                      <Link 
-                        to={`/admin/products/edit/${product.id}`} 
-                        className="action-icon edit" 
-                        title="Editar"
-                      >
+
+                      <Link to={`/admin/products/edit/${product.id}`} className="action-icon edit" title="Editar">
                         <Pencil size={18} />
                       </Link>
-                      <button 
-                        className="action-icon delete" 
+                      <button className="action-icon power">
+                        <Power size={18} className="mr-8" /> {product.status === 1 ? "Desactivar" : "Activar"}
+                      </button>
+                      <button
+                        className="action-icon delete"
                         title="Eliminar"
-                        onClick={() => {/* Tu lógica de delete */}}
+                        onClick={() => {
+                          if (window.confirm("Segur que vols eliminar aquest producte?")) {
+                            console.log("Eliminar producte", product.id);
+                          }
+                        }}
                       >
                         <Trash2 size={18} />
                       </button>
+
                     </td>
+
                   </tr>
+
                 ))
+
               ) : (
+
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '40px' }}>
+                  <td colSpan="8" style={{ textAlign: "center", padding: "40px" }}>
                     No s'han trobat productes
                   </td>
                 </tr>
+
               )}
+
             </tbody>
+
           </table>
+
         </div>
       </div>
+
     </div>
   );
 }
