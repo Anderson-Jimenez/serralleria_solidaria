@@ -465,6 +465,21 @@ class ProductSeeder extends Seeder
                 'ext_size' => '-',
                 'status' => true,
             ],
+            [
+                'code' => 'pack 001',
+                'name' => 'Super pack de cilindres',
+                'description' => 'Pack de prova',
+                'cost_price' => 14.30,
+                'sale_price' => 26.50,
+                'stock' => 2,
+                'discount' => 0,
+                'highlighted' => false,
+                'category_id' => 1,
+                'product_type' => 'pack',
+                'int_size' => '',
+                'ext_size' => '',
+                'status' => true,
+            ],
         ]);
     }
 }

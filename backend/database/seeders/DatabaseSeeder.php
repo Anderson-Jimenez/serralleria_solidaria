@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             C1haracteristicTypeSeeder::class,
             CharacteristicSeeder::class,
             ProductSeeder::class,
+            zProductsInPacksSeeder::class,
         ]);
     }
 }
