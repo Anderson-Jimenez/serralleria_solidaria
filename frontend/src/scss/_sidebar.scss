@@ -1,19 +1,48 @@
 .sidebar {
-    width: 20%;
     height: 100vh;
     background-color: #4a4541; // Marró fosc original
     color: white;
     display: flex;
+    overflow-x: hidden;
     flex-direction: column;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     position: sticky;
     top: 0;
+    transition: width 0.3s ease;
+
+    &.open {
+        width: 350px;
+    }
+
+    &.closed {
+        width: 80px;
+
+        span, h2{
+            display: none;
+        }
+    }
+
+    svg {
+        opacity: 0.7;
+        transition: opacity 0.3s;
+    }
 }
 
 .sidebar-header {
-    padding: 25px 20px;
+    gap: 12px;
+    display: flex;
+    align-items: center;
+    padding: 25px 15px;
     background-color: #5c5754;
     margin-bottom: 10px;
+
+    button {
+        display: flex;
+        align-items: center;
+        padding: 0px 0px 0px 15px;
+        background-color: transparent;
+        border: none;
+    }
 
     h2 {
         font-size: 1.2rem;
@@ -21,10 +50,21 @@
         margin: 0;
         text-align: center;
         letter-spacing: 0.5px;
+        white-space: nowrap;
+    }
+
+    svg {
+        padding: 3.5px 0px;
     }
 }
 
 .sidebar-nav {
+    display: grid;
+
+    svg {
+        padding: 1px 0px;
+    }
+
     ul {
         list-style: none;
         padding: 0 15px;
@@ -32,6 +72,7 @@
 
         li {
             margin-bottom: 4px;
+
             a {
                 display: flex;
                 align-items: center;
@@ -41,28 +82,28 @@
                 text-decoration: none;
                 border-radius: 8px;
                 transition: all 0.3s ease;
-                
-                svg {
-                    opacity: 0.7;
-                    transition: opacity 0.3s;
-                }
 
                 .text {
                     font-size: 0.95rem;
                     font-weight: 500;
                     text-transform: capitalize;
+                    white-space: nowrap;
                 }
 
                 &:hover {
                     background-color: rgba(255, 255, 255, 0.1);
                     color: white;
-                    svg { opacity: 1; }
+
+                    svg {
+                        opacity: 1;
+                    }
                 }
+
                 &.active {
                     background-color: #ff6333; // Taronja original
                     color: white;
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                    
+
                     svg {
                         opacity: 1;
                         stroke-width: 2.5px; // Un poco más de grosor al estar activo

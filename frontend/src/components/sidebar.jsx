@@ -1,12 +1,20 @@
 import React from 'react';
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, Tags, Boxes, Settings2, NotebookText } from "lucide-react";
+import { LayoutDashboard, Package, Tags, Boxes, Settings2, NotebookText, Menu } from "lucide-react";
 import '../scss/app.scss';
 
 const Sidebar = () => {
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleSidebar = () => setIsOpen(!isOpen);
+
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header">
+        <button onClick={toggleSidebar}>
+          <Menu size={20} color='white'/>
+        </button>
         <h2>Serralleria Solidària</h2>
       </div>
       <nav className="sidebar-nav">
