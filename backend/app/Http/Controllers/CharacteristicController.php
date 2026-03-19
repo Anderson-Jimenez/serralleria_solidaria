@@ -5,11 +5,10 @@ use App\Models\Characteristic;
 use App\Models\CharacteristicType;
 use Illuminate\Http\Request;
 
+
 class CharacteristicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {   
         $characteristics = Characteristic::with('type')->get();
