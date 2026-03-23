@@ -17,7 +17,9 @@ class ProductController extends Controller
     {
         $characteristics = Characteristic::with('type')->get();
         $categories = Category::all();
-        $products = Product::with('category', 'characteristics')->get();
+
+        $products = Product::with(['category','characteristics','primaryImage'])->get();
+
         return response()->json([
             'characteristics' => $characteristics,
             'categories' => $categories,
@@ -38,54 +40,59 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $validated=$request->validate([
-                'code'=>'required|string|unique:products,code|max:255',
-                'name'=>'required|string|max:255',
-                'description'=>'nullable|string',
-                'price'=>'required|numeric|min:0',
-                'stock'=>'required|integer|min:0',
-                'discount'=>'nullable|integer|min:0|max:100',
-                'highlighted'=>'boolean',
-                'category_id'=>'nullable|exists:categories,id',
-                'product_type'=>'required|string'
+        try {
+            $validated = $request->validate([
+                'code'           => 'required|string|unique:products,code|max:255',
+                'name'           => 'required|string|max:255',
+                'description'    => 'nullable|string',
+                'sale_price'     => 'required|numeric|min:0',
+                'stock'          => 'required|integer|min:0',
+                'discount'       => 'nullable|integer|min:0|max:100',
+                'category_id'    => 'nullable',
+                'product_type'   => 'required|string'
             ]);
+            $validated['highlighted'] = (bool) $request->highlighted;
+            if (empty($validated['category_id'])) {
+                $validated['category_id'] = null;
+            }
+            $product = Product::create($validated);
 
-            $product=Product::create($validated);
-
-            if($request->characteristics){
-                foreach($request->characteristics as $char){
+            if ($request->has('characteristics')) {
+                foreach ($request->characteristics as $char) {
                     ProductCharacteristic::create([
-                        'product_id'=>$product->id,
-                        'characteristic_id'=>$char['characteristic_id'],
-                        'value'=>$char['value'] ?? true
+                        'product_id'        => $product->id,
+                        'characteristic_id' => $char['type_id'],
+                        'value'             => $char['value']
                     ]);
                 }
             }
 
-            if($request->hasFile('images')){
-                foreach($request->file('images') as $image){
-                    $path=$image->store('products','public');
+            if ($request->hasFile('images')) {
+                $images = $request->file('images');
+                $primaryIndex = $request->input('primary_image_index', 0);
+
+                foreach ($images as $index => $image) {
+                    $path = $image->store('products', 'public');
+                    
                     ProductImg::create([
-                        'product_id'=>$product->id,
-                        'path'=>$path,
-                        'is_primary'=>false
+                        'product_id' => $product->id,
+                        'path'       => $path,
+                        //Si el index coincide con el seleccionado en el front, es la principal
+                        'is_primary' => (int)$index === (int)$primaryIndex
                     ]);
                 }
             }
 
             return response()->json([
-                'success'=>true,
-                'data'=>$product->load('category','characteristics.characteristic','images'),
-                'message'=>'Producte creat correctament'
-            ],201);
+                'success' => true,
+                'message' => 'Producte creat correctament'
+            ], 201);
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-                'success'=>false,
-                'message'=>'Error en crear el producte',
-                'error'=>$e->getMessage()
-            ],500);
+                'success' => false,
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 
