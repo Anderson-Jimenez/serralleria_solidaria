@@ -17,7 +17,9 @@ class ProductController extends Controller
     {
         $characteristics = Characteristic::with('type')->get();
         $categories = Category::all();
-        $products = Product::with('category', 'characteristics')->get();
+
+        $products = Product::with(['category','characteristics','primaryImage'])->get();
+
         return response()->json([
             'characteristics' => $characteristics,
             'categories' => $categories,
@@ -43,14 +45,16 @@ class ProductController extends Controller
                 'code'           => 'required|string|unique:products,code|max:255',
                 'name'           => 'required|string|max:255',
                 'description'    => 'nullable|string',
-                'sale_price'          => 'required|numeric|min:0',
+                'sale_price'     => 'required|numeric|min:0',
                 'stock'          => 'required|integer|min:0',
                 'discount'       => 'nullable|integer|min:0|max:100',
-                'highlighted'    => 'boolean',
-                'category_id'    => 'nullable|exists:categories,id',
+                'category_id'    => 'nullable',
                 'product_type'   => 'required|string'
             ]);
-
+            $validated['highlighted'] = (bool) $request->highlighted;
+            if (empty($validated['category_id'])) {
+                $validated['category_id'] = null;
+            }
             $product = Product::create($validated);
 
             if ($request->has('characteristics')) {

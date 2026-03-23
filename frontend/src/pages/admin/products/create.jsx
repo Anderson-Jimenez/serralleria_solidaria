@@ -90,7 +90,7 @@ function ProductsCreate() {
         formData.append("code", code);
         formData.append("name", name);
         formData.append("description", description || "");
-        formData.append("price", price);
+        formData.append("sale_price", price);
         formData.append("stock", stock);
         formData.append("discount", discount);
         formData.append("highlighted", highlighted ? 1 : 0);

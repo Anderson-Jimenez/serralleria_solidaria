@@ -96,6 +96,7 @@ function ProductsIndex() {
 
             <thead>
               <tr>
+                <th>Imatge</th>
                 <th>Codi</th>
                 <th>Nom</th>
                 <th>Preu</th>
@@ -113,12 +114,21 @@ function ProductsIndex() {
                 filteredProducts.map(product => (
 
                   <tr key={product.id}>
-
+                    <td className="img">
+                      {product.primary_image ? (
+                        <img
+                          src={`http://localhost:8000/storage/${product.primary_image.path}`}
+                          alt={product.name}
+                        />
+                      ) : (
+                        "—"
+                      )}
+                    </td>
                     <td className="font-semibold">{product.code}</td>
 
                     <td>{product.name}</td>
 
-                    <td>{product.price}€</td>
+                    <td>{product.sale_price}€</td>
 
                     <td>
                       <span className={product.stock < 5 ? "text-danger" : ""}>
@@ -136,26 +146,26 @@ function ProductsIndex() {
                       </span>
                     </td>
 
-                    <td className="actions">
-
-                      <Link to={`/admin/products/edit/${product.id}`} className="action-icon edit" title="Editar">
-                        <Pencil size={18} />
-                      </Link>
-                      <button className="action-icon power">
-                        <Power size={18} className="mr-8" /> {product.status === 1 ? "Desactivar" : "Activar"}
-                      </button>
-                      <button
-                        className="action-icon delete"
-                        title="Eliminar"
-                        onClick={() => {
-                          if (window.confirm("Segur que vols eliminar aquest producte?")) {
-                            console.log("Eliminar producte", product.id);
-                          }
-                        }}
-                      >
-                        <Trash2 size={18} />
-                      </button>
-
+                    <td>
+                      <div className="actions">
+                        <Link to={`/admin/products/edit/${product.id}`} className="action-icon edit" title="Editar">
+                          <Pencil size={18} />
+                        </Link>
+                        <button className="action-icon power">
+                          <Power size={18} className="mr-8" /> {product.status === 1 ? "Desactivar" : "Activar"}
+                        </button>
+                        <button
+                          className="action-icon delete"
+                          title="Eliminar"
+                          onClick={() => {
+                            if (window.confirm("Segur que vols eliminar aquest producte?")) {
+                              console.log("Eliminar producte", product.id);
+                            }
+                          }}
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </td>
 
                   </tr>

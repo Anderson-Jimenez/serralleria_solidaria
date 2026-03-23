@@ -53,8 +53,9 @@
 }
 .actions {
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-around;
+    gap: 10px;
 }
 
 .action-icon {

@@ -1,6 +1,5 @@
 @use '../variables';
 
-// --- Contenedor Principal ---
 .product-data-box {
     background: white;
     border: 1px solid variables.$color-border;
@@ -61,7 +60,6 @@
     }
 }
 
-// --- Estilos de Formulario Base ---
 .form-group {
     display: flex; align-items: flex-start; padding: 18px 0; border-bottom: 1px solid #f1f5f9;
     label { width: 160px; font-size: 0.9rem; font-weight: 600; color: #475569; padding-top: 8px; }
@@ -72,7 +70,6 @@
     }
 }
 
-// --- Grid de Características (SIMPLIFICADO) ---
 .characteristics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -118,7 +115,6 @@
     }
 }
 
-// --- Sección de Imágenes ---
 .images-layout {
     display: grid; grid-template-columns: 240px 1fr; gap: 30px;
     .upload-container .drag-zone {
