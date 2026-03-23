@@ -30,6 +30,7 @@ Route::get('/characteristics/changeState/{id}', [CharacteristicController::class
 
 Route::apiResource('characteristicTypes', CharacteristicTypeController::class);
 Route::get('/characteristicTypes/changeState/{id}', [CharacteristicTypeController::class, 'changeStatusTypeCharacteristic']);
+Route::get('/characteristicTypes/searchTypeCharacteristic/{text}',[CharacteristicTypeController::class,'searchTypeCharacteristic']);
 
 
 Route::apiResource('packs', ProductInPackController::class);

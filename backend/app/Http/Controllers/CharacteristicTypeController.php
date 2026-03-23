@@ -120,4 +120,29 @@ class CharacteristicTypeController extends Controller
             ], 500);
         }
     }
+
+    public function searchTypeCharacteristic($text)
+    {
+        try {
+            if($text===""){
+                $types = CharacteristicType::all(); 
+            }
+            else{
+                $types = CharacteristicType::where('id','LIKE',$text)->orWhere('type','LIKE','%'.$text.'%')->get(); 
+            }
+            
+            return response()->json([
+                'success' => true,
+                'types' => $types,
+                'message' => 'Tipus de caracteristicas passan'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al buscar el camp',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

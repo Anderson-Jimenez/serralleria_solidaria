@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save } from "lucide-react";
 
-function CategoriesCreate(){
+function CategoriesCreate() {
 
     const navigate = useNavigate();
+
+    const [activeTab, setActiveTab] = useState("general");
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -24,51 +27,82 @@ function CategoriesCreate(){
                 status,
             })
         })
-        .then(async res => {
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(JSON.stringify(errorData));
-            }
-            return res.json();
-        })
-        .then(data => {
-            console.log('Categoría creada:', data);
-            navigate("/admin/categories");
-        })
-        .catch(err => {
-            console.error('Error detallado:', err);
-            alert('Error al crear la categoría. Revisa la consola para más detalles.');
-        });
+            .then(async res => {
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(JSON.stringify(errorData));
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log('Categoría creada:', data);
+                navigate("/admin/categories");
+            })
+            .catch(err => {
+                console.error('Error detallado:', err);
+                alert('Error al crear la categoría. Revisa la consola para más detalles.');
+            });
     };
 
     return (
-        <div className="edit-form">
+        <div className="dashboard-content">
             <h1 className="dashboard-title">Crear categoria</h1>
             <h3 className="dashboard-subtitle">Afegeix una nova categoria</h3>
-            
-            <form onSubmit={handleSubmit} className="flex-column">
 
-                <div className="flex">
-                    <div className="w50 flex-column">
-                        <label htmlFor="name">Nom: </label>
-                        <input  type="text" value={name} onChange={(e) => setName(e.target.value)}/> 
-                    </div>
-
-                    <div className="w50 flex-column">
-                        <label htmlFor="status">Estat: </label>
-                        <select value={status} onChange={(e) => setStatus(Number(e.target.value))} >
-                            <option value="1">Actiu</option>
-                            <option value="0">Inactiu</option>
-                        </select>
+            <form onSubmit={handleSubmit} className="product-data-box">
+                <div className="data-box-header">
+                    <div className="title-section">
+                        <h2>Dades de la caracteristica</h2>
                     </div>
                 </div>
 
-                <label htmlFor="description">Descripció: </label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)}/>
-                <input type="submit" value="Guardar" />
+                <div className="data-box-body">
+                    <nav className="data-sidebar">
+                        <ul>
+                            <li className={activeTab === 'general' ? 'active' : ''} onClick={() => setActiveTab('general')}>
+                                <Info size={18} /> <span className="text">General</span>
+                            </li>
+                        </ul>
+                    </nav>
 
+
+
+                    <div className="data-content">
+                        {activeTab === 'general' && (
+                            <section className="tab-panel">
+                                <div className="form-group">
+                                    <label htmlFor="name">Nom: </label>
+                                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="status">Estat: </label>
+                                    <select value={status} onChange={(e) => setStatus(Number(e.target.value))} >
+                                        <option value="1">Actiu</option>
+                                        <option value="0">Inactiu</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Descripció</label>
+                                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows="4" />
+                                </div>
+                            </section>
+                        )}
+
+                    </div>
+                </div>
+
+                <div className="data-box-footer">
+                    <button type="submit" className="save-button">
+                        <Save size={18} />
+                        <span>Guardar Categoria</span>
+                    </button>
+                </div>
             </form>
+
+
         </div>
+
+
     );
 }
 

@@ -22,10 +22,31 @@ function Characteristics() {
       .then(data => {
         if (data.success) {
           setData(prevType =>
-            prevType.map(item =>
-              item.id === id ? data.type : item
+            prevType.map(characteristicType =>
+              characteristicType.id === id ? data.type : characteristicType
             )
           );
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));
+  }
+
+  const buscarTipus = (e) => {
+    const text = e.target.value;
+    console.log("Buscant actualment:", text);
+    fetch(`http://localhost:8000/api/characteristicTypes/searchTypeCharacteristic/${text}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.success) {
+          setData(data.types)
         } else {
           console.error('Error en la lògica del servidor:', data.message);
         }
@@ -61,13 +82,13 @@ function Characteristics() {
         <div className="table-container">
           <h1>Tipus de Caracteristiques</h1>
           <div className="tableFilters">
-            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." />
+            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." onChange={buscarTipus}/>
 
             <select name="" id="">
 
             </select>
 
-            <Link to="/admin/characteristics/create">Afegir Tipus +</Link>
+            <Link to="/admin/types/create">Afegir Tipus +</Link>
 
           </div>
           <table>
@@ -91,7 +112,7 @@ function Characteristics() {
                   </td>
 
                   <td className="actions">
-                    <Link className="action-icon edit" to={`/admin/characteristics/edit/${characteristicTypes.id}`}>
+                    <Link className="action-icon edit" to={`/admin/types/edit/${characteristicTypes.id}`}>
                       <Pencil size={18} />
                     </Link>
                     <button className="action-icon power" onClick={() => changeStatusTypeCharacteristic(characteristicTypes.id)}>
