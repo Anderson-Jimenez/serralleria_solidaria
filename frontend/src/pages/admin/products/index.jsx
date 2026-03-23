@@ -7,6 +7,7 @@ function ProductsIndex() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [data, setData] = useState([]);
 
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -29,6 +30,29 @@ function ProductsIndex() {
       })
       .catch(error => console.error(error));
   };
+  const changeStatusProduct = (id) => {
+    fetch(`http://localhost:8000/api/products/changeState/${id}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setData(prevProducts =>
+            prevProducts.map(item =>
+              item.id === id ? data.products : item
+            )
+          );
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));      
+  }
 
   const filterProducts = () => {
     let filtered = [...products];
@@ -151,7 +175,7 @@ function ProductsIndex() {
                         <Link to={`/admin/products/edit/${product.id}`} className="action-icon edit" title="Editar">
                           <Pencil size={18} />
                         </Link>
-                        <button className="action-icon power">
+                        <button className="action-icon power" onClick={() => changeStatusProduct(product.id)}>
                           <Power size={18} className="mr-8" /> {product.status === 1 ? "Desactivar" : "Activar"}
                         </button>
                         <button

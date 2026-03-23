@@ -23,6 +23,7 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 Route::apiResource('categories', CategoryController::class);
 
 Route::apiResource('products', ProductController::class);
+Route::get('/products/changeState/{id}', [ProductController::class, 'changeStatusProduct']);
 
 Route::apiResource('characteristics', CharacteristicController::class);
 Route::get('/characteristics/changeState/{id}', [CharacteristicController::class, 'changeStatusCharacteristic']);
