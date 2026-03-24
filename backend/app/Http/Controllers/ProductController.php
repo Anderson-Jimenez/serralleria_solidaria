@@ -127,4 +127,42 @@ class ProductController extends Controller
     {
         //
     }
+
+    public function searchProducts($text)
+    {
+        $characteristics = Characteristic::with('type')->get();
+        $categories = Category::all();
+
+        try {
+            if($text===""){
+                $products = Product::with(['category','characteristics','primaryImage'])->get();
+            }
+            else{
+                
+                $products = Product::select('products.code','products.name','categories.name')
+                    ->join('categories', 'categories.id', '=', 'products.category_id')
+                    ->where('products.code', 'LIKE','%' . $text . '%')
+                    ->orWhere('products.name', 'LIKE', '%' . $text . '%')
+                    ->orWhere('categories.name', 'LIKE', '%' . $text . '%')
+                    ->with(['category','characteristics','primaryImage'])
+                    ->get();
+            }
+
+
+            return response()->json([
+                'success' => true,
+                'characteristics' => $characteristics,
+                'categories' => $categories,
+                'products' => $products,
+                'message' => 'Productes passan',
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al buscar el camp',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

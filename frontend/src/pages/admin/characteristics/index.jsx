@@ -33,6 +33,42 @@ function Characteristics() {
       .catch(error => console.error('Error en la petició:', error));      
   }
 
+  const searchCharacteristic = (e) => {
+    let text = e.target.value;
+
+    if(text===""){
+      fetch("http://localhost:8000/api/characteristics", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => setData(data.characteristics))
+      .catch(error => console.error('Error en la petició:', error));
+    }
+    else{
+      fetch(`http://localhost:8000/api/characteristics/searchCharacteristic/${text}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.success) {
+          setData(data.characteristics)
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));
+    }
+  }
+
+  /*
   const handleDeleteCharacteristic = (id) => {
     fetch(`http://localhost:8000/api/characteristics/${id}`, {
       method: "DELETE",
@@ -45,7 +81,7 @@ function Characteristics() {
         navigate("/admin/characteristics");
       })
   }
-
+*/
   useEffect(() => {
     fetch("http://localhost:8000/api/characteristics")
       .then(response => response.json())
@@ -61,7 +97,7 @@ function Characteristics() {
           <h1>Caracteristiques</h1>
 
           <div className="tableFilters">
-            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." />
+            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." onChange={searchCharacteristic}/>
 
             <select name="" id="">
 

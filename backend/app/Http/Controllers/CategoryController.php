@@ -79,4 +79,29 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();    
     }
+
+    public function searchCategories($text)
+    {
+        try {
+            if($text===""){
+                $categories = Category::all();
+            }
+            else{
+                $categories = Category::where('name', 'LIKE','%' . $text . '%')->orWhere('description', 'LIKE', '%' . $text . '%')->get();
+            }
+
+            return response()->json([
+                'success' => true,
+                'categories' => $categories,
+                'message' => 'Productes passan',
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al buscar el camp',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

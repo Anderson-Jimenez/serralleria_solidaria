@@ -110,4 +110,37 @@ class CharacteristicController extends Controller
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function searchCharacteristic($text)
+    {
+        try {
+            if($text===""){
+                $characteristics = Characteristic::with('type')->get();
+            }
+            else{
+                //$characteristics = Characteristic::with('type')->join('characteristic_types', 'characteristic_types.id', '=', 'characteristic_types_id')->where('id','LIKE',$text)->orWhere('description','LIKE','%'.$text.'%')->orWhere('characteristic_types.type','LIKE','%'.$text.'%')->get(); 
+                
+                $characteristics = Characteristic::select('characteristics.id','characteristics.description','characteristics.characteristic_type_id')
+                    ->join('characteristic_types', 'characteristic_types.id', '=', 'characteristics.characteristic_type_id')
+                    ->where('characteristics.id', 'LIKE','%' . $text . '%')
+                    ->orWhere('characteristics.description', 'LIKE', '%' . $text . '%')
+                    ->orWhere('characteristic_types.type', 'LIKE', '%' . $text . '%')
+                    ->with('type')
+                    ->get();
+            }
+            
+            return response()->json([
+                'success' => true,
+                'characteristics' => $characteristics,
+                'message' => 'Caracteristicas passan'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al buscar el camp',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
