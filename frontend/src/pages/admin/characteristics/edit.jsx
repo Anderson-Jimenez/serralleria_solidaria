@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save } from "lucide-react";
 
 function CharacteristicsEdit() {
   const { id } = useParams();
@@ -9,6 +10,7 @@ function CharacteristicsEdit() {
   const [description, setDescription] = useState("");
 
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("general");
 
   useEffect(() => {
     fetch("http://localhost:8000/api/characteristicTypes")
@@ -47,24 +49,56 @@ function CharacteristicsEdit() {
   };
 
   return (
-    <div className="edit-form">
-      <h1 className="dashboard-title">Editar la caracteristica</h1>
-      <h3 className="dashboard-subtitle">Modifica les dades de la caracteristica</h3>
+    <div className="dashboard-content">
+      <h1 className="dashboard-title">Editar Caracteristica</h1>
+      <h3 className="dashboard-subtitle">Editar una Caracteristica</h3>
 
-      <form onSubmit={handleSubmit} className="flex-column">
-        <label htmlFor="code">Tipus: </label>
-        <select name="characteristic_type_id" onChange={(e) => setType(e.target.value)}>
-          {data.map((characteristicType) => (
-            characteristicType.id === characteristic_type_id ? <option selected value={characteristicType.id}>{characteristicType.type}</option> : <option value={characteristicType.id}>{characteristicType.type}</option>
-          ))}
-        </select>
+      <form onSubmit={handleSubmit} className="product-data-box">
+        <div className="data-box-header">
+          <div className="title-section">
+            <h2>Dades de la caracteristica</h2>
+          </div>
+        </div>
 
-        <label htmlFor="description">Descripció: </label>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+        <div className="data-box-body">
+          <nav className="data-sidebar">
+            <ul>
+              <li className={activeTab === 'general' ? 'active' : ''} onClick={() => setActiveTab('general')}>
+                <Info size={18} /> <span className="text">General</span>
+              </li>
+            </ul>
+          </nav>
 
+          <div className="data-content">
+            {activeTab === 'general' && (
+              <section className="tab-panel">
+                <div className="form-group">
+                  <label>Type</label>
+                  <select name="characteristic_type_id" onChange={(e) => setType(e.target.value)}>
+                    {data.map((characteristicType) => (
+                      characteristicType.id === characteristic_type_id ? <option selected value={characteristicType.id}>{characteristicType.type}</option> : <option value={characteristicType.id}>{characteristicType.type}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Descripció</label>
+                  <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows="4" />
+                </div>
+              </section>
+            )}
 
-        <input type="submit" value="Guardar" />
+          </div>
+        </div>
+
+        <div className="data-box-footer">
+          <button type="submit" className="save-button">
+            <Save size={18} />
+            <span>Actualitzar la Caracteristica</span>
+          </button>
+        </div>
       </form>
+
+
     </div>
   );
 }

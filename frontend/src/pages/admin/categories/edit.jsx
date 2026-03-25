@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save } from "lucide-react";
 
 function CategoriesEdit(){
 
@@ -9,7 +10,10 @@ function CategoriesEdit(){
     const [description, setDescription] = useState("");
     const [status, setStatus] = useState(1);
     const [code, setCode] = useState("");
+
     const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState("general");
+
     useEffect(() => {
         fetch(`http://localhost:8000/api/categories/${id}`)
         .then(res => res.json())
@@ -43,31 +47,61 @@ function CategoriesEdit(){
     };
 
     return (
-        <div className="edit-form">
-            <h1 className="dashboard-title">Editar la categoria {name}</h1>
-            <h3 className="dashboard-subtitle">Modifica les dades de la categoria "{name}"</h3>
-            
-            <form onSubmit={handleSubmit} className="flex-column">
-                <div className="flex">
-                    <div className="w50 flex-column">
-                        <label htmlFor="name">Nom: </label>
-                        <input type="text" value={name} onChange={(e) => setName(e.target.value)}/> 
-                    </div>
-                    <div className="w50 flex-column">
-                        <label htmlFor="status">Estat: </label>
-                        <select value={status} onChange={(e) => setStatus(Number(e.target.value))}>
-                            <option value="1">Actiu</option>
-                            <option value="0">Inactiu</option>
-                        </select>
+        <div className="dashboard-content">
+            <h1 className="dashboard-title">Editar categoria</h1>
+            <h3 className="dashboard-subtitle">Editar una categoria</h3>
+
+            <form onSubmit={handleSubmit} className="product-data-box">
+                <div className="data-box-header">
+                    <div className="title-section">
+                        <h2>Dades de la caracteristica</h2>
                     </div>
                 </div>
 
-                <label htmlFor="description">Descripció: </label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)}/>
+                <div className="data-box-body">
+                    <nav className="data-sidebar">
+                        <ul>
+                            <li className={activeTab === 'general' ? 'active' : ''} onClick={() => setActiveTab('general')}>
+                                <Info size={18} /> <span className="text">General</span>
+                            </li>
+                        </ul>
+                    </nav>
 
 
-                <input type="submit" value="Guardar" />
+
+                    <div className="data-content">
+                        {activeTab === 'general' && (
+                            <section className="tab-panel">
+                                <div className="form-group">
+                                    <label htmlFor="name">Nom: </label>
+                                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="status">Estat: </label>
+                                    <select value={status} onChange={(e) => setStatus(Number(e.target.value))} >
+                                        <option value="1">Actiu</option>
+                                        <option value="0">Inactiu</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Descripció</label>
+                                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows="4" />
+                                </div>
+                            </section>
+                        )}
+
+                    </div>
+                </div>
+
+                <div className="data-box-footer">
+                    <button type="submit" className="save-button">
+                        <Save size={18} />
+                        <span>Actualitzar Categoria</span>
+                    </button>
+                </div>
             </form>
+
+
         </div>
     );
 }
