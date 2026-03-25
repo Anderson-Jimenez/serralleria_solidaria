@@ -22,13 +22,6 @@ class CharacteristicTypeController extends Controller
     {
         //
     }
-    public function getTypes(){
-        $types=CharacteristicType::with(['characteristic'=>function($query){
-            $query->where('status',1);
-        }])->where('status',1)->get();
-
-        return response()->json($types);
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -94,6 +87,13 @@ class CharacteristicTypeController extends Controller
         $characteristic->delete();
     }
 
+    public function getTypes(){
+        $types=CharacteristicType::with(['characteristic'=>function($query){
+            $query->where('status',1);
+        }])->where('status',1)->get();
+
+        return response()->json($types);
+    }
 
     public function changeStatusTypeCharacteristic($id)
     {
@@ -128,7 +128,7 @@ class CharacteristicTypeController extends Controller
                 $types = CharacteristicType::all(); 
             }
             else{
-                $types = CharacteristicType::where('id','LIKE',$text)->orWhere('type','LIKE','%'.$text.'%')->get(); 
+                $types = CharacteristicType::where('id','LIKE','%' . $text . '%')->orWhere('type','LIKE','%'.$text.'%')->get(); 
             }
             
             return response()->json([

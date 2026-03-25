@@ -2,143 +2,132 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
     ArrowLeft, Info, Box, Settings, Image as ImageIcon, 
-    Save, LayoutList, X, Upload, Star, CheckSquare, Hash 
+    Save, LayoutList, X, Upload, Star
 } from "lucide-react";
 
 function ProductsCreate() {
     const navigate = useNavigate();
-
-    // Navegación de pestañas
+    const [isDragging, setIsDragging] = useState(false);
     const [activeTab, setActiveTab] = useState("general");
 
-    // Datos maestros (API)
+    // API
     const [categories, setCategories] = useState([]);
     const [types, setTypes] = useState([]);
 
-    // Estado del Formulario: General
+    // FORM
     const [name, setName] = useState("");
     const [price, setPrice] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [description, setDescription] = useState("");
 
-    // Estado del Formulario: Inventario
     const [code, setCode] = useState("");
     const [stock, setStock] = useState(0);
 
-    // Estado del Formulario: Avanzado
     const [categoryId, setCategoryId] = useState("");
     const [highlighted, setHighlighted] = useState(0);
 
-    // Estado: Características
-    const [selectedType, setSelectedType] = useState("");
-    const [availableCharacteristics, setAvailableCharacteristics] = useState([]);
-    const [selectedCharacteristics, setSelectedCharacteristics] = useState([]);
+    // ✅ CARACTERÍSTICAS
+    const [selectedCharacteristics, setSelectedCharacteristics] = useState({});
+    const [extraValues, setExtraValues] = useState({});
 
-    // Estado: Imágenes
+    // IMÁGENES
     const [images, setImages] = useState([]);
     const [previews, setPreviews] = useState([]);
     const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
-    const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
-        fetchCategories();
-        fetchCharacteristicTypes();
-    }, []);
-
-    const fetchCategories = () => {
         fetch("http://localhost:8000/api/categories")
             .then(res => res.json())
-            .then(data => setCategories(data.categories ?? data))
-            .catch(err => console.error(err));
-    };
+            .then(data => setCategories(data.categories ?? data));
 
-    const fetchCharacteristicTypes = () => {
         fetch("http://localhost:8000/api/characteristic-types")
             .then(res => res.json())
-            .then(data => setTypes(data))
-            .catch(err => console.error(err));
+            .then(data => setTypes(data));
+    }, []);
+
+    // ✅ HANDLERS
+    const handleCharacteristicChange = (typeId, value) => {
+        setSelectedCharacteristics(prev => ({
+            ...prev,
+            [typeId]: value
+        }));
     };
 
-    // --- Lógica de Características ---
-    const handleTypeChange = (typeId) => {
-        setSelectedType(typeId);
-        const type = types.find(t => t.id == typeId);
-        setAvailableCharacteristics(type ? type.characteristic : []);
+    const handleExtraValueChange = (typeId, field, value) => {
+        setExtraValues(prev => ({
+            ...prev,
+            [typeId]: {
+                ...prev[typeId],
+                [field]: value
+            }
+        }));
     };
 
-    const addCharacteristic = (charId) => {
-        if (!charId) return;
-        const char = availableCharacteristics.find(c => c.id == charId);
-        if (!char || selectedCharacteristics.find(c => c.characteristic_id == charId)) return;
-
-        // Lógica dinámica: Si es peso/kg usamos número, si no, checkbox
-        const desc = char.description.toLowerCase();
-        const isNumeric = desc.includes("pes") || desc.includes("kg") || desc.includes("mida");
-        
-        setSelectedCharacteristics(prev => [...prev, {
-            characteristic_id: char.id,
-            name: char.description,
-            value: isNumeric ? 0 : true,
-            type: isNumeric ? 'number' : 'boolean'
-        }]);
-    };
-
-    const updateCharValue = (id, newValue) => {
-        setSelectedCharacteristics(prev => prev.map(c => 
-            c.characteristic_id === id ? { ...c, value: newValue } : c
-        ));
-    };
-
-    const removeCharacteristic = (id) => {
-        setSelectedCharacteristics(prev => prev.filter(c => c.characteristic_id != id));
-    };
-
-    // --- Lógica de Imágenes ---
+    // IMÁGENES
     const handleFiles = (files) => {
-        const validFiles = Array.from(files).filter(file => file.type.startsWith("image/"));
-        setImages(prev => [...prev, ...validFiles]);
-        const newPreviews = validFiles.map(file => URL.createObjectURL(file));
-        setPreviews(prev => [...prev, ...newPreviews]);
+        const filesArray = Array.from(files);
+
+        setImages(prev => [...prev, ...filesArray]);
+
+        const urls = filesArray.map(file => URL.createObjectURL(file));
+        setPreviews(prev => [...prev, ...urls]);
     };
 
     const removeImage = (index) => {
         setImages(prev => prev.filter((_, i) => i !== index));
-        setPreviews(prev => {
-            URL.revokeObjectURL(prev[index]);
-            return prev.filter((_, i) => i !== index);
-        });
-        if (primaryImageIndex === index) setPrimaryImageIndex(0);
-        else if (primaryImageIndex > index) setPrimaryImageIndex(primaryImageIndex - 1);
+        setPreviews(prev => prev.filter((_, i) => i !== index));
+
+        if (primaryImageIndex >= images.length - 1) {
+            setPrimaryImageIndex(0);
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         const formData = new FormData();
-        
+
         formData.append("code", code);
         formData.append("name", name);
-        formData.append("description", description);
-        formData.append("price", price);
+        formData.append("description", description || "");
+        formData.append("sale_price", price);
         formData.append("stock", stock);
         formData.append("discount", discount);
-        formData.append("highlighted", highlighted);
+        formData.append("highlighted", highlighted ? 1 : 0);
         formData.append("category_id", categoryId);
         formData.append("product_type", "simple");
+        
+        // Índice de la imagen principal
         formData.append("primary_image_index", primaryImageIndex);
 
-        selectedCharacteristics.forEach((c, i) => {
-            formData.append(`characteristics[${i}][characteristic_id]`, c.characteristic_id);
-            formData.append(`characteristics[${i}][value]`, c.value);
-        });
+        let charIndex = 0;
+        for (let typeId in selectedCharacteristics) {
+            const val = selectedCharacteristics[typeId];
+            if (val !== "" && val !== null) {
+                formData.append(`characteristics[${charIndex}][type_id]`, typeId);
+                formData.append(`characteristics[${charIndex}][value]`, val);
+                charIndex++;
+            }
+        }
 
         images.forEach((file) => {
             formData.append("images[]", file);
         });
 
-        fetch("http://localhost:8000/api/products", { method: "POST", body: formData })
-            .then(res => res.json())
-            .then(() => navigate("/admin/products"))
-            .catch(err => console.error(err));
+        fetch("http://localhost:8000/api/products", {
+            method: "POST",
+            body: formData,
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                navigate("/admin/products");
+            } else {
+                console.error("Error:", data.error);
+                alert("Error al crear el producte");
+            }
+        })
+        .catch(err => console.error("Fetch error:", err));
     };
 
     return (
@@ -170,31 +159,26 @@ function ProductsCreate() {
                     </nav>
 
                     <div className="data-content flex">
-                        {/* PESTAÑA GENERAL */}
+
+                        {/* GENERAL */}
                         {activeTab === "general" && (
                             <section className="tab-panel">
-                                <div className="form-group"><label>Nom</label><input type="text" value={name} onChange={e => setName(e.target.value)} required /></div>
-                                <div className="form-group"><label>Preu (€)</label><input type="number" step="0.01" value={price} onChange={e => setPrice(e.target.value)} /></div>
-                                <div className="form-group"><label>Descompte (%)</label><input type="number" min="0" max="100" value={discount} onChange={e => setDiscount(e.target.value)} /></div>
-                                <div className="form-group"><label>Descripció</label><textarea rows="4" value={description} onChange={e => setDescription(e.target.value)} /></div>
+                                <div className="form-group"><label>Nom</label><input value={name} onChange={e => setName(e.target.value)} /></div>
+                                <div className="form-group"><label>Preu (€)</label><input type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
+                                <div className="form-group"><label>Descompte (%)</label><input type="number" value={discount} onChange={e => setDiscount(e.target.value)} /></div>
+                                <div className="form-group"><label>Descripció</label><textarea value={description} onChange={e => setDescription(e.target.value)} /></div>
                             </section>
                         )}
 
-                        {/* PESTAÑA INVENTARIO (RECUPERADA) */}
+                        {/* INVENTARIO */}
                         {activeTab === "inventario" && (
                             <section className="tab-panel">
-                                <div className="form-group">
-                                    <label>Codi (SKU)</label>
-                                    <input type="text" value={code} onChange={e => setCode(e.target.value)} required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Stock disponible</label>
-                                    <input type="number" min="0" value={stock} onChange={e => setStock(e.target.value)} />
-                                </div>
+                                <div className="form-group"><label>Codi</label><input value={code} onChange={e => setCode(e.target.value)} /></div>
+                                <div className="form-group"><label>Stock</label><input type="number" value={stock} onChange={e => setStock(e.target.value)} /></div>
                             </section>
                         )}
 
-                        {/* PESTAÑA AVANZADO (RECUPERADA) */}
+                        {/* AVANZADO */}
                         {activeTab === "avanzado" && (
                             <section className="tab-panel">
                                 <div className="form-group">
@@ -206,8 +190,9 @@ function ProductsCreate() {
                                         ))}
                                     </select>
                                 </div>
+
                                 <div className="form-group">
-                                    <label>Producte destacat</label>
+                                    <label>Destacat</label>
                                     <select value={highlighted} onChange={e => setHighlighted(e.target.value)}>
                                         <option value="0">No</option>
                                         <option value="1">Sí</option>
@@ -215,42 +200,83 @@ function ProductsCreate() {
                                 </div>
                             </section>
                         )}
-
-                        {/* PESTAÑA CARACTERÍSTICAS */}
                         {activeTab === "caracteristics" && (
                             <section className="tab-panel">
                                 <div className="panel-header">
                                     <h3>Atributs i Característiques</h3>
-                                    <p>Afegeix detalls tècnics com pes, tipus de targeta o embrague.</p>
+                                    <p>Configura els detalls tècnics d'aquest producte.</p>
                                 </div>
-                                <div className="form-group">
-                                    <label>Tipus</label>
-                                    <select value={selectedType} onChange={e => handleTypeChange(e.target.value)}>
-                                        <option value="">Selecciona tipus...</option>
-                                        {types.map(type => <option key={type.id} value={type.id}>{type.type}</option>)}
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>Afegir Atribut</label>
-                                    <select value="" onChange={e => addCharacteristic(e.target.value)} disabled={!selectedType}>
-                                        <option value="" disabled>Selecciona una característica</option>
-                                        {availableCharacteristics.map(char => <option key={char.id} value={char.id}>{char.description}</option>)}
-                                    </select>
-                                </div>
-                                <div className="selected-characteristics-list">
-                                    {selectedCharacteristics.map(char => (
-                                        <div key={char.characteristic_id} className="char-input-row">
-                                            <div className="char-info">
-                                                {char.type === 'number' ? <Hash size={16} /> : <CheckSquare size={16} />}
-                                                <span>{char.name}</span>
-                                            </div>
-                                            <div className="char-controls">
-                                                {char.type === 'number' ? (
-                                                    <input type="number" value={char.value} onChange={e => updateCharValue(char.characteristic_id, e.target.value)} className="small-input" />
-                                                ) : (
-                                                    <input type="checkbox" checked={char.value} onChange={e => updateCharValue(char.characteristic_id, e.target.checked)} />
+
+                                <div className="characteristics-grid">
+                                    {types.map(type => (
+                                        <div key={type.id} className="char-item">
+                                            <label className="char-label">{type.type}</label>
+
+                                            <div className="char-field-wrapper">
+                                                {type.type === "Doble Embrague" && (
+                                                    <label className="checkbox-label">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedCharacteristics[type.id] || false}
+                                                            onChange={(e) => handleCharacteristicChange(type.id, e.target.checked)}
+                                                        />
+                                                        <span>Incloure doble embragatge</span>
+                                                    </label>
                                                 )}
-                                                <button type="button" className="delete-btn" onClick={() => removeCharacteristic(char.characteristic_id)}><X size={14} /></button>
+
+                                                {type.type === "Pes" && (
+                                                    <div className="input-with-unit">
+                                                        <input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            value={selectedCharacteristics[type.id] || ""}
+                                                            onChange={(e) => handleCharacteristicChange(type.id, e.target.value)}
+                                                        />
+                                                        <span className="unit-tag">Kg</span>
+                                                    </div>
+                                                )}
+
+                                                {type.type === "Duplicat de clau" && (
+                                                    <div className="extra-group">
+                                                        <label className="checkbox-label">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={extraValues[type.id]?.enabled || false}
+                                                                onChange={(e) => handleExtraValueChange(type.id, "enabled", e.target.checked)}
+                                                            />
+                                                            <span>Incloure preu extra</span>
+                                                        </label>
+
+                                                        {extraValues[type.id]?.enabled && (
+                                                            <div className="input-with-unit mt-10">
+                                                                <input
+                                                                    type="number"
+                                                                    placeholder="Preu"
+                                                                    value={extraValues[type.id]?.price || ""}
+                                                                    onChange={(e) => handleExtraValueChange(type.id, "price", e.target.value)}
+                                                                />
+                                                                <span className="unit-tag">€</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+
+                                                {type.type !== "Doble Embrague" &&
+                                                    type.type !== "Pes" &&
+                                                    type.type !== "Duplicat de clau" && (
+                                                        <select
+                                                            className="full-select"
+                                                            value={selectedCharacteristics[type.id] || ""}
+                                                            onChange={(e) => handleCharacteristicChange(type.id, e.target.value)}
+                                                        >
+                                                            <option value="">Selecciona...</option>
+                                                            {type.characteristic?.map(char => (
+                                                                <option key={char.id} value={char.id}>
+                                                                    {char.description}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
@@ -258,7 +284,7 @@ function ProductsCreate() {
                             </section>
                         )}
 
-                        {/* PESTAÑA IMÁGENES */}
+                        {/* IMÁGENES */}
                         {activeTab === "imagenes" && (
                             <section className="tab-panel">
                                 <div className="panel-header">
@@ -267,33 +293,59 @@ function ProductsCreate() {
                                 </div>
                                 <div className="images-layout">
                                     <div className="upload-container">
-                                        <label className={`drag-zone ${isDragging ? 'dragging' : ''}`} onDragOver={e => { e.preventDefault(); setIsDragging(true); }} onDragLeave={() => setIsDragging(false)} onDrop={e => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}>
-                                            <input type="file" multiple accept="image/*" onChange={e => handleFiles(e.target.files)} hidden />
-                                            <div className="upload-info"><Upload size={24} /><span>Pujar o arrossegar</span></div>
+                                        <label className={`drag-zone ${isDragging ? 'dragging' : ''}`}
+                                            onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
+                                            onDragLeave={() => setIsDragging(false)}
+                                            onDrop={e => {
+                                                e.preventDefault();
+                                                setIsDragging(false);
+                                                handleFiles(e.dataTransfer.files);
+                                            }}>
+                                            <input type="file" multiple accept="image/*"
+                                                onChange={e => handleFiles(e.target.files)} hidden />
+                                            <div className="upload-info">
+                                                <Upload size={24} />
+                                                <span>Pujar o arrossegar</span>
+                                            </div>
                                         </label>
                                     </div>
+
                                     <div className="previews-grid">
                                         {previews.map((url, index) => (
                                             <div key={index} className={`preview-item ${primaryImageIndex === index ? 'is-primary' : ''}`}>
-                                                <img src={url} alt="preview" onClick={() => setPrimaryImageIndex(index)} />
+                                                <img src={url} alt="" onClick={() => setPrimaryImageIndex(index)} />
+
                                                 <div className="preview-actions">
-                                                    <button type="button" className={`star-btn ${primaryImageIndex === index ? 'active' : ''}`} onClick={() => setPrimaryImageIndex(index)}>
+                                                    <button type="button"
+                                                        className={`star-btn ${primaryImageIndex === index ? 'active' : ''}`}
+                                                        onClick={() => setPrimaryImageIndex(index)}>
                                                         <Star size={14} fill={primaryImageIndex === index ? "currentColor" : "none"} />
                                                     </button>
-                                                    <button type="button" className="remove-btn" onClick={() => removeImage(index)}><X size={14} /></button>
+
+                                                    <button type="button"
+                                                        className="remove-btn"
+                                                        onClick={() => removeImage(index)}>
+                                                        <X size={14} />
+                                                    </button>
                                                 </div>
-                                                {primaryImageIndex === index && <div className="primary-label">Principal</div>}
+
+                                                {primaryImageIndex === index && (
+                                                    <div className="primary-label">Principal</div>
+                                                )}
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             </section>
                         )}
+
                     </div>
                 </div>
 
                 <div className="data-box-footer">
-                    <button type="submit" className="save-button"><Save size={18} /> Guardar producte</button>
+                    <button type="submit" className="save-button">
+                        <Save size={18} /> Guardar producte
+                    </button>
                 </div>
             </form>
         </div>

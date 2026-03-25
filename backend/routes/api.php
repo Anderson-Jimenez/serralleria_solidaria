@@ -21,11 +21,15 @@ Route::post('/categories', [CategoryController::class, 'store']);
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 */
 Route::apiResource('categories', CategoryController::class);
+Route::get('/categories/searchCategories/{text}', [CategoryController::class, 'searchCategories']);
 
 Route::apiResource('products', ProductController::class);
+Route::get('/products/searchProducts/{text}', [ProductController::class, 'searchProducts']);
+
 
 Route::apiResource('characteristics', CharacteristicController::class);
 Route::get('/characteristics/changeState/{id}', [CharacteristicController::class, 'changeStatusCharacteristic']);
+Route::get('/characteristics/searchCharacteristic/{text}', [CharacteristicController::class, 'searchCharacteristic']);
 
 
 Route::apiResource('characteristicTypes', CharacteristicTypeController::class);

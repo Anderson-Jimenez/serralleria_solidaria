@@ -6,6 +6,42 @@ function Categories() {
 
   const [categories, setCategories] = useState([]);
 
+
+  const searchCategories = (e) => {
+    let text = e.target.value;
+
+    if(text===""){
+      fetch("http://localhost:8000/api/categories", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => setCategories(data))
+      .catch(error => console.error('Error en la petició:', error));
+    }
+    else{
+      fetch(`http://localhost:8000/api/categories/searchCategories/${text}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.success) {
+          setCategories(data.categories);
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));
+    }
+  }
+
   useEffect(() => {
     fetch("http://localhost:8000/api/categories")
       .then(response => response.json())
@@ -23,11 +59,11 @@ function Categories() {
         <div className="table-container">
 
           <div className="tableFilters">
-
-            <div className="search-box">
-              <Search size={18}/>
-              <input type="text" placeholder="Cerca categories..." />
-            </div>
+            <input
+                type="text"
+                placeholder="Cerca per nom, codi o descripció..."
+                onChange={searchCategories}
+              />
 
             <select>
               <option value="">Tots els estats</option>
