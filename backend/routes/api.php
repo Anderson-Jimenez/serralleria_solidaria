@@ -26,7 +26,6 @@ Route::get('/categories/searchCategories/{text}', [CategoryController::class, 's
 Route::apiResource('products', ProductController::class);
 Route::get('/products/searchProducts/{text}', [ProductController::class, 'searchProducts']);
 
-
 Route::apiResource('characteristics', CharacteristicController::class);
 Route::get('/characteristics/changeState/{id}', [CharacteristicController::class, 'changeStatusCharacteristic']);
 Route::get('/characteristics/searchCharacteristic/{text}', [CharacteristicController::class, 'searchCharacteristic']);
@@ -38,5 +37,6 @@ Route::get('/characteristicTypes/searchTypeCharacteristic/{text}',[Characteristi
 
 
 Route::apiResource('packs', ProductInPackController::class);
+Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsNotInPack']);
 Route::get('/characteristic-types',[CharacteristicTypeController::class,'getTypes']);
 

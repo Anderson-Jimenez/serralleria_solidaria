@@ -67,4 +67,8 @@ class ProductInPackController extends Controller
     {
         //
     }
+
+    public function productsNotInPack(){
+        return Product::all();
+    }
 }
