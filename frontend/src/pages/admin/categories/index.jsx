@@ -19,9 +19,7 @@ function Categories() {
         }
       })
       .then(response => response.json()) 
-      .then(data => {
-        setCategories(data.categories);
-      })
+      .then(data => setCategories(data))
       .catch(error => console.error('Error en la petició:', error));
     }
     else{
