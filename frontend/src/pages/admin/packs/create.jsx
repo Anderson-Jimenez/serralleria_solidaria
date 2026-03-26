@@ -13,7 +13,9 @@ function ProductsCreate() {
   // API
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
-  const [prodcucts, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  const [productsInPack, setProductsInPack] = useState([]);
 
 
   // FORM
@@ -37,6 +39,10 @@ function ProductsCreate() {
   const [previews, setPreviews] = useState([]);
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
 
+  const addProductInPack = (id) => {
+    console.log("ID seleccionat:", id);
+  };
+
   useEffect(() => {
     fetch("http://localhost:8000/api/categories")
       .then(res => res.json())
@@ -48,7 +54,9 @@ function ProductsCreate() {
 
     fetch("http://localhost:8000/api/packs/productsNotInPack")
       .then(res => res.json())
-      .then(data => setProducts(data));
+      .then(data =>{
+         setProducts(data);
+      });
   }, []);
 
   // ✅ HANDLERS
@@ -180,8 +188,52 @@ function ProductsCreate() {
             {activeTab === "productes" && (
               <section className="tab-panel">
                 <div className="productsInPack">
-                  <div>
+                  <div className="table-container scrollable">
                     <h3>Productes</h3>
+                    <div className="tableFilters tableFiltersInPacks">
+                        <input
+                            type="text"
+                            placeholder="Cerca per nom, codi o descripció..."
+                            /*onChange={searchPacks}*/
+                        />
+
+                        <select>
+
+                        </select>
+                    </div>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Codi</th>
+                          <th>Nom</th>
+                          <th>Preu</th>
+                        </tr>
+                      </thead>
+                      <tbody id="productsTable">
+                        {products.map(product=>(
+                        <tr onClick={() => addProductInPack(product.id)}>
+                          <td>{product.code}</td>
+                          <td>{product.name}</td>
+                          <td>{product.sale_price}</td>
+                        </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="table-container scrollable">
+                    <h3>Productes en el Pack</h3>
+
+                    <div className="tableFilters tableFiltersInPacks">
+                        <input
+                            type="text"
+                            placeholder="Cerca per nom, codi o descripció..."
+                            /*onChange={searchPacks}*/
+                        />
+
+                        <select>
+
+                        </select>
+                    </div>
                     <table>
                       <thead>
                         <tr>
@@ -191,19 +243,17 @@ function ProductsCreate() {
                         </tr>
                       </thead>
                       <tbody>
-                        {prodcucts.map(product=>{
+                        {/*
+                        {products.map(product=>(
                         <tr>
                           <td>{product.code}</td>
                           <td>{product.name}</td>
-                          <td>{product.price}</td>
+                          <td>{product.sale_price}</td>
                         </tr>
-                        })}
+                        ))}
+                        */}
                       </tbody>
                     </table>
-                  </div>
-                  <div>
-                    <h3>Productes en el Pack</h3>
-
                   </div>
                 </div>
               </section>
