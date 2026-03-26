@@ -1,0 +1,123 @@
+@import '../variables';
+
+$color-bg-footer: #4a4541; 
+
+.footer {
+  background-color: $color-bg-footer;
+  color: $color-text-header;
+  padding: 4rem 0 1rem 0;
+  font-family: 'Inter', sans-serif;
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap; // Responsive
+  }
+
+  .footer-col {
+    flex: 1;
+    min-width: 200px;
+
+    h3 {
+      color: $color-bg-container; // Blanco
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 0.8rem;
+        a {
+          text-decoration: none;
+          color: $color-text-header;
+          font-size: 0.95rem;
+          transition: color 0.2s;
+          &:hover { color: $color-accent; }
+        }
+      }
+    }
+  }
+
+  .info {
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+    .description {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 280px;
+    }
+    .social-icons {
+      display: flex;
+      gap: 10px;
+      .social-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+        &:hover { background: $color-accent; }
+      }
+    }
+  }
+
+  .contact {
+    .contact-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+      align-items: flex-start;
+      font-size: 0.95rem;
+      span { line-height: 1.4; }
+    }
+  }
+
+  .icon-accent {
+    color: $color-accent; // Naranja
+  }
+
+  .footer-bottom {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    
+    .bottom-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      
+      .legal-links {
+        display: flex;
+        gap: 20px;
+        a {
+          color: $color-text-header;
+          text-decoration: none;
+          &:hover { text-decoration: underline; }
+        }
+      }
+    }
+  }
+}

@@ -1,12 +1,13 @@
-import React from 'react';
-import '../../styles/store/home.css'; 
-function Dashboard() {
+import PrincipalPanell from "../../components/store/home/principalPanel";
+//import FeaturedProducts from "../components/home/FeaturedProducts";
+
+function Home() {
   return (
-    <div className='welcome'>
-        <h2>Benvingut a la serralleria solidaria</h2>
-        <h3>ola</h3>
+    <div className="home-page">
+      <PrincipalPanell />
+      {/* Otras secciones irán aquí */}
     </div>
   );
 }
 
-export default Dashboard;
+export default Home;

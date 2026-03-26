@@ -1,0 +1,49 @@
+@import '../variables';
+
+$color-bg-base: #3d3a37; 
+
+.principalPanell {
+  // La lógica es linear-gradient(overlay), url(image)
+  background: linear-gradient(rgba($color-bg-base, 0.8), rgba($color-bg-base, 0.8)), url('/images/principalPanel.jpg');
+
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat; 
+
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: left;
+
+  .container {
+    max-width: 60%; // Un ancho estándar profesional
+    width: 100%;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: flex-start;
+
+    .principalPanellContent {
+      max-width: 50%;
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+      }
+
+      p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+        opacity: 0.9;
+      }
+
+      .principalContentActions {
+        display: flex;
+        gap: 1.5rem;
+      }
+    }
+  }
+}

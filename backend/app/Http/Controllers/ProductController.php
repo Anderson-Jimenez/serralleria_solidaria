@@ -258,4 +258,24 @@ class ProductController extends Controller
     {
         //
     }
+
+    public function changeStatusProduct($id)
+    {
+        try {
+            $product = Product::findOrFail($id); 
+            $product->status = ($product->status == 1) ? 0 : 1;
+            $product->save();
+            $product->load(['characteristics', 'category', 'primaryImage']);
+
+
+            return response()->json([
+                'success' => true,
+                'product' => $product,
+                'message' => 'Canvi de estat fet'
+            ], 200);
+        
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
 }

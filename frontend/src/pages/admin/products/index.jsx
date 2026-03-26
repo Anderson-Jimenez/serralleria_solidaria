@@ -7,7 +7,6 @@ function ProductsIndex() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [data, setData] = useState([]);
 
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -41,10 +40,11 @@ function ProductsIndex() {
     })
       .then(response => response.json())
       .then(data => {
+        console.log(data.product);
         if (data.success) {
-          setData(prevProducts =>
+          setProducts(prevProducts =>
             prevProducts.map(item =>
-              item.id === id ? data.products : item
+              item.id === id ? data.product : item
             )
           );
         } else {
