@@ -39,8 +39,16 @@ function ProductsCreate() {
   const [previews, setPreviews] = useState([]);
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
 
-  const addProductInPack = (id) => {
-    console.log("ID seleccionat:", id);
+  const addProductInPack = (product) => {
+    console.log("ID seleccionat:", product.id);
+    setProductsInPack(prevProducts => prevProducts.concat(product));
+    setProducts(prevProducts => prevProducts.filter(item => item.id !== product.id));
+  };
+
+  const removeProductFromPack = (product) => {
+    console.log("ID seleccionat:", product.id);
+    setProducts(prevProducts => prevProducts.concat(product));
+    setProductsInPack(prevProducts => prevProducts.filter(item => item.id !== product.id));
   };
 
   useEffect(() => {
@@ -54,8 +62,8 @@ function ProductsCreate() {
 
     fetch("http://localhost:8000/api/packs/productsNotInPack")
       .then(res => res.json())
-      .then(data =>{
-         setProducts(data);
+      .then(data => {
+        setProducts(data);
       });
   }, []);
 
@@ -104,6 +112,12 @@ function ProductsCreate() {
     formData.append("code", code);
     formData.append("name", name);
     formData.append("description", description || "");
+
+    productsInPack.forEach((product) => {
+        // Afegim cada ID individualment usant la nomenclatura de claudàtors []
+        formData.append("product_ids[]", product.id); 
+    });
+
     formData.append("sale_price", price);
     formData.append("stock", stock);
     formData.append("discount", discount);
@@ -128,7 +142,7 @@ function ProductsCreate() {
       formData.append("images[]", file);
     });
 
-    fetch("http://localhost:8000/api/products", {
+    fetch("http://localhost:8000/api/packs", {
       method: "POST",
       body: formData,
     })
@@ -138,7 +152,7 @@ function ProductsCreate() {
           navigate("/admin/packs");
         } else {
           console.error("Error:", data.error);
-          alert("Error al crear el producte");
+          alert("Error al crear el pack");
         }
       })
       .catch(err => console.error("Fetch error:", err));
@@ -191,15 +205,15 @@ function ProductsCreate() {
                   <div className="table-container scrollable">
                     <h3>Productes</h3>
                     <div className="tableFilters tableFiltersInPacks">
-                        <input
-                            type="text"
-                            placeholder="Cerca per nom, codi o descripció..."
-                            /*onChange={searchPacks}*/
-                        />
+                      <input
+                        type="text"
+                        placeholder="Cerca per nom, codi o descripció..."
+                      /*onChange={searchPacks}*/
+                      />
 
-                        <select>
+                      <select>
 
-                        </select>
+                      </select>
                     </div>
                     <table>
                       <thead>
@@ -210,12 +224,12 @@ function ProductsCreate() {
                         </tr>
                       </thead>
                       <tbody id="productsTable">
-                        {products.map(product=>(
-                        <tr onClick={() => addProductInPack(product.id)}>
-                          <td>{product.code}</td>
-                          <td>{product.name}</td>
-                          <td>{product.sale_price}</td>
-                        </tr>
+                        {products.map(product => (
+                          <tr onClick={() => addProductInPack(product)}>
+                            <td>{product.code}</td>
+                            <td>{product.name}</td>
+                            <td>{product.sale_price}</td>
+                          </tr>
                         ))}
                       </tbody>
                     </table>
@@ -224,15 +238,15 @@ function ProductsCreate() {
                     <h3>Productes en el Pack</h3>
 
                     <div className="tableFilters tableFiltersInPacks">
-                        <input
-                            type="text"
-                            placeholder="Cerca per nom, codi o descripció..."
-                            /*onChange={searchPacks}*/
-                        />
+                      <input
+                        type="text"
+                        placeholder="Cerca per nom, codi o descripció..."
+                      /*onChange={searchPacks}*/
+                      />
 
-                        <select>
+                      <select>
 
-                        </select>
+                      </select>
                     </div>
                     <table>
                       <thead>
@@ -243,15 +257,23 @@ function ProductsCreate() {
                         </tr>
                       </thead>
                       <tbody>
-                        {/*
-                        {products.map(product=>(
-                        <tr>
-                          <td>{product.code}</td>
-                          <td>{product.name}</td>
-                          <td>{product.sale_price}</td>
-                        </tr>
-                        ))}
-                        */}
+                        {productsInPack.length > 0 ? (
+                          productsInPack.map(product => (
+                            <tr onClick={() => removeProductFromPack(product)}>
+                              <td>{product.code}</td>
+                              <td>{product.name}</td>
+                              <td>{product.sale_price}</td>
+                              <td><input key={product.id}  type="hidden" name="product_ids[]" value={product.id} /></td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="8" style={{ textAlign: "center", padding: "40px" }}>
+                              No s'han trobat Pakcs
+                            </td>
+                          </tr>
+                        )
+                        }
                       </tbody>
                     </table>
                   </div>
