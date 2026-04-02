@@ -296,4 +296,19 @@ class ProductController extends Controller
             ], 500);
         }
     }
+
+
+
+
+    public function getProductCategory($category){
+        $category = Category::where('name', $category)->first();
+        
+        $products = Product::where('category_id',$category->id)->get();
+
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+            'message' => 'Productes passan',
+        ], 201);
+    }
 }
