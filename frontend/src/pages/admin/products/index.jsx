@@ -29,6 +29,30 @@ function ProductsIndex() {
       })
       .catch(error => console.error(error));
   };
+  const changeStatusProduct = (id) => {
+    fetch(`http://localhost:8000/api/products/changeState/${id}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.product);
+        if (data.success) {
+          setProducts(prevProducts =>
+            prevProducts.map(item =>
+              item.id === id ? data.product : item
+            )
+          );
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));      
+  }
 
   const searchProducts = (e) => {
     let text = e.target.value;
@@ -188,7 +212,7 @@ function ProductsIndex() {
                         <Link to={`/admin/products/edit/${product.id}`} className="action-icon edit" title="Editar">
                           <Pencil size={18} />
                         </Link>
-                        <button className="action-icon power">
+                        <button className="action-icon power" onClick={() => changeStatusProduct(product.id)}>
                           <Power size={18} className="mr-8" /> {product.status === 1 ? "Desactivar" : "Activar"}
                         </button>
                         <button
