@@ -311,4 +311,16 @@ class ProductController extends Controller
             'message' => 'Productes passan',
         ], 201);
     }
+
+    public function getProductCategoryLatest($category){
+        $category = Category::where('name', $category)->first();
+        
+        $products = Product::where('category_id',$category->id)->latest()->take(8)->get();
+
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+            'message' => 'Productes passan',
+        ], 201);
+    }
 }

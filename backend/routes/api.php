@@ -27,6 +27,8 @@ Route::apiResource('products', ProductController::class);
 Route::get('/products/searchProducts/{text}', [ProductController::class, 'searchProducts']);
 Route::get('/products/changeState/{id}', [ProductController::class, 'changeStatusProduct']);
 Route::get('/products/getProductCategory/{category}', [ProductController::class, 'getProductCategory']);
+Route::get('/products/getProductCategoryLatest/{category}', [ProductController::class, 'getProductCategoryLatest']);
+
 
 
 Route::apiResource('characteristics', CharacteristicController::class);
