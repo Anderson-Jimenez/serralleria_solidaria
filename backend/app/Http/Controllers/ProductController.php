@@ -18,7 +18,7 @@ class ProductController extends Controller
         $characteristics = Characteristic::with('type')->get();
         $categories = Category::all();
 
-        $products = Product::with(['category','characteristics','primaryImage'])->get();
+        $products = Product::where('product_type', 'simple')->with(['category','characteristics','primaryImage'])->get();
 
         return response()->json([
             'characteristics' => $characteristics,
@@ -259,23 +259,68 @@ class ProductController extends Controller
         //
     }
 
-    public function changeStatusProduct($id)
+    public function searchProducts($text)
     {
+        $characteristics = Characteristic::with('type')->get();
+        $categories = Category::all();
+
         try {
-            $product = Product::findOrFail($id); 
-            $product->status = ($product->status == 1) ? 0 : 1;
-            $product->save();
-            $product->load(['characteristics', 'category', 'primaryImage']);
+            if($text===""){
+                $products = Product::with(['category','characteristics','primaryImage'])->get();
+            }
+            else{
+                
+                $products = Product::select('products.code','products.name','categories.name')
+                    ->join('categories', 'categories.id', '=', 'products.category_id')
+                    ->where('products.code', 'LIKE','%' . $text . '%')
+                    ->orWhere('products.name', 'LIKE', '%' . $text . '%')
+                    ->orWhere('categories.name', 'LIKE', '%' . $text . '%')
+                    ->with(['category','characteristics','primaryImage'])
+                    ->get();
+            }
 
 
             return response()->json([
                 'success' => true,
-                'product' => $product,
-                'message' => 'Canvi de estat fet'
-            ], 200);
-        
+                'characteristics' => $characteristics,
+                'categories' => $categories,
+                'products' => $products,
+                'message' => 'Productes passan',
+            ], 201);
+            
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al buscar el camp',
+                'error' => $e->getMessage()
+            ], 500);
         }
+    }
+
+
+
+
+    public function getProductCategory($category){
+        $category = Category::where('name', $category)->first();
+        
+        $products = Product::where('category_id',$category->id)->get();
+
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+            'message' => 'Productes passan',
+        ], 201);
+    }
+
+    public function getProductCategoryLatest($category){
+        $category = Category::where('name', $category)->first();
+        
+        $products = Product::where('category_id',$category->id)->latest()->take(8)->get();
+
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+            'message' => 'Productes passan',
+        ], 201);
     }
 }

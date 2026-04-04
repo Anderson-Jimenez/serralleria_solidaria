@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save } from "lucide-react";
+
 
 function CharacteristicsEdit() {
+  const navigate = useNavigate();
+
   const { id } = useParams();
+  const [activeTab, setActiveTab] = useState("general");
 
   const [type, setType] = useState("");
 
@@ -27,22 +32,51 @@ function CharacteristicsEdit() {
     })
       .then(res => res.json())
       .then(() => {
-        navigate("/admin/characteristics");
+        navigate("/admin/types");
       })
       .catch(err => console.error(err));
   };
 
   return (
-    <div className="edit-form">
-      <h1 className="dashboard-title">Editar el tipus</h1>
-      <h3 className="dashboard-subtitle">Modifica les dades del Tipus</h3>
+        <div className="dashboard-content">
+      <h1 className="dashboard-title">Editar Tipus</h1>
+      <h3 className="dashboard-subtitle">Editar el tipus de caracteristica</h3>
 
-      <form onSubmit={handleSubmit} className="flex-column">
+      <form onSubmit={handleSubmit} className="product-data-box">
+        <div className="data-box-header">
+          <div className="title-section">
+            <h2>Dades del tipus de caracteristica</h2>
+          </div>
+        </div>
 
-        <label htmlFor="type">Tipus: </label>
-        <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
+        <div className="data-box-body">
+          <nav className="data-sidebar">
+            <ul>
+              <li className={activeTab === 'general' ? 'active' : ''} onClick={() => setActiveTab('general')}>
+                <Info size={18} /> <span className="text">General</span>
+              </li>
+            </ul>
+          </nav>
 
-        <input type="submit" value="Guardar" />
+          <div className="data-content">
+            {activeTab === 'general' && (
+              <section className="tab-panel">
+                <div className="form-group">
+                  <label htmlFor="code">Nom del Tipus: </label>
+                  <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
+                </div>
+              </section>
+            )}
+
+          </div>
+        </div>
+
+        <div className="data-box-footer">
+          <button type="submit" className="save-button">
+            <Save size={18} />
+            <span>Actualitzar Tipus de Caracteristica</span>
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -4,10 +4,12 @@
 @use './header';
 @use './caracteristics';
 @use './categories';
+@use './packs';
 @use './forms/forms';
 @use './forms/productCreate';
 @use './store/storeLayout';
 @use './store/principalPanell';
 @use './store/navbar';
 @use './store/footer';
+@use './store/storeCategories';
 @use './generals';

@@ -6,8 +6,8 @@ function Characteristics() {
 
   const navigate = useNavigate();
 
-  const [data, setData] = useState([]);
-  const [id, setId] = useState("");
+  let [data, setData] = useState([]);
+  let [id, setId] = useState("");
 
 
   const changeStatusTypeCharacteristic = (id) => {
@@ -34,15 +34,28 @@ function Characteristics() {
   }
 
   const buscarTipus = (e) => {
-    const text = e.target.value;
-    console.log("Buscant actualment:", text);
-    fetch(`http://localhost:8000/api/characteristicTypes/searchTypeCharacteristic/${text}`, {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      }
-    })
+    let text = e.target.value;
+
+    if(text===""){
+      fetch("http://localhost:8000/api/characteristicTypes", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => setData(data))
+      .catch(error => console.error('Error en la petició:', error));
+    }
+    else{
+      fetch(`http://localhost:8000/api/characteristicTypes/searchTypeCharacteristic/${text}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
       .then(response => response.json()) 
       .then(data => {
         if (data.success) {
@@ -52,6 +65,7 @@ function Characteristics() {
         }
       })
       .catch(error => console.error('Error en la petició:', error));
+    }
   }
 
   {/*
@@ -82,7 +96,7 @@ function Characteristics() {
         <div className="table-container">
           <h1>Tipus de Caracteristiques</h1>
           <div className="tableFilters">
-            <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." onChange={buscarTipus}/>
+            <input type="text" name="" id="" placeholder="Buscar Tipus de Caracteristiques..." onChange={buscarTipus}/>
 
             <select name="" id="">
 

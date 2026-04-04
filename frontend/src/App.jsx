@@ -3,8 +3,14 @@ import { Routes, Route } from "react-router-dom";
 import StoreLayout from "./layouts/storeLayout";
 import AdminLayout from "./layouts/adminLayout";
 
-import Home from "./pages/store/home";
 import Dashboard from "./pages/admin/dashboard";
+
+//Store
+import Home from "./pages/store/home";
+
+import Shields from "./pages/store/categories/escuts";
+
+//Admin
 
 //Categories
 import CategoriesIndex from "./pages/admin/categories/index";
@@ -38,6 +44,7 @@ function App() {
       {/* TIENDA PÚBLICA */}
       <Route path="/" element={<StoreLayout />}>
         <Route index element={<Home />} />
+        <Route path="escuts" element={<Shields />} />
       </Route>
 
       {/* PANEL ADMIN */}

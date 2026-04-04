@@ -54,6 +54,47 @@ function ProductsIndex() {
       .catch(error => console.error('Error en la petició:', error));      
   }
 
+  const searchProducts = (e) => {
+    let text = e.target.value;
+
+    if(text===""){
+      fetch("http://localhost:8000/api/products", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        setProducts(data.products);
+        setFilteredProducts(data.products);
+        setCategories(data.categories);
+      })
+      .catch(error => console.error('Error en la petició:', error));
+    }
+    else{
+      fetch(`http://localhost:8000/api/products/searchProducts/${text}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.success) {
+          setProducts(data.products);
+          setFilteredProducts(data.products);
+          setCategories(data.categories);
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));
+    }
+  }
+
   const filterProducts = () => {
     let filtered = [...products];
 
@@ -84,16 +125,11 @@ function ProductsIndex() {
         <div className="table-container">
 
           <div className="tableFilters">
-
-            <div className="search-box">
-              <Search size={18} />
-              <input
+            <input
                 type="text"
                 placeholder="Cerca per nom, codi o descripció..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={searchProducts}
               />
-            </div>
 
             <select
               value={selectedCategory}
@@ -108,6 +144,7 @@ function ProductsIndex() {
               ))}
 
             </select>
+
 
             <Link to="/admin/products/create" className="add-button">
               <Plus size={18} />
@@ -160,9 +197,9 @@ function ProductsIndex() {
                       </span>
                     </td>
 
-                  <td>
-                    {product.category ? product.category.name : "Sense categoria"}
-                  </td>
+                    <td>
+                      {product.category ? product.category.name : "Sense categoria"}
+                    </td>
 
                     <td>
                       <span className={product.status === 1 ? "status-active" : "status-inactive"}>

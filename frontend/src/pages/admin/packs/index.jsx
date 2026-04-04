@@ -1,4 +1,4 @@
-import { Eye, Pencil, Power } from "lucide-react";
+import { Search, Plus, Pencil, Power, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -15,65 +15,117 @@ function Packs() {
     }, []);
 
     return (
+
         <div className="dashboard-content">
-            <h1>Packs</h1>
+
+            <h1 className="dashboard-title">Gestió de packs</h1>
+            <h3 className="dashboard-subtitle">Administra els packs del catàleg</h3>
+
             <div className="caracteristics-content">
                 <div className="table-container">
-                    <div className="tableFilters">
-                        <input type="text" name="" id="" placeholder="Buscar Packs..." />
 
-                        <select name="" id="">
+                    <div className="tableFilters">
+                        <input
+                            type="text"
+                            placeholder="Cerca per nom, codi o descripció..."
+                            /*onChange={searchPacks}*/
+                        />
+
+                        <select>
 
                         </select>
 
-                        <Link to="/admin/packs/create">Afegir Pack +</Link>
+
+                        <Link to="/admin/packs/create" className="add-button">
+                            <Plus size={18} />
+                            <span>Afegir producte</span>
+                        </Link>
 
                     </div>
+
                     <table>
+
                         <thead>
                             <tr>
+                                <th>Imatge</th>
                                 <th>Codi</th>
                                 <th>Nom</th>
-                                <th>Descripció</th>
                                 <th>Preu</th>
-                                <th>Stock</th>
+                                <th>Estoc</th>
                                 <th>Categoria</th>
                                 <th>Estat</th>
-                                <th>Accions</th>
+                                <th className="text-center">Accions</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            {packs.map((pack) => (
-                                <tr key={pack.id}>
-                                    <td>{pack.code}</td>
-                                    <td>{pack.name}</td>
-                                    <td>{pack.description}</td>
-                                    <td>{pack.price}€</td>
-                                    <td>{pack.stock}</td>
-                                    <td>{pack.category ? pack.category.name : "Sense categoria"}</td>
-                                    <td><span className={pack.status === 1 ? "status-active" : "status-inactive"}>{pack.status === 1 ? "Actiu" : "Inactiu"}</span></td>
-                                    
 
+                            {packs.length > 0 ? (
 
-                                    <td className="actions">
-                                        <Link 
-                                            className="action-icon" 
-                                            title="Veure"
-                                        >
-                                            <Eye size={18} />
-                                        </Link>
-                                        <button className="action-icon power">
-                                            <Power size={18} className="mr-8"/> {pack.status === 1 ? "Desactivar" : "Activar"}
-                                        </button>
-                                        <Link className="action-icon edit" to={`/admin/packs/edit/${pack.id}`}>
-                                            <Pencil size={18}/>
-                                        </Link>
+                                packs.map(pack => (
+
+                                    <tr key={pack.id}>
+                                        <td className="img">
+                                            {pack.primary_image ? (
+                                                <img
+                                                    src={`http://localhost:8000/storage/${pack.primary_image.path}`}
+                                                    alt={pack.name}
+                                                />
+                                            ) : (
+                                                "—"
+                                            )}
+                                        </td>
+                                        <td className="font-semibold">{pack.code}</td>
+
+                                        <td>{pack.name}</td>
+
+                                        <td>{pack.sale_price}€</td>
+
+                                        <td>
+                                            <span className={pack.stock < 5 ? "text-danger" : ""}>
+                                                {pack.stock} u.
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            {pack.category ? pack.category.name : "Sense categoria"}
+                                        </td>
+
+                                        <td>
+                                            <span className={pack.status === 1 ? "status-active" : "status-inactive"}>
+                                                {pack.status === 1 ? "Actiu" : "Inactiu"}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <div className="actions">
+                                                <Link to={`/admin/packs/edit/${pack.id}`} className="action-icon edit" title="Editar">
+                                                    <Pencil size={18} />
+                                                </Link>
+                                                <button className="action-icon power">
+                                                    <Power size={18} className="mr-8" /> {pack.status === 1 ? "Desactivar" : "Activar"}
+                                                </button>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
+                            ) : (
+
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center", padding: "40px" }}>
+                                        No s'han trobat productes
                                     </td>
-
                                 </tr>
-                            ))}
+
+                            )}
+
                         </tbody>
+
                     </table>
+
                 </div>
             </div>
 
