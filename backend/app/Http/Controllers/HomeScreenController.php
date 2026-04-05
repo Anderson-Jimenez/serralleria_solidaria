@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Characteristic;
+use App\Models\ProductImg;
+use App\Models\ProductCharacteristic;
 
 class HomeScreenController extends Controller
 {
@@ -11,8 +15,21 @@ class HomeScreenController extends Controller
      */
     public function index()
     {
-        //
+        $characteristics = Characteristic::with('type')->get();
+        $categories = Category::all();
+
+        $products = Product::where('product_type', 'simple')->with(['category','characteristics','primaryImage'])->get();
+
+        $featuredProducts = Product::where('highlighted', true)->with(['category','characteristics','primaryImage'])->get();
+
+        return response()->json([
+            'characteristics' => $characteristics,
+            'categories' => $categories,
+            'products' => $products,
+            'featured_products' => $featuredProducts,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.

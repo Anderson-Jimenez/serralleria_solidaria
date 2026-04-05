@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductInPackController;
+use App\Http\Controllers\HomeScreenController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -46,3 +47,6 @@ Route::apiResource('packs', ProductInPackController::class);
 
 Route::get('/characteristic-types',[CharacteristicTypeController::class,'getTypes']);
 
+
+// Rutas para el HomeScreen
+Route::apiResource('homescreens', HomeScreenController::class);

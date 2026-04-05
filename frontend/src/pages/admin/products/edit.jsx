@@ -258,9 +258,9 @@ function ProductsEdit() {
 
                                 <div className="form-group">
                                     <label>Destacat</label>
-                                    <select value={highlighted} onChange={e => setHighlighted(e.target.value)}>
-                                        <option value="0">No</option>
-                                        <option value="1">Sí</option>
+                                    <select value={highlighted} onChange={e => setHighlighted(Number(e.target.value))}>
+                                        <option value={0}>No</option>
+                                        <option value={1}>Sí</option>
                                     </select>
                                 </div>
                             </section>

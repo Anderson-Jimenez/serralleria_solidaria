@@ -1,11 +1,30 @@
+import { useEffect, useState } from "react";
 import PrincipalPanell from "../../components/store/home/principalPanel";
-//import FeaturedProducts from "../components/home/FeaturedProducts";
+import FeaturedProducts from "../../components/store/home/featuredProducts";
+
 
 function Home() {
+  const [data, setData] = useState({ products: [], featured_products: [] });
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('http://localhost:8000/api/homescreens');
+        if (!response.ok) throw new Error('Error en la API');
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="home-page">
       <PrincipalPanell />
-      {/* Otras secciones irán aquí */}
+      {/* Pasamos directamente la lista de destacados */}
+      <FeaturedProducts products={data.featured_products} />
     </div>
   );
 }
