@@ -8,6 +8,7 @@ import Dashboard from "./pages/admin/dashboard";
 //Store
 import Home from "./pages/store/home";
 
+import Products from "./pages/store/products";
 import Shields from "./pages/store/categories/escuts";
 
 //Admin
@@ -44,6 +45,8 @@ function App() {
       {/* TIENDA PÚBLICA */}
       <Route path="/" element={<StoreLayout />}>
         <Route index element={<Home />} />
+        
+        <Route path="products" element={<Products />} />
         <Route path="escuts" element={<Shields />} />
       </Route>
 

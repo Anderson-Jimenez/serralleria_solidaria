@@ -323,4 +323,37 @@ class ProductController extends Controller
             'message' => 'Productes passan',
         ], 201);
     }
+
+    public function searchProductsInStore($category, $text)
+    {
+
+        try {
+            $query = Product::with(['category', 'characteristics', 'primaryImage']);
+
+            // 1. Filtre de categoria (Això SEMPRE s'ha d'aplicar)
+            $query->whereHas('category', function($q) use ($category) {
+                $q->where('name', 'LIKE', $category); 
+            });
+
+            // 2. Filtre de text (AGRUPAT)
+            if ($text !== "") {
+                // Fem servir un where amb funció per agrupar els OR
+                $query->where(function($q) use ($text) {
+                    $q->where('name', 'LIKE', "%$text%")
+                    ->orWhere('code', 'LIKE', "%$text%");
+                });
+            }
+
+            $products = $query->get();
+
+            return response()->json([
+                'success' => true,
+                'products' => $products,
+                'message' => 'Productes trobats: ' . $products->count(),
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
 }

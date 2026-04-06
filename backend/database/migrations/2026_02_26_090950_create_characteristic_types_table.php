@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('type');
             $table->boolean('status')->default(true);
+            $table->enum('filterType', ['checkbox','select','moreLess']);
             $table->timestamps();
         });
     }

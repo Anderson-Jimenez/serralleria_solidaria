@@ -110,6 +110,7 @@ function Characteristics() {
               <tr>
                 <th>ID</th>
                 <th>Tipus</th>
+                <th>Tipus de Filtre</th>
                 <th>Estat</th>
                 <th>Accions</th>
               </tr>
@@ -119,12 +120,12 @@ function Characteristics() {
                 <tr key={characteristicTypes.id}>
                   <td>{characteristicTypes.id}</td>
                   <td>{characteristicTypes.type}</td>
+                  <td>{characteristicTypes.filterType}</td>
                   <td>
                     <span className={characteristicTypes.status === 1 ? "status-active" : "status-inactive"}>
                       {characteristicTypes.status === 1 ? "Actiu" : "Inactiu"}
                     </span>
                   </td>
-
                   <td className="actions">
                     <Link className="action-icon edit" to={`/admin/types/edit/${characteristicTypes.id}`}>
                       <Pencil size={18} />

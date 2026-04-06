@@ -7,6 +7,7 @@ import ProductDisplayAll from "../../../components/store/categories/productCateg
 function Home() {
   const [products, setProducts] = useState([]);
   const [latestProducts, setLatestProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/products/getProductCategory/Escut`)
@@ -18,11 +19,19 @@ function Home() {
       .then(response => response.json())
       .then(data => setLatestProducts(data.products))
       .catch(error => console.error(error));
+    
+    fetch(`http://localhost:8000/api/characteristicTypes`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setCategories(data);
+      })
+      .catch(error => console.error(error));
   }, []);
-
+  
   return (
     <div>
-      <Title />
+      <Title title={"Escuts"} />
       <h1 className="sectionCategoryTitle">Escuts Destacats</h1>
       <ProductDisplay products={products}/>
 
@@ -30,7 +39,7 @@ function Home() {
       <ProductDisplay products={latestProducts}/>
 
       <h1 className="sectionCategoryTitle">Tots els escuts</h1>
-      <ProductDisplayAll products={products}/>
+      <ProductDisplayAll products={products} categories={categories}/>
     </div>
   );
 }

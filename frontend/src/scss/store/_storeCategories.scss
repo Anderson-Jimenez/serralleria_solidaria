@@ -60,7 +60,6 @@ $color-bg-base: #3d3a37;
     padding: 0px 100px 50px 100px;
 
     overflow-x: auto;
-    user-select: none;
     -webkit-user-drag: none;
     scroll-behavior: smooth;
     scrollbar-width: none;
@@ -149,4 +148,26 @@ $color-bg-base: #3d3a37;
             }
         }
     }
+}
+
+.displayFilters{
+    padding: 20px 30px;
+
+    h3{
+        margin: 0;
+    }
+
+    label,h3,h2{
+        color: white;
+    }
+    
+    .allFilters{
+        
+
+        .uniqueCharacteristic{
+            border-top: solid 3px variables.$color-accent;
+            padding: 30px 0px;
+        }
+    }
+    
 }

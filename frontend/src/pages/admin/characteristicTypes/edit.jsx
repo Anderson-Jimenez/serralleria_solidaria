@@ -10,12 +10,14 @@ function CharacteristicsEdit() {
   const [activeTab, setActiveTab] = useState("general");
 
   const [type, setType] = useState("");
+  const [filterType, setFilterType] = useState("");
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/characteristicTypes/${id}`)
       .then(res => res.json())
       .then(data => {
         setType(data.type);
+        setFilterType(data.filterType);
       });
   }, [id]);
 
@@ -28,6 +30,7 @@ function CharacteristicsEdit() {
       },
       body: JSON.stringify({
         type,
+        filterType,
       })
     })
       .then(res => res.json())
@@ -64,6 +67,14 @@ function CharacteristicsEdit() {
                 <div className="form-group">
                   <label htmlFor="code">Nom del Tipus: </label>
                   <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="code">Tipus de filtratje: </label>
+                  <select name="filterType" value={filterType} onChange={(e) => setFilterType(e.target.value)} >
+                    <option value="checkbox">Checkbox</option>
+                    <option value="select">Select</option>
+                    <option value="moreLess">More or Less</option>
+                  </select>
                 </div>
               </section>
             )}
