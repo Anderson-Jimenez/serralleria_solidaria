@@ -8,7 +8,7 @@ import Dashboard from "./pages/admin/dashboard";
 //Store
 import Home from "./pages/store/home";
 import Shields from "./pages/store/categories/escuts";
-// import ProductDetail from "./pages/store/productDetail"
+import ProductDetail from "./pages/store/productDetails"
 
 //Admin
 
@@ -33,11 +33,11 @@ import ProductsEdit from "./pages/admin/products/edit";
 import PacksIndex from "./pages/admin/packs/index";
 import PacksCreate from "./pages/admin/packs/create";
 import PacksEdit from "./pages/admin/packs/edit";
-
+import CustomSolutionForm from "./pages/store/customSolutionForm";  
 
 //import Users from "./pages/admin/users";
 
-//<Route path="producte/:id" element={<ProductDetail />} /> pa cuando haga la pagina de detalles del producto.
+//
 
 function App() {
   return (
@@ -47,7 +47,9 @@ function App() {
       <Route path="/" element={<StoreLayout />}>
         <Route index element={<Home />} />
         <Route path="escuts" element={<Shields />} />
-        
+        <Route path="producte/:id" element={<ProductDetail />} />
+        <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
+        <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />
       </Route>
 
       {/* PANEL ADMIN */}

@@ -31,7 +31,7 @@ function Navbar() {
         </li>
 
         <li><a href="/ferramentes">Ferramentes</a></li>
-        <li><a href="/contacte">Contacte</a></li>
+        <li><a href="/solucions_personalitzades">Contacte</a></li>
       </ul>
 
       {/* LADO DERECHO: ICONOS */}

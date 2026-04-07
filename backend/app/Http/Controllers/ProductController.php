@@ -102,7 +102,7 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            $product = Product::with(['category', 'characteristics', 'images'])->findOrFail($id);
+            $product = Product::with(['category', 'characteristics', 'images', 'primaryImage'])->findOrFail($id);
             
             return response()->json([
                 'success' => true,
