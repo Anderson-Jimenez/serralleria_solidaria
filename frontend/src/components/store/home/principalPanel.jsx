@@ -1,4 +1,3 @@
-// HeroSection.jsx
 import React from 'react';
 
 function principalPanell() {
@@ -11,8 +10,8 @@ function principalPanell() {
             Especialistes en serralleria amb més de 25 anys d'experiència. Productes de màxima qualitat i servei professional.
           </p>
           <div className="principalContentActions">
-            <button className="btnPrimary">Veure Productes</button>
-            <button className="btnSecondary">Contacta'ns</button>
+            <button className="seeProducts">Veure Productes</button>
+            <button className="contactUs">Contacta'ns</button>
           </div>
         </div>
       </div>

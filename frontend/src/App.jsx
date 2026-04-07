@@ -10,6 +10,7 @@ import Home from "./pages/store/home";
 
 import Products from "./pages/store/products";
 import Shields from "./pages/store/categories/escuts";
+// import ProductDetail from "./pages/store/productDetail"
 
 //Admin
 
@@ -38,6 +39,8 @@ import PacksEdit from "./pages/admin/packs/edit";
 
 //import Users from "./pages/admin/users";
 
+//<Route path="producte/:id" element={<ProductDetail />} /> pa cuando haga la pagina de detalles del producto.
+
 function App() {
   return (
     <Routes>
@@ -48,6 +51,7 @@ function App() {
         
         <Route path="products" element={<Products />} />
         <Route path="escuts" element={<Shields />} />
+        
       </Route>
 
       {/* PANEL ADMIN */}
