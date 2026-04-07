@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Characteristic;
 use App\Models\ProductImg;
 use App\Models\ProductCharacteristic;
+
 class ProductController extends Controller
 {
     /**
@@ -335,21 +336,31 @@ class ProductController extends Controller
 
             $category=$validated['category'];
             $text=$validated['searchText'];
+
             $filters = collect($validated['filters'])->flatten()->all();
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
-            // 1. Filtre de categoria (Això SEMPRE s'ha d'aplicar)
+            // 1. Filtre de categoria
             $query->whereHas('category', function($q) use ($category) {
                 $q->where('name', 'LIKE', $category); 
             });
 
+            // 2. Filtre de caracteristiques
+            if (!empty($filters)) {
+                foreach ($filters as $filterId) {
+                    $query->whereHas('characteristics', function($q) use ($filterId) {
+                        $q->where('characteristics.id', $filterId);
+                    });
+                }
+            }
+            /*
             if (!empty($filters) && count($filters) > 0) {
                 $query->whereHas('characteristics', function($q) use ($filters) {
                     $q->whereIn('characteristics.id', $filters);
                 });
             }
-
+            */
             /*
             foreach($filters as $filter){
                 $filterId = (int) $filter;
@@ -359,9 +370,8 @@ class ProductController extends Controller
             }
             */
 
-            // 2. Filtre de text (AGRUPAT)
+            // 3. Filtre de text
             if ($text !== "") {
-                // Fem servir un where amb funció per agrupar els OR
                 $query->where(function($q) use ($text) {
                     $q->where('name', 'LIKE', "%$text%")
                     ->orWhere('code', 'LIKE', "%$text%");

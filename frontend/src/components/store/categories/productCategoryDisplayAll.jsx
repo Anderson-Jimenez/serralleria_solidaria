@@ -54,29 +54,6 @@ function productCategoryDisplayAll({ products, categories }) {
                 }
             })
             .catch(error => console.error('Error en la petició:', error));
-
-        /*
-        fetch(`http://localhost:8000/api/products/searchProductsInStore/${'Escut'}/${text}`, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    searchText: text,
-                    filters: savedFilters // Enviem l'array directament
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        setProductsFiltrats(data.products);
-                    } else {
-                        console.error('Error en la lògica del servidor:', data.message);
-                    }
-                })
-                .catch(error => console.error('Error en la petició:', error));
-        */
     }
 
     return (
@@ -124,18 +101,43 @@ function productCategoryDisplayAll({ products, categories }) {
                 <input type="text" placeholder='Buscar Escuts...' onChange={searchProductsInStore} />
                 <div className='searchDisplayResult'>
                     {productsFiltrats.map((product) => (
-                        <div className='productDisplay'>
-                            <div className='productImg'>
+                        <div
+                            className="card"
+                            key={product.id}
+                            onClick={() => handleProductClick(product.id)}
+                        >
+                            {product.discount > 0 ? (
+                                <span className="badge discount">-{product.discount}%</span>
+                            ) : product.is_new ? (
+                                <span className="badge new">Nou</span>
+                            ) : null}
 
-
+                            <div className="imageContainer">
+                                {product.primary_image ? (
+                                    <img src={`http://localhost:8000/storage/${product.primary_image.path}`} alt={product.name} />
+                                ) : (
+                                    <div className="noImage">No Image</div>
+                                )}
                             </div>
-                            <div className='productContent'>
-                                <div><Star fill='#ffd900' /> <Star fill='#ffd900' /> <Star fill='#ffd900' /> <Star fill='#ffd900' /> <Star fill='#ffd900' /></div>
+
+                            <div className="info">
                                 <h4>{product.name}</h4>
-                                <p>{product.description}</p>
-                                <div className='buyProduct'>
-                                    <p>{product.sale_price}€</p>
-                                    <ShoppingCart />
+                                <p className="desc">{product.description}</p>
+
+                                <div className="bottom">
+                                    <div className="priceGroup">
+                                        <span className="currentPrice">{product.sale_price}€</span>
+                                        {product.discount > 0 && <span className="oldPrice">{product.base_price}€</span>}
+                                    </div>
+
+                                    <button
+                                        className="cartBtn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                        }}
+                                    >
+                                        <ShoppingCart size={20} color="white" />
+                                    </button>
                                 </div>
                             </div>
                         </div>
