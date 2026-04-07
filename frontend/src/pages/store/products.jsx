@@ -5,7 +5,6 @@ import ProductDisplayAll from "../../components/store/categories/productCategory
 
 function Home() {
   const [products, setProducts] = useState([]);
-  const [latestProducts, setLatestProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -25,7 +24,7 @@ function Home() {
   
   return (
     <div>
-      <Title title={"Els Nostres Productes"}/>
+      <Title title={"Productes"}/>
 
       <h1 className="sectionCategoryTitle">Tots els productes</h1>
       <ProductDisplayAll products={products} categories={categories}/>

@@ -26,7 +26,7 @@ Route::get('/categories/searchCategories/{text}', [CategoryController::class, 's
 
 Route::apiResource('products', ProductController::class);
 Route::get('/products/searchProducts/{text}', [ProductController::class, 'searchProducts']);
-Route::get('/products/searchProductsInStore/{category}/{text}', [ProductController::class, 'searchProductsInStore']);
+Route::post('/products/searchProductsInStore', [ProductController::class, 'searchProductsInStore']);
 
 Route::get('/products/changeState/{id}', [ProductController::class, 'changeStatusProduct']);
 Route::get('/products/getProductCategory/{category}', [ProductController::class, 'getProductCategory']);

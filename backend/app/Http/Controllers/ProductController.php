@@ -324,16 +324,40 @@ class ProductController extends Controller
         ], 201);
     }
 
-    public function searchProductsInStore($category, $text)
+    public function searchProductsInStore(Request $request)
     {
-
         try {
+            $validated = $request->validate([
+                'searchText'     => 'nullable|string|max:255',
+                'filters'   => 'present|array',
+                'category'     => 'required|string|max:100',
+            ]);
+
+            $category=$validated['category'];
+            $text=$validated['searchText'];
+            $filters = collect($validated['filters'])->flatten()->all();
+
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
             // 1. Filtre de categoria (Això SEMPRE s'ha d'aplicar)
             $query->whereHas('category', function($q) use ($category) {
                 $q->where('name', 'LIKE', $category); 
             });
+
+            if (!empty($filters) && count($filters) > 0) {
+                $query->whereHas('characteristics', function($q) use ($filters) {
+                    $q->whereIn('characteristics.id', $filters);
+                });
+            }
+
+            /*
+            foreach($filters as $filter){
+                $filterId = (int) $filter;
+                $query->whereHas('characteristics', function($q) use ($filterId) {
+                    $q->whereIn('characteristics.id', $filterId); 
+                });
+            }
+            */
 
             // 2. Filtre de text (AGRUPAT)
             if ($text !== "") {

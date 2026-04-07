@@ -5,24 +5,67 @@ import { Star, ShoppingCart } from 'lucide-react';
 function productCategoryDisplayAll({ products, categories }) {
 
     const [productsFiltrats, setProductsFiltrats] = useState([]);
+    const [savedFilters, setSavedFilters] = useState([]);
 
     useEffect(() => {
         setProductsFiltrats(products);
     }, [products]);
-    
+
+    const saveFilter = (e) => {
+        let filterValue = e.target.value;
+
+        if (savedFilters.includes(filterValue)) {
+            const updatedFilters = savedFilters.filter(item => item !== filterValue);
+            setSavedFilters(prevLlista => [...prevLlista, updatedFilters]);
+        }
+        else {
+            setSavedFilters(prevLlista => [...prevLlista, filterValue]);
+        }
+
+        searchProductsInStore(e);
+    }
+
     const searchProductsInStore = (e) => {
         let text = e.target.value;
 
-        if (text === "") {
-            setProductsFiltrats(products);
-        }
-        else {
-            fetch(`http://localhost:8000/api/products/searchProductsInStore/${'Escut'}/${text}`, {
+        fetch(`http://localhost:8000/api/products/searchProductsInStore`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                searchText: text || "",
+                filters: savedFilters || [],
+                category: "Escut",
+            })
+        })
+            .then(async response => {
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Si la resposta no és 200, imprimim tot l'objecte per saber què falla
+                    console.error("Error del servidor:", data);
+                    return;
+                }
+
+                if (data.success) {
+                    setProductsFiltrats(data.products);
+                }
+            })
+            .catch(error => console.error('Error en la petició:', error));
+
+        /*
+        fetch(`http://localhost:8000/api/products/searchProductsInStore/${'Escut'}/${text}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json"
-                }
+                },
+                body: JSON.stringify({
+                    searchText: text,
+                    filters: savedFilters // Enviem l'array directament
+                })
             })
                 .then(response => response.json())
                 .then(data => {
@@ -33,7 +76,7 @@ function productCategoryDisplayAll({ products, categories }) {
                     }
                 })
                 .catch(error => console.error('Error en la petició:', error));
-        }
+        */
     }
 
     return (
@@ -44,21 +87,29 @@ function productCategoryDisplayAll({ products, categories }) {
                     {categories.map((category) => (
                         <div className="uniqueCharacteristic" key={category.id}>
                             <h3>{category.type}</h3>
+
                             {category.filterType === 'checkbox' ?
-                                category.characteristics && category.characteristics.map((char) => (
+
+                                category.characteristic && category.characteristic.map((char) => (
+
                                     <div key={char.id}>
-                                        <input type="checkbox" id={`check-${char.id}`} value={`${category.id}-${char.id}`} />
+                                        <input type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
                                         <label htmlFor={`check-${char.id}`}>{char.description}</label>
                                     </div>
+
                                 )) : category.filterType === 'select' ? (
-                                    <select name={`filter-${category.id}`} key={category.id}>
+
+                                    <select name={`select-${category.id}`} key={category.id}>
                                         <option value="" >Selecciona...</option>
 
-                                        {category.characteristics?.map((char) => (
-                                            <option value={`${category.id}-${char.id}`} key={char.id}>
+                                        {category.characteristic?.map((char) => (
+
+                                            <option value={`${char.id}`} key={char.id}>
                                                 {char.description}
                                             </option>
+
                                         ))}
+
                                     </select>) : (
                                     <p>No vull fer mes o menys ara</p>
                                 )}

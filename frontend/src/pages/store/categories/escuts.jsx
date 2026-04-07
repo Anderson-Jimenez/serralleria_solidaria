@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import Title from "../../../components/store/categories/pageTitle";
 import ProductDisplay from "../../../components/store/categories/productCategoryDisplay";
 import ProductDisplayAll from "../../../components/store/categories/productCategoryDisplayAll";
+import FeaturedProducts from "../../../components/store/home/featuredProducts";
+import GeneralProducts from "../../../components/store/home/generalProducts";
 
 
-function Home() {
+
+function Shields() {
   const [products, setProducts] = useState([]);
   const [latestProducts, setLatestProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -20,7 +23,7 @@ function Home() {
       .then(data => setLatestProducts(data.products))
       .catch(error => console.error(error));
     
-    fetch(`http://localhost:8000/api/characteristicTypes`)
+    fetch(`http://localhost:8000/api/characteristic-types`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
@@ -32,11 +35,9 @@ function Home() {
   return (
     <div>
       <Title title={"Escuts"} />
-      <h1 className="sectionCategoryTitle">Escuts Destacats</h1>
-      <ProductDisplay products={products}/>
+      <FeaturedProducts products={products} />
 
-      <h1 className="sectionCategoryTitle">Ultims Escuts</h1>
-      <ProductDisplay products={latestProducts}/>
+      <GeneralProducts products={latestProducts} title={"Ultims Escuts"}/>
 
       <h1 className="sectionCategoryTitle">Tots els escuts</h1>
       <ProductDisplayAll products={products} categories={categories}/>
@@ -44,4 +45,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Shields;
