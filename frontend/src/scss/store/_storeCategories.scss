@@ -56,8 +56,9 @@ $color-bg-base: #3d3a37;
 #categoryProductDisplayAll {
 
     margin: 0 auto;
-    width: 95%;
+    width: 85%;
     display: flex;
+    justify-content: space-between;
 
     .displayFilters {
         width: 20%;
@@ -68,7 +69,6 @@ $color-bg-base: #3d3a37;
 
     div.searchDisplay {
         width: 75%;
-        margin: 0 auto;
 
         input {
             @include mixins.search-bar-tables;
