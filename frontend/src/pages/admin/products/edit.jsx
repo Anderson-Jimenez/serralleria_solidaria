@@ -82,7 +82,7 @@ function ProductsEdit() {
             .then(res => res.json())
             .then(data => setCategories(data.categories ?? data));
 
-        fetch("http://localhost:8000/api/characteristic-types")
+        fetch("http://localhost:8000/api/characteristicTypes")
             .then(res => res.json())
             .then(data => setTypes(data));
     }, [id]);

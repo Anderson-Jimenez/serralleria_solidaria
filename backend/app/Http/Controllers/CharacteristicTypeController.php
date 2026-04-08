@@ -12,7 +12,7 @@ class CharacteristicTypeController extends Controller
      */
     public function index()
     {
-        return CharacteristicType::all();
+        return CharacteristicType::where('status','1')->with('characteristics')->get();
     }
 
     /**
@@ -31,6 +31,7 @@ class CharacteristicTypeController extends Controller
         try {
             $validated = $request->validate([
                 'type' => 'required|string|max:255',
+                'filterType' => 'required|string|max:255',
             ]);
 
             $characteristicType = CharacteristicType::create($validated);

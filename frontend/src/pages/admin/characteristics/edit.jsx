@@ -13,7 +13,7 @@ function CharacteristicsEdit() {
   const [activeTab, setActiveTab] = useState("general");
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/characteristicTypes")
+    fetch("http://localhost:8000/api/characteristic-types")
       .then(response => response.json())
       .then(data => setData(data))
       .catch(error => console.error(error));

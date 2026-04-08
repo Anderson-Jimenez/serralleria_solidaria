@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Characteristic;
 use App\Models\ProductImg;
 use App\Models\ProductCharacteristic;
+
 class ProductController extends Controller
 {
     /**
@@ -322,5 +323,71 @@ class ProductController extends Controller
             'products' => $products,
             'message' => 'Productes passan',
         ], 201);
+    }
+
+    public function searchProductsInStore(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'searchText'     => 'nullable|string|max:255',
+                'filters'   => 'present|array',
+                'category'     => 'required|string|max:100',
+            ]);
+
+            $category=$validated['category'];
+            $text=$validated['searchText'];
+
+            $filters = collect($validated['filters'])->flatten()->all();
+
+            $query = Product::with(['category', 'characteristics', 'primaryImage']);
+
+            // 1. Filtre de categoria
+            $query->whereHas('category', function($q) use ($category) {
+                $q->where('name', 'LIKE', $category); 
+            });
+
+            // 2. Filtre de caracteristiques
+            if (!empty($filters)) {
+                foreach ($filters as $filterId) {
+                    $query->whereHas('characteristics', function($q) use ($filterId) {
+                        $q->where('characteristics.id', $filterId);
+                    });
+                }
+            }
+            /*
+            if (!empty($filters) && count($filters) > 0) {
+                $query->whereHas('characteristics', function($q) use ($filters) {
+                    $q->whereIn('characteristics.id', $filters);
+                });
+            }
+            */
+            /*
+            foreach($filters as $filter){
+                $filterId = (int) $filter;
+                $query->whereHas('characteristics', function($q) use ($filterId) {
+                    $q->whereIn('characteristics.id', $filterId); 
+                });
+            }
+            */
+
+            // 3. Filtre de text
+            if ($text !== "") {
+                $query->where(function($q) use ($text) {
+                    $q->where('name', 'LIKE', "%$text%")
+                    ->orWhere('code', 'LIKE', "%$text%");
+                });
+            }
+
+            $products = $query->get();
+
+            return response()->json([
+                'success' => true,
+                'products' => $products,
+                'message' => 'Productes trobats: ' . $products->count(),
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
     }
 }

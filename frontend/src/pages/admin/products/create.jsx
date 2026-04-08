@@ -43,6 +43,8 @@ function ProductsCreate() {
             .then(data => setTypes(data));
     }, []);
 
+    console.log(types);
+
     // Auto-ocultar alerta tras 4 segundos
     useEffect(() => {
         if (alert.show) {

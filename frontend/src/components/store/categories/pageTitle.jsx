@@ -1,11 +1,11 @@
 import React from 'react';
 
 
-function CategoryTitle() {
+function CategoryTitle({title}) {
   return (
     <section className="categoryTitle">
-        <h1>Escuts</h1>
-        <h2>Escuts</h2>
+        <h1>{title}</h1>
+        <h2>{title}</h2>
     </section>
   );
 }

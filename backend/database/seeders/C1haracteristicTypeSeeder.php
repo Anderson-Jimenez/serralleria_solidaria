@@ -16,27 +16,35 @@ class C1haracteristicTypeSeeder extends Seeder
         DB::table('characteristic_types')->insert([
             [
                 'type' => 'Marca',
+                'filterType' => 'checkbox',
             ],
             [
                 'type' => 'Doble Embrague',
+                'filterType' => 'select',
             ],
             [
                 'type' => 'Color',
+                'filterType' => 'checkbox',
             ],
             [
                 'type' => 'Tipus de clau',
+                'filterType' => 'select',
             ],
             [
                 'type' => 'Duplicat de clau',
+                'filterType' => 'select',
             ],
             [
                 'type' => 'Tarjeta',
+                'filterType' => 'select',
             ],
             [
                 'type' => 'Pes',
+                'filterType' => 'moreLess',
             ],
             [
                 'type' => 'Nivell de Seguretat',
+                'filterType' => 'select',
             ],
         ]);
     }

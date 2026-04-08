@@ -8,6 +8,7 @@ function CharacteristicsCreate() {
   const [activeTab, setActiveTab] = useState("general");
 
   const [type, setType] = useState("");
+  const [filterType, setFilterType] = useState("checkbox");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,6 +21,7 @@ function CharacteristicsCreate() {
       },
       body: JSON.stringify({
         type,
+        filterType,
       })
     })
       .then(async res => {
@@ -66,6 +68,14 @@ function CharacteristicsCreate() {
                 <div className="form-group">
                   <label htmlFor="code">Nom del Tipus: </label>
                   <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="code">Tipus de filtratje: </label>
+                  <select name="filterType" onChange={(e) => setFilterType(e.target.value)} >
+                    <option value="checkbox">Checkbox</option>
+                    <option value="select">Select</option>
+                    <option value="moreLess">More or Less</option>
+                  </select>
                 </div>
               </section>
             )}
