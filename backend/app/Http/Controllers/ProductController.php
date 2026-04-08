@@ -260,6 +260,10 @@ class ProductController extends Controller
         //
     }
 
+
+
+
+
     public function searchProducts($text)
     {
         $characteristics = Characteristic::with('type')->get();
@@ -357,28 +361,13 @@ class ProductController extends Controller
             });
 
             // 2. Filtre de caracteristiques
-            if (!empty($filters)) {
-                foreach ($filters as $filterId) {
-                    $query->whereHas('characteristics', function($q) use ($filterId) {
-                        $q->where('characteristics.id', $filterId);
-                    });
-                }
-            }
-            /*
-            if (!empty($filters) && count($filters) > 0) {
-                $query->whereHas('characteristics', function($q) use ($filters) {
-                    $q->whereIn('characteristics.id', $filters);
-                });
-            }
-            */
-            /*
             foreach($filters as $filter){
                 $filterId = (int) $filter;
                 $query->whereHas('characteristics', function($q) use ($filterId) {
                     $q->whereIn('characteristics.id', $filterId); 
                 });
             }
-            */
+            
 
             // 3. Filtre de text
             if ($text !== "") {

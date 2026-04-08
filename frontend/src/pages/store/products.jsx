@@ -15,59 +15,41 @@ function Products() {
   const [latestProducts, setLatestProducts] = useState([]);
   const [characteristicType, setCharacteristicTypes] = useState([]);
 
+  const [changedTitle, setChangedTitle] = useState("");
 
-  if (!title) {
-    useEffect(() => {
-      fetch(`http://localhost:8000/api/products`)
-        .then(response => response.json())
-        .then(data => setProducts(data.products))
-        .catch(error => console.error(error));
 
-      fetch("http://localhost:8000/api/productes/getProductLatest")
-        .then(response => response.json())
-        .then(data => setLatestProducts(data.products))
-        .catch(error => console.error(error));
+  useEffect(() => {
+    const productsUrl = title ? `http://localhost:8000/api/products/getProductCategory/${title}`:`http://localhost:8000/api/products`;
 
-      fetch(`http://localhost:8000/api/characteristic-types`)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          setCharacteristicTypes(data);
-        })
-        .catch(error => console.error(error));
-    }, []);
-  }
-  else {
-    useEffect(() => {
-      fetch(`http://localhost:8000/api/products/getProductCategory/${title}`)
-        .then(response => response.json())
-        .then(data => setProducts(data.products))
-        .catch(error => console.error(error));
+    const latestUrl = title ? `http://localhost:8000/api/products/getProductCategoryLatest/${title}` : `http://localhost:8000/api/productes/getProductLatest`;
 
-      fetch(`http://localhost:8000/api/products/getProductCategoryLatest/${title}`)
-        .then(response => response.json())
-        .then(data => setLatestProducts(data.products))
-        .catch(error => console.error(error));
+    fetch(productsUrl)
+      .then(res => res.json())
+      .then(data => setProducts(data.products))
+      .catch(console.error);
 
-      fetch(`http://localhost:8000/api/characteristic-types`)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          setCharacteristicTypes(data);
-        })
-        .catch(error => console.error(error));
-    }, []);
-  }
+    fetch(latestUrl)
+      .then(res => res.json())
+      .then(data => setLatestProducts(data.products))
+      .catch(console.error);
 
+    fetch(`http://localhost:8000/api/characteristic-types`)
+      .then(res => res.json())
+      .then(data => setCharacteristicTypes(data))
+      .catch(console.error);
+
+    setChangedTitle(title || "Productes");
+
+  });
 
   return (
     <div>
-      <Title title={title} />
-      <FeaturedProducts products={products} title={title}/>
+      <Title title={changedTitle} />
+      <FeaturedProducts products={products} title={changedTitle} />
 
-      <GeneralProducts products={latestProducts} title={"Ultims " + title} />
+      <GeneralProducts products={latestProducts} title={"Ultims " + changedTitle} />
 
-      <ProductDisplayAll products={products} characteristics={characteristicType} title={title}/>
+      <ProductDisplayAll products={products} characteristics={characteristicType} title={changedTitle} />
     </div>
   );
 }

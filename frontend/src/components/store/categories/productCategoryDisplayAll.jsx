@@ -45,7 +45,7 @@ function productCategoryDisplayAll({ products, characteristics, title }) {
             body: JSON.stringify({
                 searchText: text || "",
                 filters: savedFilters || [],
-                category: "Escut",
+                category: title,
             })
         })
             .then(async response => {
@@ -58,6 +58,9 @@ function productCategoryDisplayAll({ products, characteristics, title }) {
 
                 if (data.success) {
                     setProductsFiltrats(data.products);
+                }
+                else {
+                    console.warn("El servidor diu que no ha tingut èxit:", data.message);
                 }
             })
             .catch(error => console.error('Error en la petició:', error));
