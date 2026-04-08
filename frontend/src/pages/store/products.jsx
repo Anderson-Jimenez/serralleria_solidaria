@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import Title from "../../components/store/categories/pageTitle";
-import ProductDisplayAll from "../../components/store/categories/productCategoryDisplayAll";
+import ProductSearchCategories from "../../components/store/categories/productDisplaySearchCategory";
+import ProductSearch from "../../components/store/categories/productDisplaySearch";
 import FeaturedProducts from "../../components/store/home/featuredProducts";
 import GeneralProducts from "../../components/store/home/generalProducts";
 
@@ -40,16 +41,18 @@ function Products() {
 
     setChangedTitle(title || "Productes");
 
-  });
+  }, [title]);
 
   return (
     <div>
       <Title title={changedTitle} />
+
       <FeaturedProducts products={products} title={changedTitle} />
 
       <GeneralProducts products={latestProducts} title={"Ultims " + changedTitle} />
 
-      <ProductDisplayAll products={products} characteristics={characteristicType} title={changedTitle} />
+      { title ? <ProductSearchCategories products={products} characteristics={characteristicType} title={changedTitle} /> : <ProductSearch products={products} characteristics={characteristicType} title={changedTitle} />}
+
     </div>
   );
 }

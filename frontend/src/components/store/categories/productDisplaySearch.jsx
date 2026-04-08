@@ -4,7 +4,7 @@ import { Star, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 
-function productCategoryDisplayAll({ products, characteristics, title }) {
+function productDisplaySearch({ products, characteristics, title }) {
 
     const [productsFiltrats, setProductsFiltrats] = useState([]);
     const [savedFilters, setSavedFilters] = useState([]);
@@ -36,7 +36,7 @@ function productCategoryDisplayAll({ products, characteristics, title }) {
     const searchProductsInStore = (e) => {
         let text = e.target.value;
 
-        fetch(`http://localhost:8000/api/products/searchProductsInStore`, {
+        fetch(`http://localhost:8000/api/products/searchAllProductsInStore`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -45,7 +45,6 @@ function productCategoryDisplayAll({ products, characteristics, title }) {
             body: JSON.stringify({
                 searchText: text || "",
                 filters: savedFilters || [],
-                category: title,
             })
         })
             .then(async response => {
@@ -162,4 +161,4 @@ function productCategoryDisplayAll({ products, characteristics, title }) {
     );
 }
 
-export default productCategoryDisplayAll;
+export default productDisplaySearch;

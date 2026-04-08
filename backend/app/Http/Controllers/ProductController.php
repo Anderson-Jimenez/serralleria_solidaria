@@ -339,6 +339,51 @@ class ProductController extends Controller
         ], 201);
     }
 
+    public function searchAllProductsInStore(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'searchText'     => 'nullable|string|max:255',
+                'filters'   => 'present|array',
+            ]);
+
+            $text=$validated['searchText'];
+
+            $filters = collect($validated['filters'])->flatten()->all();
+
+            $query = Product::with(['category', 'characteristics', 'primaryImage']);
+
+
+            // 1. Filtre de caracteristiques
+            foreach($filters as $filter){
+                $filterId = (int) $filter;
+                $query->whereHas('characteristics', function($q) use ($filterId) {
+                    $q->whereIn('characteristics.id', $filterId); 
+                });
+            }
+            
+
+            // 2. Filtre de text
+            if ($text !== "") {
+                $query->where(function($q) use ($text) {
+                    $q->where('name', 'LIKE', "%$text%")
+                    ->orWhere('code', 'LIKE', "%$text%");
+                });
+            }
+
+            $products = $query->get();
+
+            return response()->json([
+                'success' => true,
+                'products' => $products,
+                'message' => 'Productes trobats: ' . $products->count(),
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
     public function searchProductsInStore(Request $request)
     {
         try {
