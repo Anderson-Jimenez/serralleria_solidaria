@@ -24,7 +24,7 @@ function Home() {
     <div className="home-page">
       <PrincipalPanell />
       {/* Pasamos directamente la lista de destacados */}
-      <FeaturedProducts products={data.featured_products} />
+      <FeaturedProducts products={data.featured_products} title={"Productes"}/>
     </div>
   );
 }

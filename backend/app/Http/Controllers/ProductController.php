@@ -133,7 +133,7 @@ class ProductController extends Controller
                 'stock'          => 'required|integer|min:0',
                 'discount'       => 'nullable|integer|min:0|max:100',
                 'category_id'    => 'nullable',
-                'product_type'   => 'required|string'
+                'product_type'   => 'required|string',
             ]);
             
             $validated['highlighted'] = (bool) $request->highlighted;
@@ -304,7 +304,17 @@ class ProductController extends Controller
     public function getProductCategory($category){
         $category = Category::where('name', $category)->first();
         
-        $products = Product::where('category_id',$category->id)->get();
+        $products = Product::where('category_id',$category->id)->with(['category','characteristics','primaryImage'])->get();
+
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+            'message' => 'Productes passan',
+        ], 201);
+    }
+
+    public function getProductLatest(){       
+        $products = Product::latest()->with(['category','characteristics','primaryImage'])->take(8)->get();
 
         return response()->json([
             'success' => true,
@@ -316,7 +326,7 @@ class ProductController extends Controller
     public function getProductCategoryLatest($category){
         $category = Category::where('name', $category)->first();
         
-        $products = Product::where('category_id',$category->id)->latest()->take(8)->get();
+        $products = Product::where('category_id',$category->id)->with(['category','characteristics','primaryImage'])->latest()->take(8)->get();
 
         return response()->json([
             'success' => true,

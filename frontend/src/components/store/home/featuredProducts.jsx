@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-function FeaturedProducts({ products }) {
+function FeaturedProducts({ products , title}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
   const itemsPerPage = 4;
@@ -25,7 +25,7 @@ function FeaturedProducts({ products }) {
 
   return (
     <section className="highlightedProducts">
-      <h2 className="title">Productes Destacats</h2>
+      <h2 className="title">{title} Destacats</h2>
       
       <div className="carousel-container">
         <button 

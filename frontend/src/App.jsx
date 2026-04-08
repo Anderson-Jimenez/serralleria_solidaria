@@ -9,7 +9,6 @@ import Dashboard from "./pages/admin/dashboard";
 import Home from "./pages/store/home";
 
 import Products from "./pages/store/products";
-import Shields from "./pages/store/categories/escuts";
 import ProductDetail from "./pages/store/productDetails"
 
 //Admin
@@ -48,9 +47,9 @@ function App() {
       {/* TIENDA PÚBLICA */}
       <Route path="/" element={<StoreLayout />}>
         <Route index element={<Home />} />
-        
+
         <Route path="products" element={<Products />} />
-        <Route path="escuts" element={<Shields />} />
+        <Route path="products/:title" element={<Products />} />
         <Route path="producte/:id" element={<ProductDetail />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />

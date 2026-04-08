@@ -1,15 +1,23 @@
 import React from 'react';
 import { useRef, useState, useEffect } from 'react';
 import { Star, ShoppingCart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-function productCategoryDisplayAll({ products, categories }) {
+
+function productCategoryDisplayAll({ products, characteristics, title }) {
 
     const [productsFiltrats, setProductsFiltrats] = useState([]);
     const [savedFilters, setSavedFilters] = useState([]);
+    const navigate = useNavigate();
+    
 
     useEffect(() => {
         setProductsFiltrats(products);
     }, [products]);
+
+    const handleProductClick = (productId) => {
+        navigate(`/producte/${productId}`);
+    };
 
     const saveFilter = (e) => {
         let filterValue = e.target.value;
@@ -44,7 +52,6 @@ function productCategoryDisplayAll({ products, categories }) {
                 const data = await response.json();
 
                 if (!response.ok) {
-                    // Si la resposta no és 200, imprimim tot l'objecte per saber què falla
                     console.error("Error del servidor:", data);
                     return;
                 }
@@ -57,93 +64,96 @@ function productCategoryDisplayAll({ products, categories }) {
     }
 
     return (
-        <section id='categoryProductDisplayAll' className='categoryProductDisplay'>
-            <div className='displayFilters'>
-                <h2>Filtres</h2>
-                <div className="allFilters">
-                    {categories.map((category) => (
-                        <div className="uniqueCharacteristic" key={category.id}>
-                            <h3>{category.type}</h3>
+        <section className='categoryProductDisplay'>
+            <h2 className="title">Tots els {title}</h2>
+            <div id='categoryProductDisplayAll'>
+                <div className='displayFilters'>
+                    <h2>Filtres</h2>
+                    <div className="allFilters">
+                        {characteristics.map((characteristic) => (
+                            <div className="uniqueCharacteristic" key={characteristic.id}>
+                                <h3>{characteristic.type}</h3>
 
-                            {category.filterType === 'checkbox' ?
+                                {characteristic.filterType === 'checkbox' ?
 
-                                category.characteristic && category.characteristic.map((char) => (
+                                    characteristic.characteristic && characteristic.characteristic.map((char) => (
 
-                                    <div key={char.id}>
-                                        <input type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
-                                        <label htmlFor={`check-${char.id}`}>{char.description}</label>
-                                    </div>
+                                        <div key={char.id}>
+                                            <input type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
+                                            <label htmlFor={`check-${char.id}`}>{char.description}</label>
+                                        </div>
 
-                                )) : category.filterType === 'select' ? (
+                                    )) : characteristic.filterType === 'select' ? (
 
-                                    <select name={`select-${category.id}`} key={category.id}>
-                                        <option value="" >Selecciona...</option>
+                                        <select name={`select-${characteristic.id}`} key={characteristic.id}>
+                                            <option value="" >Selecciona...</option>
 
-                                        {category.characteristic?.map((char) => (
+                                            {characteristic.characteristic?.map((char) => (
 
-                                            <option value={`${char.id}`} key={char.id}>
-                                                {char.description}
-                                            </option>
+                                                <option value={`${char.id}`} key={char.id}>
+                                                    {char.description}
+                                                </option>
 
-                                        ))}
+                                            ))}
 
-                                    </select>) : (
-                                    <p>No vull fer mes o menys ara</p>
-                                )}
+                                        </select>) : (
+                                        <p>No vull fer mes o menys ara</p>
+                                    )}
 
 
-                        </div>
-
-                    ))}
-                </div>
-            </div>
-            <div className='searchDisplay'>
-                <input type="text" placeholder='Buscar Escuts...' onChange={searchProductsInStore} />
-                <div className='searchDisplayResult'>
-                    {productsFiltrats.map((product) => (
-                        <div
-                            className="card"
-                            key={product.id}
-                            onClick={() => handleProductClick(product.id)}
-                        >
-                            {product.discount > 0 ? (
-                                <span className="badge discount">-{product.discount}%</span>
-                            ) : product.is_new ? (
-                                <span className="badge new">Nou</span>
-                            ) : null}
-
-                            <div className="imageContainer">
-                                {product.primary_image ? (
-                                    <img src={`http://localhost:8000/storage/${product.primary_image.path}`} alt={product.name} />
-                                ) : (
-                                    <div className="noImage">No Image</div>
-                                )}
                             </div>
 
-                            <div className="info">
-                                <h4>{product.name}</h4>
-                                <p className="desc">{product.description}</p>
+                        ))}
+                    </div>
+                </div>
+                <div className='searchDisplay'>
+                    <input type="text" placeholder='Buscar Escuts...' onChange={searchProductsInStore} />
+                    <div className='searchDisplayResult'>
+                        {productsFiltrats.map((product) => (
+                            <div
+                                className="card"
+                                key={product.id}
+                                onClick={() => handleProductClick(product.id)}
+                            >
+                                {product.discount > 0 ? (
+                                    <span className="badge discount">-{product.discount}%</span>
+                                ) : product.is_new ? (
+                                    <span className="badge new">Nou</span>
+                                ) : null}
 
-                                <div className="bottom">
-                                    <div className="priceGroup">
-                                        <span className="currentPrice">{product.sale_price}€</span>
-                                        {product.discount > 0 && <span className="oldPrice">{product.base_price}€</span>}
+                                <div className="imageContainer">
+                                    {product.primary_image ? (
+                                        <img src={`http://localhost:8000/storage/${product.primary_image.path}`} alt={product.name} />
+                                    ) : (
+                                        <div className="noImage">No Image</div>
+                                    )}
+                                </div>
+
+                                <div className="info">
+                                    <h4>{product.name}</h4>
+                                    <p className="desc">{product.description}</p>
+
+                                    <div className="bottom">
+                                        <div className="priceGroup">
+                                            <span className="currentPrice">{product.sale_price}€</span>
+                                            {product.discount > 0 && <span className="oldPrice">{product.base_price}€</span>}
+                                        </div>
+
+                                        <button
+                                            className="cartBtn"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                        >
+                                            <ShoppingCart size={20} color="white" />
+                                        </button>
                                     </div>
-
-                                    <button
-                                        className="cartBtn"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
-                                    >
-                                        <ShoppingCart size={20} color="white" />
-                                    </button>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
+                </div>
             </div>
         </section>
     );
