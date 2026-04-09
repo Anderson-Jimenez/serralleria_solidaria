@@ -8,11 +8,13 @@ function productDisplaySearch({ products, characteristics, title }) {
 
     const [productsFiltrats, setProductsFiltrats] = useState([]);
     const [savedFilters, setSavedFilters] = useState([]);
+    const [savedText, setSavedText] = useState("");
     const navigate = useNavigate();
     
 
     useEffect(() => {
         setProductsFiltrats(products);
+        console.log(productsFiltrats);
     }, [products]);
 
     const handleProductClick = (productId) => {
@@ -23,19 +25,17 @@ function productDisplaySearch({ products, characteristics, title }) {
         let filterValue = e.target.value;
 
         if (savedFilters.includes(filterValue)) {
-            const updatedFilters = savedFilters.filter(item => item !== filterValue);
-            setSavedFilters(prevLlista => [...prevLlista, updatedFilters]);
+            let updatedFilters = savedFilters.filter(item => item !== filterValue);
+            setSavedFilters(updatedFilters);
         }
         else {
             setSavedFilters(prevLlista => [...prevLlista, filterValue]);
         }
-
         searchProductsInStore(e);
+        console.log(savedFilters);
     }
 
     const searchProductsInStore = (e) => {
-        let text = e.target.value;
-
         fetch(`http://localhost:8000/api/products/searchAllProductsInStore`, {
             method: 'POST',
             headers: {
@@ -43,8 +43,8 @@ function productDisplaySearch({ products, characteristics, title }) {
                 "Accept": "application/json"
             },
             body: JSON.stringify({
-                searchText: text || "",
-                filters: savedFilters || [],
+                searchText: savedText,
+                filters: savedFilters,
             })
         })
             .then(async response => {
@@ -109,7 +109,7 @@ function productDisplaySearch({ products, characteristics, title }) {
                     </div>
                 </div>
                 <div className='searchDisplay'>
-                    <input type="text" placeholder='Buscar Escuts...' onChange={searchProductsInStore} />
+                    <input type="text" placeholder='Buscar Escuts...' onChange={(e) => {setSavedText(e.target.value);}} onKeyUp={searchProductsInStore} />
                     <div className='searchDisplayResult'>
                         {productsFiltrats.map((product) => (
                             <div

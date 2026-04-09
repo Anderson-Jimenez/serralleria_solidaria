@@ -60,10 +60,16 @@ class ProductController extends Controller
 
             if ($request->has('characteristics')) {
                 foreach ($request->characteristics as $char) {
+                    
+                    if($char['value'] == "true" || $char['value'] == "false"){
+                        $valueBolean =  $char['value'] ? "Si" : "No";
+                        $char['value'] = Characteristic::where('characteristic_type_id',$char['type_id'])->where('description', $valueBolean)->first();
+                    }
+
                     ProductCharacteristic::create([
                         'product_id'        => $product->id,
-                        'characteristic_id' => $char['type_id'],
-                        'value'             => $char['value']
+                        'characteristic_id' => $char['value'],
+                        'value'             => $char['type_id']
                     ]);
                 }
             }
@@ -344,22 +350,24 @@ class ProductController extends Controller
         try {
             $validated = $request->validate([
                 'searchText'     => 'nullable|string|max:255',
-                'filters'   => 'present|array',
+                'filters'   => 'nullable|present|array',
             ]);
 
             $text=$validated['searchText'];
 
-            $filters = collect($validated['filters'])->flatten()->all();
+            $filters = $validated['filters'];
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
 
             // 1. Filtre de caracteristiques
-            foreach($filters as $filter){
-                $filterId = (int) $filter;
-                $query->whereHas('characteristics', function($q) use ($filterId) {
-                    $q->whereIn('characteristics.id', $filterId); 
-                });
+            if(!empty($filters)){
+                foreach($filters as $filter){
+                    $filterId = (int) $filter;
+                    $query->whereHas('characteristics', function($q) use ($filterId) {
+                        $q->where('characteristics.id', $filterId); 
+                    });
+                }
             }
             
 
@@ -389,10 +397,10 @@ class ProductController extends Controller
         try {
             $validated = $request->validate([
                 'searchText'     => 'nullable|string|max:255',
-                'filters'   => 'present|array',
+                'filters'   => 'nullable|present|array',
                 'category'     => 'required|string|max:100',
             ]);
-
+        
             $category=$validated['category'];
             $text=$validated['searchText'];
 
@@ -406,13 +414,15 @@ class ProductController extends Controller
             });
 
             // 2. Filtre de caracteristiques
-            foreach($filters as $filter){
-                $filterId = (int) $filter;
-                $query->whereHas('characteristics', function($q) use ($filterId) {
-                    $q->whereIn('characteristics.id', $filterId); 
-                });
+            if(!empty($filters)){
+                foreach($filters as $filter){
+                    $filterId = $filter;
+                    $query->whereHas('characteristics', function($q) use ($filterId) {
+                        $q->where('characteristics.id', $filterId); 
+                    });
+                }
             }
-            
+        
 
             // 3. Filtre de text
             if ($text !== "") {
