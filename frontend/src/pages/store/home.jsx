@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PrincipalPanell from "../../components/store/home/principalPanel";
 import FeaturedProducts from "../../components/store/home/featuredProducts";
-
+import GeneralProducts from "../../components/store/home/generalProducts";
 
 function Home() {
   const [data, setData] = useState({ products: [], featured_products: [] });
@@ -25,6 +25,7 @@ function Home() {
       <PrincipalPanell />
       {/* Pasamos directamente la lista de destacados */}
       <FeaturedProducts products={data.featured_products} />
+      <GeneralProducts products={data.products} title="Tots els Productes" />
     </div>
   );
 }
