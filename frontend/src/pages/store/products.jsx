@@ -1,35 +1,60 @@
 import { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
 import Title from "../../components/store/categories/pageTitle";
-import ProductDisplayAll from "../../components/store/categories/productCategoryDisplayAll";
+import ProductSearchCategories from "../../components/store/categories/productDisplaySearchCategory";
+import ProductSearch from "../../components/store/categories/productDisplaySearch";
+import FeaturedProducts from "../../components/store/home/featuredProducts";
+import GeneralProducts from "../../components/store/home/generalProducts";
 
 
-function Home() {
+
+function Products() {
+
+  const { title } = useParams();
+
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [latestProducts, setLatestProducts] = useState([]);
+  const [characteristicType, setCharacteristicTypes] = useState([]);
+
+  const [changedTitle, setChangedTitle] = useState("");
+
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/products`)
-      .then(response => response.json())
+    const productsUrl = title ? `http://localhost:8000/api/products/getProductCategory/${title}`:`http://localhost:8000/api/products`;
+
+    const latestUrl = title ? `http://localhost:8000/api/products/getProductCategoryLatest/${title}` : `http://localhost:8000/api/productes/getProductLatest`;
+
+    fetch(productsUrl)
+      .then(res => res.json())
       .then(data => setProducts(data.products))
-      .catch(error => console.error(error));
-    
-    fetch(`http://localhost:8000/api/characteristicTypes`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setCategories(data);
-      })
-      .catch(error => console.error(error));
-  }, []);
-  
+      .catch(console.error);
+
+    fetch(latestUrl)
+      .then(res => res.json())
+      .then(data => setLatestProducts(data.products))
+      .catch(console.error);
+
+    fetch(`http://localhost:8000/api/characteristic-types`)
+      .then(res => res.json())
+      .then(data => setCharacteristicTypes(data))
+      .catch(console.error);
+
+    setChangedTitle(title || "Productes");
+
+  }, [title]);
+
   return (
     <div>
-      <Title title={"Productes"}/>
+      <Title title={changedTitle} />
 
-      <h1 className="sectionCategoryTitle">Tots els productes</h1>
-      <ProductDisplayAll products={products} categories={categories}/>
+      <FeaturedProducts products={products} title={changedTitle} />
+
+      <GeneralProducts products={latestProducts} title={"Ultims " + changedTitle} />
+
+      { title ? <ProductSearchCategories products={products} characteristics={characteristicType} title={changedTitle} /> : <ProductSearch products={products} characteristics={characteristicType} title={changedTitle} />}
+
     </div>
   );
 }
 
-export default Home;
+export default Products;
