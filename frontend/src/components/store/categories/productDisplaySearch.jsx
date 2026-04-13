@@ -8,34 +8,65 @@ function productDisplaySearch({ products, characteristics, title }) {
 
     const [productsFiltrats, setProductsFiltrats] = useState([]);
     const [savedFilters, setSavedFilters] = useState([]);
+    const [dinamicFilters, setDinamicFilters] = useState({});
     const [savedText, setSavedText] = useState("");
     const navigate = useNavigate();
-    
+
 
     useEffect(() => {
         setProductsFiltrats(products);
-        console.log(productsFiltrats);
     }, [products]);
+
+    useEffect(() => {
+        console.log("Filtres actualitzats:", savedFilters);
+    }, [savedFilters]);
+
+    useEffect(() => {
+        console.log("Filtres select actualitzats:", dinamicFilters);
+    }, [dinamicFilters]);
+
 
     const handleProductClick = (productId) => {
         navigate(`/producte/${productId}`);
     };
 
     const saveFilter = (e) => {
-        let filterValue = e.target.value;
+        const filterValue = e.target.value;
+        let updatedFilters;
 
-        if (savedFilters.includes(filterValue)) {
-            let updatedFilters = savedFilters.filter(item => item !== filterValue);
-            setSavedFilters(updatedFilters);
+        if (filterValue != "") {
+            if (savedFilters.includes(filterValue)) {
+                updatedFilters = savedFilters.filter(item => item !== filterValue);
+            }
+            else {
+                updatedFilters = [...savedFilters, filterValue];
+            }
         }
-        else {
-            setSavedFilters(prevLlista => [...prevLlista, filterValue]);
+        else{
+            updatedFilters = [...savedFilters];
         }
-        searchProductsInStore(e);
-        console.log(savedFilters);
+
+
+        setSavedFilters(updatedFilters);
+
+        searchProductsInStore(savedText, updatedFilters, dinamicFilters);
     }
 
-    const searchProductsInStore = (e) => {
+    const handleSelectChange = (e) => {
+        const { name, value } = e.target;
+
+        let updatedFilters = {...dinamicFilters, [name]: value};
+
+        if (value === "") {
+          delete updatedFilters[name];
+        }
+
+        setDinamicFilters(updatedFilters);
+
+        searchProductsInStore(savedText, savedFilters, updatedFilters);
+    };
+
+    const searchProductsInStore = (text = savedText, filters = savedFilters, selectFilters = dinamicFilters) => {
         fetch(`http://localhost:8000/api/products/searchAllProductsInStore`, {
             method: 'POST',
             headers: {
@@ -43,8 +74,9 @@ function productDisplaySearch({ products, characteristics, title }) {
                 "Accept": "application/json"
             },
             body: JSON.stringify({
-                searchText: savedText,
-                filters: savedFilters,
+                searchText: text,
+                filters: filters,
+                selectFilters: selectFilters,
             })
         })
             .then(async response => {
@@ -72,6 +104,10 @@ function productDisplaySearch({ products, characteristics, title }) {
                 <div className='displayFilters'>
                     <h2>Filtres</h2>
                     <div className="allFilters">
+                        <div className="uniqueCharacteristic" key="sale_price">
+                            <h3>Preu</h3>
+                            <p>No vull fer mes o menys ara</p>
+                        </div>
                         {characteristics.map((characteristic) => (
                             <div className="uniqueCharacteristic" key={characteristic.id}>
                                 <h3>{characteristic.type}</h3>
@@ -87,7 +123,7 @@ function productDisplaySearch({ products, characteristics, title }) {
 
                                     )) : characteristic.filterType === 'select' ? (
 
-                                        <select name={`select-${characteristic.id}`} key={characteristic.id}>
+                                        <select name={characteristic.id} key={characteristic.id} onChange={handleSelectChange}>
                                             <option value="" >Selecciona...</option>
 
                                             {characteristic.characteristic?.map((char) => (
@@ -109,7 +145,7 @@ function productDisplaySearch({ products, characteristics, title }) {
                     </div>
                 </div>
                 <div className='searchDisplay'>
-                    <input type="text" placeholder='Buscar Escuts...' onChange={(e) => {setSavedText(e.target.value);}} onKeyUp={searchProductsInStore} />
+                    <input type="text" placeholder='Buscar Escuts...' onChange={(e) => { setSavedText(e.target.value); }} onKeyUp={(e) => { searchProductsInStore(e.target.value, savedFilters, dinamicFilters) }} />
                     <div className='searchDisplayResult'>
                         {productsFiltrats.map((product) => (
                             <div

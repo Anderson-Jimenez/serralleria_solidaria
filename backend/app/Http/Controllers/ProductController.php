@@ -351,16 +351,16 @@ class ProductController extends Controller
             $validated = $request->validate([
                 'searchText'     => 'nullable|string|max:255',
                 'filters'   => 'nullable|present|array',
+                'selectFilters'   => 'nullable|present|array',
             ]);
 
             $text=$validated['searchText'];
-
             $filters = $validated['filters'];
+            
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
-
-            // 1. Filtre de caracteristiques
+            // 1. Filtre de caracteristiques de checkboxes
             if(!empty($filters)){
                 foreach($filters as $filter){
                     $filterId = (int) $filter;
@@ -369,9 +369,21 @@ class ProductController extends Controller
                     });
                 }
             }
+
+            // 2. Filtre de caracteristiques de select
+            if(!empty($validated['selectFilters'])){
+                foreach($validated['selectFilters'] as $value => $id){
+                    if (!empty($id)) {
+                        $query->whereHas('characteristics', function($q) use ($id) {
+                            $q->where('characteristics.id', $id);
+                        });
+                        
+                    }
+                }
+            }
             
 
-            // 2. Filtre de text
+            // 3. Filtre de text
             if ($text !== "") {
                 $query->where(function($q) use ($text) {
                     $q->where('name', 'LIKE', "%$text%")
