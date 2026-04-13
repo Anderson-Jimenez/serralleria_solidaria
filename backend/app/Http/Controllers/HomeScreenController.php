@@ -18,9 +18,9 @@ class HomeScreenController extends Controller
         $characteristics = Characteristic::with('type')->get();
         $categories = Category::all();
 
-        $products = Product::where('product_type', 'simple')->with(['category','characteristics','primaryImage'])->get();
+        $products = Product::where('product_type', 'simple')->where('status', 1)->with(['category','characteristics','primaryImage'])->get();
 
-        $featuredProducts = Product::where('highlighted', true)->with(['category','characteristics','primaryImage'])->get();
+        $featuredProducts = Product::where('highlighted', true)->where('status', 1)->with(['category','characteristics','primaryImage'])->get();
 
         return response()->json([
             'characteristics' => $characteristics,

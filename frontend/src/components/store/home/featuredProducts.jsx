@@ -22,6 +22,7 @@ function FeaturedProducts({ products }) {
   const handleProductClick = (productId) => {
     navigate(`/producte/${productId}`);
   };
+  
 
   return (
     <section className="highlightedProducts">

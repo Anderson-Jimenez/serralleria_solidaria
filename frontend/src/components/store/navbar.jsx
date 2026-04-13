@@ -1,37 +1,54 @@
-import React from 'react';
+import { useEffect, useState } from "react";
 import { Search, User, ShoppingCart, ChevronDown, KeyRound } from 'lucide-react';
 
+import { useNavigate } from 'react-router-dom';
+
 function Navbar() {
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch('http://localhost:8000/api/categories'); 
+        if (!response.ok) throw new Error('Error al traer categorías');
+        const data = await response.json();
+        setCategories(data);
+      } 
+      catch (error) {
+        console.error("Error:", error);
+      } 
+      finally {
+        setLoading(false);
+      }
+    }
+    fetchCategories();
+  }, []);
+
   return (
     <nav className="navbar">
-      {/* LADO IZQUIERDO: LOGO */}
       <div className="navbar-brand">
         <KeyRound size={24} color="#ff6b35" />
         <span className="brand-name">Serralleria Solidaria</span>
       </div>
 
-      {/* CENTRO: LINKS */}
       <ul className="nav-links">
         <li><a href="/">Inici</a></li>
         
         <li className="dropdown">
-          <a href="#">Panys <ChevronDown size={14} /></a>
+          <a href="#">Productes <ChevronDown size={14} /></a>
           <ul className="dropdown-menu">
-            <li><a href="/segon-pany">Segon pany</a></li>
-            <li><a href="/bombins">Bombins</a></li>
+            { categories.map(category => (
+              <li key={category.id}>
+                <a href={`products/${category.name}`}>{category.name}</a>
+              </li>
+            ))
+
+            }
           </ul>
         </li>
-
-        <li className="dropdown">
-          <a href="#">Claus <ChevronDown size={14} /></a>
-          <ul className="dropdown-menu">
-            <li><a href="/clauers">Clauers</a></li>
-            <li><a href="/copies">Còpies</a></li>
-          </ul>
-        </li>
-
-        <li><a href="/ferramentes">Ferramentes</a></li>
-        <li><a href="/solucions_personalitzades">Contacte</a></li>
+        <li><a href="/solucions_personalitzades">Solucions Personalitzades</a></li>
       </ul>
 
       {/* LADO DERECHO: ICONOS */}

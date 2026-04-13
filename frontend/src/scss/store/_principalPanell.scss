@@ -3,11 +3,19 @@
 $color-bg-base: #3d3a37; 
 
 .principalPanell {
-  background: linear-gradient(rgba($color-bg-base, 0.8), rgba($color-bg-base, 0.8)), url('/images/antique-keys.jpg');
-
+background: 
+    linear-gradient(90deg, rgba($color-bg-base, 0.9) 30%, rgba($color-bg-base, 0.2) 100%), 
+    url('/images/antique-keys.jpg');
   background-size: cover;
-  background-position: right;
-  background-repeat: no-repeat; 
+  background-position: center;
+  
+  // Añade un borde inferior sutil con forma para conectar con la topografía
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+
+  h1 {
+    font-weight: 900;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3); // Le da ese "destaque" que buscas
+  }
 
   color: white;
   display: flex;
