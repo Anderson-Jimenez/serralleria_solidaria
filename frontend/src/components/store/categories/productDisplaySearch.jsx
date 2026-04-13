@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRef, useState, useEffect } from 'react';
-import { Star, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart, Plus, Minus} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -114,14 +114,16 @@ function productDisplaySearch({ products, characteristics, title }) {
 
                                 {characteristic.filterType === 'checkbox' ?
 
-                                    characteristic.characteristic && characteristic.characteristic.map((char) => (
-
-                                        <div key={char.id}>
-                                            <input type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
-                                            <label htmlFor={`check-${char.id}`}>{char.description}</label>
+                                        <div className='checkboxFilter'>
+                                            {characteristic.characteristic && characteristic.characteristic.map((char) => (
+                                                <div key={char.id}>
+                                                    <input className='checkmark' type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
+                                                    <label htmlFor={`check-${char.id}`}>{char.description}</label>
+                                                </div>
+                                            ))} 
                                         </div>
-
-                                    )) : characteristic.filterType === 'select' ? (
+                                        
+                                        : characteristic.filterType === 'select' ? (
 
                                         <select name={characteristic.id} key={characteristic.id} onChange={handleSelectChange}>
                                             <option value="" >Selecciona...</option>
