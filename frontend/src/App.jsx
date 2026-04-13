@@ -38,8 +38,6 @@ import CustomSolutionForm from "./pages/store/customSolutionForm";
 
 //import Users from "./pages/admin/users";
 
-//
-
 function App() {
   return (
     <Routes>
@@ -47,7 +45,7 @@ function App() {
       {/* TIENDA PÚBLICA */}
       <Route path="/" element={<StoreLayout />}>
         <Route index element={<Home />} />
-
+        
         <Route path="products" element={<Products />} />
         <Route path="products/:title" element={<Products />} />
         <Route path="producte/:id" element={<ProductDetail />} />
