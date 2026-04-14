@@ -12,7 +12,7 @@ class CharacteristicTypeController extends Controller
      */
     public function index()
     {
-        return CharacteristicType::where('status','1')->with('characteristics')->get();
+        return CharacteristicType::where('status',1)->with('characteristic')->get();
     }
 
     /**
