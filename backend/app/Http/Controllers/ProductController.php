@@ -364,9 +364,11 @@ class ProductController extends Controller
             if(!empty($filters)){
                 foreach($filters as $filter){
                     $filterId = (int) $filter;
-                    $query->whereHas('characteristics', function($q) use ($filterId) {
+                    
+                    $query->orWhereHas('characteristics', function($q) use ($filterId) {
                         $q->where('characteristics.id', $filterId); 
                     });
+                    
                 }
             }
 
