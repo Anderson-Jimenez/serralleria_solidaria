@@ -50,8 +50,6 @@ function FeaturedProducts({ products , title}) {
               >
                 {product.discount > 0 ? (
                   <span className="badge discount">-{product.discount}%</span>
-                ) : product.is_new ? (
-                  <span className="badge new">Nou</span>
                 ) : null}
                 
                 <div className="imageContainer">
@@ -68,8 +66,8 @@ function FeaturedProducts({ products , title}) {
                   
                   <div className="bottom">
                     <div className="priceGroup">
-                      <span className="currentPrice">{product.sale_price}€</span>
-                      {product.discount > 0 && <span className="oldPrice">{product.base_price}€</span>}
+                      <span className="currentPrice">{(product.sale_price * (1 - product.discount/100)).toFixed(2)}€</span>
+                      {product.discount > 0 && <span className="oldPrice">{product.sale_price}€</span>}
                     </div>
                     
                     <button 
