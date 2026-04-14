@@ -189,12 +189,12 @@ function ProductDetails() {
           <div className="shipping-info">
             <div className="info-item">
               <Truck size={18} />
-              <span>Enviament gratuït +50€</span>
+              <span>Enviament a partir de 9€</span>
             </div>
 
             <div className="info-item">
               <Shield size={18} />
-              <span>Garantia de 2 anys</span>
+              <span>Garantia de X anys</span>
             </div>
           </div>
 

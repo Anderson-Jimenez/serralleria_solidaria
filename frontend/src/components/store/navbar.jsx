@@ -41,7 +41,7 @@ function Navbar() {
           <ul className="dropdown-menu">
             { categories.map(category => (
               <li key={category.id}>
-                <a href={`products/${category.name}`}>{category.name}</a>
+                <a onClick={() => navigate(`/products/${category.name}`)}>{category.name}</a>
               </li>
             ))
 
