@@ -36,6 +36,9 @@ import PacksCreate from "./pages/admin/packs/create";
 import PacksEdit from "./pages/admin/packs/edit";
 import CustomSolutionForm from "./pages/store/customSolutionForm";  
 
+import LoginAdmin from "./pages/admin/loginAdmin";  
+
+
 //import Users from "./pages/admin/users";
 
 function App() {
@@ -47,6 +50,7 @@ function App() {
         <Route index element={<Home />} />
         
         <Route path="products" element={<Products />} />
+        <Route path="loginAdmin" element={<LoginAdmin />} />
         <Route path="products/:title" element={<Products />} />
         <Route path="producte/:id" element={<ProductDetail />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

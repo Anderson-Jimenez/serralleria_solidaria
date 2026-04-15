@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 
 
 function productDisplaySearchCategory({ products, characteristics, title }) {
-
+    {/*
     const [productsFiltrats, setProductsFiltrats] = useState([]);
     const [savedFilters, setSavedFilters] = useState([]);
     const navigate = useNavigate();
-    
+
 
     useEffect(() => {
         setProductsFiltrats(products);
@@ -65,6 +65,100 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
             })
             .catch(error => console.error('Error en la petició:', error));
     }
+    */}
+
+
+    const [productsFiltrats, setProductsFiltrats] = useState([]);
+    const [savedFilters, setSavedFilters] = useState([]);
+    const [dinamicFilters, setDinamicFilters] = useState({});
+    const [savedText, setSavedText] = useState("");
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        setProductsFiltrats(products);
+    }, [products]);
+
+    useEffect(() => {
+        console.log("Filtres actualitzats:", savedFilters);
+    }, [savedFilters]);
+
+    useEffect(() => {
+        console.log("Filtres select actualitzats:", dinamicFilters);
+    }, [dinamicFilters]);
+
+
+    const handleProductClick = (productId) => {
+        navigate(`/producte/${productId}`);
+    };
+
+    const saveFilter = (e) => {
+        const filterValue = e.target.value;
+        let updatedFilters;
+
+        if (filterValue != "") {
+            if (savedFilters.includes(filterValue)) {
+                updatedFilters = savedFilters.filter(item => item !== filterValue);
+            }
+            else {
+                updatedFilters = [...savedFilters, filterValue];
+            }
+        }
+        else {
+            updatedFilters = [...savedFilters];
+        }
+
+
+        setSavedFilters(updatedFilters);
+
+        searchProductsInStore(savedText, updatedFilters, dinamicFilters);
+    }
+
+    const handleSelectChange = (e) => {
+        const { name, value } = e.target;
+
+        let updatedFilters = { ...dinamicFilters, [name]: value };
+
+        if (value === "") {
+            delete updatedFilters[name];
+        }
+
+        setDinamicFilters(updatedFilters);
+
+        searchProductsInStore(savedText, savedFilters, updatedFilters);
+    };
+
+    const searchProductsInStore = (text = savedText, filters = savedFilters, selectFilters = dinamicFilters) => {
+        fetch(`http://localhost:8000/api/products/searchProductsInStore`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                searchText: text,
+                filters: filters,
+                selectFilters: selectFilters,
+                category: title,
+            })
+        })
+            .then(async response => {
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error("Error del servidor:", data);
+                    return;
+                }
+
+                if (data.success) {
+                    setProductsFiltrats(data.products);
+                }
+                else {
+                    console.warn("El servidor diu que no ha tingut èxit:", data.message);
+                }
+            })
+            .catch(error => console.error('Error en la petició:', error));
+    }
 
     return (
         <section className='categoryProductDisplay'>
@@ -73,22 +167,28 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                 <div className='displayFilters'>
                     <h2>Filtres</h2>
                     <div className="allFilters">
+                        <div className="uniqueCharacteristic" key="sale_price">
+                            <h3>Preu</h3>
+                            <p>No vull fer mes o menys ara</p>
+                        </div>
                         {characteristics.map((characteristic) => (
                             <div className="uniqueCharacteristic" key={characteristic.id}>
                                 <h3>{characteristic.type}</h3>
 
                                 {characteristic.filterType === 'checkbox' ?
 
-                                    characteristic.characteristic && characteristic.characteristic.map((char) => (
+                                    <div className='checkboxFilter'>
+                                        {characteristic.characteristic && characteristic.characteristic.map((char) => (
+                                            <div key={char.id}>
+                                                <input className='checkmark' type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
+                                                <label className='checkmarkLabel' htmlFor={`check-${char.id}`}>{char.description}</label>
+                                            </div>
+                                        ))}
+                                    </div>
 
-                                        <div key={char.id}>
-                                            <input type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
-                                            <label htmlFor={`check-${char.id}`}>{char.description}</label>
-                                        </div>
+                                    : characteristic.filterType === 'select' ? (
 
-                                    )) : characteristic.filterType === 'select' ? (
-
-                                        <select name={`select-${characteristic.id}`} key={characteristic.id}>
+                                        <select name={characteristic.id} key={characteristic.id} onChange={handleSelectChange}>
                                             <option value="" >Selecciona...</option>
 
                                             {characteristic.characteristic?.map((char) => (
@@ -110,7 +210,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                     </div>
                 </div>
                 <div className='searchDisplay'>
-                    <input type="text" placeholder='Buscar Escuts...' onChange={searchProductsInStore} />
+                    <input type="text" placeholder='Buscar Escuts...' onChange={(e) => { setSavedText(e.target.value); }} onKeyUp={(e) => { searchProductsInStore(e.target.value, savedFilters, dinamicFilters) }} />
                     <div className='searchDisplayResult'>
                         {productsFiltrats.map((product) => (
                             <div

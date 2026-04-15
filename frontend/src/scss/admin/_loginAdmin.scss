@@ -1,0 +1,15 @@
+@use '../_variables';
+
+.loginSection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+
+    .loginContainer{
+        padding: 50px;
+        border-radius: 8px;
+        border: solid 0.5px #88888842;
+        background-color: white;
+    }
+}

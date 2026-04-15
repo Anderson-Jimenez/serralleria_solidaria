@@ -356,7 +356,6 @@ class ProductController extends Controller
 
             $text=$validated['searchText'];
             $filters = $validated['filters'];
-            
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
@@ -412,13 +411,13 @@ class ProductController extends Controller
             $validated = $request->validate([
                 'searchText'     => 'nullable|string|max:255',
                 'filters'   => 'nullable|present|array',
+                'selectFilters'   => 'nullable|present|array',
                 'category'     => 'required|string|max:100',
             ]);
         
             $category=$validated['category'];
             $text=$validated['searchText'];
-
-            $filters = collect($validated['filters'])->flatten()->all();
+            $filters = $validated['filters'];
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
@@ -427,18 +426,31 @@ class ProductController extends Controller
                 $q->where('name', 'LIKE', $category); 
             });
 
-            // 2. Filtre de caracteristiques
+            // 2. Filtre de caracteristiques de checkboxes
             if(!empty($filters)){
                 foreach($filters as $filter){
-                    $filterId = $filter;
-                    $query->whereHas('characteristics', function($q) use ($filterId) {
+                    $filterId = (int) $filter;
+                    
+                    $query->orWhereHas('characteristics', function($q) use ($filterId) {
                         $q->where('characteristics.id', $filterId); 
                     });
+                    
+                }
+            }
+
+            // 3. Filtre de caracteristiques de select
+            if(!empty($validated['selectFilters'])){
+                foreach($validated['selectFilters'] as $value => $id){
+                    if (!empty($id)) {
+                        $query->whereHas('characteristics', function($q) use ($id) {
+                            $q->where('characteristics.id', $id);
+                        });
+                        
+                    }
                 }
             }
         
-
-            // 3. Filtre de text
+            // 4. Filtre de text
             if ($text !== "") {
                 $query->where(function($q) use ($text) {
                     $q->where('name', 'LIKE', "%$text%")

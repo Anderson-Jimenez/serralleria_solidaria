@@ -118,7 +118,7 @@ function productDisplaySearch({ products, characteristics, title }) {
                                             {characteristic.characteristic && characteristic.characteristic.map((char) => (
                                                 <div key={char.id}>
                                                     <input className='checkmark' type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
-                                                    <label htmlFor={`check-${char.id}`}>{char.description}</label>
+                                                    <label className='checkmarkLabel' htmlFor={`check-${char.id}`}>{char.description}</label>
                                                 </div>
                                             ))} 
                                         </div>
