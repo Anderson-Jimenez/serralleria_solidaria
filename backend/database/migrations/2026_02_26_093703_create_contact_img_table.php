@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('contact_img', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('form_id')->constrained('contact_forms')->onDelete('cascade');
+            $table->foreignId('contact_form_id')->constrained('contact_forms')->onDelete('cascade');
             $table->string('path');
             $table->timestamps();
             
-            $table->index('form_id');
+            $table->index('contact_form_id');
         });
     }
 

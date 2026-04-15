@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductInPackController;
 use App\Http\Controllers\HomeScreenController;
 use App\Http\Controllers\ContactController;
+
 Route::get('/test', function () {
     return response()->json([
         'message' => 'API funcionando'
@@ -55,4 +56,9 @@ Route::get('/characteristic-types',[CharacteristicTypeController::class,'getType
 // Rutas para el HomeScreen
 Route::apiResource('homescreens', HomeScreenController::class);
 
-Route::post('/contacte', [ContactController::class, 'store']);
+//Solucions personalitzades
+Route::apiResource('contact', ContactController::class);
+Route::get('/solucionsPersonalitzades', [ContactController::class, 'showPetitions']);
+
+Route::get('/peticions/{id}', [ContactController::class, 'showEspecificPetition']);
+//Route::post('/contacte', [ContactController::class, 'store']);

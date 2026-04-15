@@ -1,193 +1,308 @@
 @use "../variables";
+.backgroundForm {
+    background-image: url('/images/productBg.jpg');
+    filter: saturate(1.1) brightness(1.02);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 3rem 0;
+}
 
 .formContainerPrincipal {
-  max-width: 70%;
-  margin: 4rem auto;
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  width: clamp(320px, 90%, 65%);
+  margin: 0 auto;
+  border-radius: 15px;
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.15);
+  }
 
   .formHeader {
-    margin-bottom: 20px;
-    border-radius: 10px 10px 0 0;
-    padding:1.2rem;
+    background: linear-gradient(135deg, variables.$color-title 0%, variables.$color-accent 100%);
+    padding: 2rem 2rem;
     display: flex;
-    flex-direction: column;
-    background-color: variables.$gray-background;
-    
-    .title {
+    align-items: center;
+    gap: 20px;
+
+    .iconWrapper {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
       display: flex;
       align-items: center;
-      gap: 12px;
-
-      .iconoHeader {
-        color: variables.$color-accent;
-        height: 100%;
-      }
+      justify-content: center;
+      backdrop-filter: blur(4px);
     }
+
+    .iconoHeader {
+      color: white;
+      stroke-width: 1.5;
+    }
+
     .tituloPrincipal {
-      color: variables.$color-title;
+      color: white;
+      margin: 0;
       font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 10px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
     }
 
     .subtituloForm {
-      color: #666;
-      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0.3rem 0 0;
+      font-size: 0.9rem;
     }
   }
 
   .formularioSolucion {
-    display: flex;
-    gap: 24px;
-    .grupoInputsSimple {
-        padding: 1.2rem;
-        width: 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+
+    .columnaDatos {
+      padding: 2rem 2rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      background-color: white;
+    }
+
+    .columnaMedia {
+      padding: 2rem;
+      background-color: #faf9fc;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      border-left: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .campoInput {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: variables.$color-title;
+      }
+
+      input, textarea {
+        padding: 12px 14px;
+        border: 1px solid variables.$border-color;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        background-color: #fff;
+        font-family: inherit;
+
+        &:focus {
+          outline: none;
+          border-color: variables.$color-accent;
+          box-shadow: 0 0 0 3px rgba(variables.$color-accent, 0.1);
+        }
+
+        &::placeholder {
+          color: #b9b9c3;
+        }
+      }
+
+      textarea {
+        min-height: 130px;
+        resize: vertical;
+        line-height: 1.5;
+      }
+    }
+
+    .grupoInputsDoble {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .zonaUpload {
+      border: 2px dashed #e2e2ea;
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: variables.$color-accent;
+        background-color: #fffaf7;
+      }
+
+      &.zonaUploadActiva {
+        border-color: variables.$color-accent;
+        background-color: #fff3ed;
+        transform: scale(0.99);
+      }
+
+      .labelUpload {
         display: flex;
         flex-direction: column;
-        gap: 20px;
-        .grupoInputsDoble {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+
+        .iconoUpload {
+          color: variables.$color-accent;
+          transition: transform 0.2s;
         }
 
-        .campoInput {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-
-            label {
-                font-size: 0.85rem;
-                font-weight: 600;
-                color: variables.$color-title;
-                margin-left: 4px;
-            }
-
-            input, textarea {
-                padding: 14px 18px;
-                border: 1.5px solid #e2e8f0;
-                border-radius: 12px;
-                font-size: 0.95rem;
-                transition: all 0.2s ease;
-                background-color: #f8fafc;
-
-                &:focus {
-                outline: none;
-                border-color: variables.$color-accent;
-                background-color: #fff;
-                box-shadow: 0 0 0 4px rgba(variables.$color-accent, 0.1);
-                }
-            }
-
-            textarea {
-                min-height: 120px;
-                resize: vertical;
-            }
+        span {
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: #2d2d3a;
         }
+
+        small {
+          font-size: 0.7rem;
+          color: #8e8e9e;
+          margin-top: 4px;
+        }
+      }
+
+      &:hover .iconoUpload {
+        transform: translateY(-3px);
+      }
     }
-    
-    .grupoInputsImages {
-        padding: 1.2rem;
-        width: 50%;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        .zonaUpload {
-            border: 2px dashed #cbd5e1;
-            border-radius: 14px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            background-color: #f8fafc;
-
-            &.zonaUploadActiva {
-                border-color: variables.$color-accent;
-                background-color: rgba(variables.$color-accent, 0.05);
-                transform: scale(1.01);
-            }
-        }
-
-        .labelUpload {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            color: #64748b;
-
-            .iconoUpload {
-            color: variables.$color-accent;
-            margin-bottom: 5px;
-            }
-
-            span { font-size: 0.9rem; }
-            small { font-size: 0.75rem; opacity: 0.7; }
-        }
-    }
-    
 
     .contenedorPreviews {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
       gap: 12px;
-      flex-wrap: wrap;
-      padding: 10px;
-      background: #f1f5f9;
-      border-radius: 12px;
+      background: #f1f0f5;
+      padding: 1rem;
+      border-radius: 20px;
+      margin-top: 0.25rem;
 
       .miniaturaImagen {
         position: relative;
-        width: 80px;
-        height: 80px;
-        border-radius: 8px;
+        height: 70px;
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        transition: transform 0.15s ease;
 
-        img { width: 100%; height: 100%; object-fit: cover; }
+        &:hover {
+          transform: scale(1.02);
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
 
         .btnEliminarImg {
           position: absolute;
           top: 4px;
           right: 4px;
-          background: rgba(255, 255, 255, 0.9);
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(2px);
+          color: white;
           border: none;
-          border-radius: 50%;
+          border-radius: 30px;
           width: 22px;
           height: 22px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          color: #ef4444;
-          &:hover { background: #fff; transform: scale(1.1); }
+          transition: background 0.2s;
+
+          &:hover {
+            background: variables.$color-accent;
+          }
         }
       }
     }
 
     .btnEnviarForm {
-      margin-top: 10px;
-      padding: 16px 45px;
-      background: linear-gradient(135deg, variables.$color-title 0%, #333 100%);
+      background: linear-gradient(95deg, variables.$color-title 0%, variables.$color-accent 100%);
       color: white;
+      padding: 14px 20px;
       border: none;
-      border-radius: 12px;
+      border-radius: 40px;
       font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      transition: all 0.3s ease;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-top: 0.5rem;
+      box-shadow: 0 4px 12px rgba(variables.$color-accent, 0.2);
 
       &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        background: variables.$color-accent;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(variables.$color-accent, 0.3);
+        filter: brightness(1.02);
       }
 
-      &:active { transform: translateY(0); }
+      &:active {
+        transform: translateY(1px);
+      }
     }
   }
+}
+
+@media (max-width: 750px) {
+  .formContainerPrincipal .formularioSolucion {
+    grid-template-columns: 1fr;
+  }
+
+  .formContainerPrincipal .formHeader {
+    padding: 1.5rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  .formContainerPrincipal .formHeader .iconWrapper {
+    width: 50px;
+    height: 50px;
+  }
+}
+.message {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+
+  &.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  &.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
