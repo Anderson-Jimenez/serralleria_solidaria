@@ -44,8 +44,9 @@ class ContactController extends Controller
             'user_phone'  => $validated['user_phone'],
             'user_issue'  => $validated['user_issue'],
             'message'     => $validated['message'],
+            'status'      => 'pending',
         ]);
-
+        
         $imagePaths = [];
         if ($request->hasFile('images')) {
             $emailClean = preg_replace('/[^a-z0-9]/i', '_', $validated['user_email']);

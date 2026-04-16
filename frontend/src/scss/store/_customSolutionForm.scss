@@ -1,7 +1,8 @@
 @use "../variables";
+
 .backgroundForm {
     background-image: url('/images/productBg.jpg');
-    filter: saturate(1.1) brightness(1.02);
+    filter: saturate(1.2) brightness(0.90);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

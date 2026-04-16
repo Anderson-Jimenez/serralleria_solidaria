@@ -84,7 +84,7 @@ function Characteristics() {
   */}
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/characteristicTypes")
+    fetch("http://localhost:8000/api/solucionsPersonalitzades")
       .then(response => response.json())
       .then(data => setData(data))
       .catch(error => console.error(error));

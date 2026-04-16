@@ -35,7 +35,7 @@ import PacksIndex from "./pages/admin/packs/index";
 import PacksCreate from "./pages/admin/packs/create";
 import PacksEdit from "./pages/admin/packs/edit";
 import CustomSolutionForm from "./pages/store/customSolutionForm";  
-
+import CustomSolutionPetitions from "./pages/admin/customSolutions/index";
 import LoginAdmin from "./pages/admin/loginAdmin";  
 
 
@@ -89,7 +89,9 @@ function App() {
           <Route path="create" element={<PacksCreate />} />
           <Route path="edit/:id" element={<PacksEdit />} />
         </Route>
+        <Route path="solucionsPersonalitzades" element={<CustomSolutionPetitions />} />
       </Route>
+
 
     </Routes>
   );

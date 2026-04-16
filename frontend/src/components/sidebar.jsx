@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, Tags, Boxes, Settings2, NotebookText, Menu } from "lucide-react";
+import { LayoutDashboard, Package, Tags, Boxes, Settings2, NotebookText, Menu, Users, Mails, Truck  } from "lucide-react";
 import '../scss/app.scss';
 
 const Sidebar = () => {
@@ -56,6 +56,24 @@ const Sidebar = () => {
             <NavLink to="/admin/types" className={({ isActive }) => (isActive ? "active" : "")}>
               <NotebookText size={20} />
               <span className="text">Tipus de Caracteristiques</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin/orders" className={({ isActive }) => (isActive ? "active" : "")}>
+              <Truck size={20} />
+              <span className="text">Comandes</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin/users" className={({ isActive }) => (isActive ? "active" : "")}>
+              <Users size={20} />
+              <span className="text">Usuaris</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin/solucionsPersonalitzades" className={({ isActive }) => (isActive ? "active" : "")}>
+              <Mails size={20} />
+              <span className="text">Peticions</span>
             </NavLink>
           </li>
         </ul>
