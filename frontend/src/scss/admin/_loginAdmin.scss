@@ -4,12 +4,45 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 90vh;
+    height: 100vh;
 
     .loginContainer{
+        z-index: 1;
         padding: 50px;
         border-radius: 8px;
-        border: solid 0.5px #88888842;
+        //border: 3px solid variables.$color-accent;
         background-color: white;
+
+        .loginCredentials{
+            padding: 10px 0px;
+            display: flex;
+            flex-wrap: wrap;
+
+            input{
+                width: 100%;
+                border: none;
+                border-bottom: 0.5px solid black;
+
+                &:focus{
+                    outline: none;
+                }
+            }
+        }
+       
+
+        button{
+            margin-top: 20px;
+            padding: 10px 0px;
+            width: 100%;
+            background-color: variables.$color-accent;
+            border: none;
+            border-radius: 8px;
+
+            color: white;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
     }
+
+
 }

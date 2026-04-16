@@ -50,12 +50,13 @@ function App() {
         <Route index element={<Home />} />
         
         <Route path="products" element={<Products />} />
-        <Route path="loginAdmin" element={<LoginAdmin />} />
         <Route path="products/:title" element={<Products />} />
         <Route path="producte/:id" element={<ProductDetail />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />
       </Route>
+
+      <Route path="loginAdmin" element={<LoginAdmin />} />
 
       {/* PANEL ADMIN */}
       <Route path="/admin" element={<AdminLayout />}>
