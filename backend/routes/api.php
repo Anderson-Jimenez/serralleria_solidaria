@@ -24,6 +24,8 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 Route::apiResource('categories', CategoryController::class);
 Route::get('/categories/searchCategories/{text}', [CategoryController::class, 'searchCategories']);
 
+
+
 Route::apiResource('products', ProductController::class);
 Route::get('/products/searchProducts/{text}', [ProductController::class, 'searchProducts']);
 Route::post('/products/searchProductsInStore', [ProductController::class, 'searchProductsInStore']);
@@ -33,6 +35,8 @@ Route::get('/productes/getProductLatest', [ProductController::class, 'getProduct
 Route::get('/products/changeState/{id}', [ProductController::class, 'changeStatusProduct']);
 Route::get('/products/getProductCategory/{category}', [ProductController::class, 'getProductCategory']);
 Route::get('/products/getProductCategoryLatest/{category}', [ProductController::class, 'getProductCategoryLatest']);
+Route::get('/productes/countProducts', [ProductController::class, 'countProducts']);
+
 
 
 

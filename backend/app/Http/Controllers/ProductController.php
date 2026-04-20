@@ -495,4 +495,23 @@ class ProductController extends Controller
             ], 500);
         }
     }
+
+    public function countProducts(){
+        try {
+            $products= Product::count();
+
+            return response()->json([
+                'success' => true,
+                'products' => $products,
+                'message' => 'Passat num de productes'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error en contar els productes',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

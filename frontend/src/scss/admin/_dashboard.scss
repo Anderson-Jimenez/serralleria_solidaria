@@ -1,0 +1,57 @@
+@use '../_variables';
+
+.dashboard-content {
+
+    .basic-info-grid {
+        display: flex;
+        gap: 10px;
+
+        .basic-grid-content {
+            width: 25%;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            justify-content: space-between;
+
+            .numberOf {
+                font-size: 3.6rem;
+                justify-content: end;
+                align-content: end;
+            }
+
+            div{
+                width: 70%;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            svg {
+                padding: 20px;
+                color: variables.$color-accent;
+                background-color: #ffede6;
+                border-radius: 8px;
+            }
+        }
+
+    }
+
+    .mainGrid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+
+        gap: 10px;
+
+        .circular-chart-grid {
+            //background-color: white;
+            border-radius: 4px;
+
+            div {
+                margin: 0;
+            }
+        }
+    }
+}
