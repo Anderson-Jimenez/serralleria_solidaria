@@ -17,13 +17,11 @@ const CustomSolutionPetitions = () => {
                 <div className="table-container">
                 <h1>Tipus de Caracteristiques</h1>
                 <div className="tableFilters">
-                    <input type="text" name="" id="" placeholder="Buscar Tipus de Caracteristiques..." onChange={}/>
+                    <input type="text" name="" id="" placeholder="Buscar Tipus de Caracteristiques..."/>
 
                     <select name="" id="">
 
                     </select>
-
-                    <Link to="/admin/types/create">Afegir Tipus +</Link>
 
                 </div>
                 <table>

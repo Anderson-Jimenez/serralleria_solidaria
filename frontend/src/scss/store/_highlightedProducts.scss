@@ -1,203 +1,265 @@
-.highlightedProducts {
-  padding: clamp(20px, 5vw, 50px) clamp(15px, 4vw, 20px);
-  background: linear-gradient(135deg, #F8F3F0 0%, #f0e8e4 100%);
-  
-  .title {
-    margin: 0 auto clamp(20px, 4vw, 30px);
-    font-size: clamp(28px, 5vw, 42px);
-    font-weight: 800;
-    color: #4C4743;
-    text-align: center;
-    position: relative;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20%;
-      height: 3px;
-      background: #ff602e;
-      border-radius: 2px;
+@use '../variables';
+
+.featured-layout {
+  padding: 4rem 6%;
+  background-color: variables.$bg-light;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 4rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 2.2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .subtitle { 
+      color: variables.$color-accent; 
+      font-size: 0.85rem; 
+      font-weight: 800; 
+      letter-spacing: 2px; 
     }
-  }
-
-  .carousel-container {
-    width: 95%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: clamp(10px, 2vw, 20px);
-  }
-
-  .carousel-wrapper {
-    flex: 1;
-    overflow: hidden;
-    border-radius: 16px;
-  }
-
-  .carousel-track {
-    display: flex;
-    gap: clamp(15px, 2vw, 25px);
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .card {
-    flex: 0 0 calc((100% - (clamp(15px, 2vw, 25px) * 3)) / 4);
-    background: #ffffff62;
-    border-radius: 10px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     
-    &:hover {
-      transform: translateY(-8px);
-      box-shadow: 7px rgba(0,0,0,0.12);
+    .main-title { 
+      font-size: clamp(2rem, 4vw, 2.8rem); 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      line-height: 1.1; 
+      margin-top: 0.5rem;
       
-      .imageContainer img {
-        transform: scale(1.05);
-      }
-      
-      .cartBtn {
-        transform: scale(1.05);
-        background: #ff4a1a;
+      span { 
+        font-weight: 300; 
       }
     }
-
-    .badge {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      padding: 10px 18px;
-      border-radius: 25px;
-      font-size: clamp(18px, 3vw, 15px);
+    
+    .view-all-btn {
+      padding: 0.75rem 1.5rem;
+      border: 1px solid #000;
+      background: none;
       font-weight: 700;
-      color: white;
-      z-index: 2;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-size: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
       
-      &.discount { 
-        background: linear-gradient(135deg, #ff4b4b, #ff2a2a);
-      }
-      
-      &.new { 
-        background: linear-gradient(135deg, #ff602e, #ff3a00);
+      &:hover { 
+        background: variables.$color-accent; 
+        color: #fff; 
+        border-color: variables.$color-accent;
       }
     }
-    
-    .imageContainer {
-      background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: 2rem;
+    flex: 1;
+    min-height: 0;
+  }
+
+  // TARGETA GRAN (ESQUERRA)
+  .hero-card {
+    border-radius: 5px;
+    position: relative;
+    background: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    .badge-hero {
+      position: absolute;
+      top: 1.25rem;
+      left: 1.25rem;
+      background: variables.$color-accent;
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 2;
+      border-radius: 4px;
+    }
+
+    .hero-image {
+      flex: 1;
       width: 100%;
-      height: clamp(180px, 25vw, 220px);
-      overflow: hidden;
+      min-height: 0;
       
       img { 
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        transition: transform 0.6s ease;
       }
     }
 
-    .info { 
-      padding: clamp(15px, 2vw, 20px);
-      
-      h4 { 
-        font-size: clamp(15px, 2.5vw, 17px);
-        margin: 0 0 8px;
-        color: #2d2d2d;
+    .hero-info {
+      padding: 1.5rem 2rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      color: #fff;
+
+      .hero-name { 
+        font-size: 1.5rem; 
+        margin-bottom: 0.5rem; 
+        text-transform: uppercase;
         font-weight: 700;
       }
-
-      .desc {
-        font-size: clamp(12px, 2vw, 13px);
-        color: #888;
-        height: clamp(35px, 6vw, 40px);
-        margin-bottom: 16px;
-        line-height: 1.4;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
+      
+      .hero-desc { 
+        font-size: 0.85rem; 
+        opacity: 0.9; 
+        margin-bottom: 1rem; 
+        max-width: 85%;
       }
-
-      .bottom {
+      
+      .hero-price-row {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .priceGroup {
-          display: flex;
-          align-items: baseline;
-          gap: 8px;
-
-          .currentPrice {
-            font-size: clamp(20px, 3vw, 24px);
-            font-weight: 800;
-            color: #ff602e;
-          }
-
-          .oldPrice {
-            font-size: clamp(12px, 2vw, 14px);
-            color: #bbb;
-            text-decoration: line-through;
-          }
+        align-items: baseline;
+        gap: 0.75rem;
+        
+        .current-price { 
+          font-size: 1.75rem; 
+          font-weight: 800; 
+          color: #ff602e; 
         }
-
-        .cartBtn {
-          background: #ff602e;
-          border: none;
-          padding: clamp(8px, 1.5vw, 10px);
-          border-radius: 10px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 6px rgba(255, 96, 46, 0.2);
-          
-          &:hover {
-            transform: scale(1.08);
-            background: #ff4a1a;
-          }
+        
+        .old-price { 
+          text-decoration: line-through; 
+          opacity: 0.7;
+          font-size: 1rem;
         }
       }
+    }
+
+    &:hover .hero-image img { 
+      transform: scale(1.05); 
     }
   }
 
-  .carousel-btn {
-    background: white;
-    border: none;
-    width: clamp(40px, 5vw, 48px);
-    height: clamp(40px, 5vw, 48px);
-    border-radius: 50%;
-    cursor: pointer;
+  // SECCIÓ DRETA (2x2 Grid + Carrousel)
+  .carousel-side {
+    position: relative;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-    
-    &:hover:not(:disabled) {
-      background: #ff602e;
-      transform: scale(1.1);
-      box-shadow: 0 6px 16px rgba(255, 96, 46, 0.3);
+    flex-direction: column;
+    min-height: 0;
+
+    .carousel-controls {
+      position: absolute;
+      top: -3rem;
+      right: 0;
+      display: flex;
+      gap: 0.5rem;
       
-      svg {
-        color: white;
+      button { 
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 0.6rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        
+        &:disabled { 
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+        
+        &:hover:not(:disabled) { 
+          border-color: #ff602e;
+          color: #ff602e;
+        }
       }
     }
-    
-    &:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
+
+    .carousel-viewport {
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .carousel-track {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-rows: 1fr 1fr;
+      grid-auto-flow: column;
+      grid-auto-columns: 50%;
+      height: 100%;
+      width: 100%;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .small-card {
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      min-height: 0;
+      background: #fff;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      .small-badge { 
+        position: absolute; 
+        top: 1rem; 
+        left: 1rem; 
+        color: #ff602e; 
+        font-size: 0.7rem; 
+        font-weight: 800; 
+        background: rgba(255,255,255,0.9);
+        padding: 0.2rem 0.5rem;
+        border-radius: 2px;
+      }
+      
+      .small-image {
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        
+        img { 
+          border-radius: 5px 5px 0 0; 
+          width: 100%; 
+          height: 100%; 
+          object-fit: cover;
+        }
+      }
+      
+      .small-info {
+        margin: 1rem;
+
+        .small-cat { 
+          font-size: 0.7rem; 
+          color: #999; 
+          font-weight: 700; 
+        }
+        
+        .small-name { 
+          font-size: 0.9rem; 
+          margin: 0.3rem 0; 
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+        
+        .small-price { 
+          font-size: 1rem; 
+          font-weight: 800;
+          color: #ff602e;
+        }
+      }
+      
+      &:hover { 
+        transform: translateY(-8px);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      }
     }
   }
 }
