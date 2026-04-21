@@ -24,7 +24,7 @@ const GraficLiniaVendes = ({ dades }) => {
     ctx.fillStyle = '#666'; // Color gris per al text
     ctx.textAlign = 'right';
 
-    const liniesGrid = 9;
+    const liniesGrid = 11;
     for (let i = 0; i < liniesGrid; i++) {
       const yLabel = (i * maxValorDades) / (liniesGrid - 1);
       const yPos = (canvas.height - padding) - (yLabel / maxValorDades) * alcadaReal;
