@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { User, BookAlert, Package, Tags } from "lucide-react";
-import GraficBarres from '../../components/barChart';
 import GraficLiniaVendes from '../../components/lineChart';
-
 
 function Dashboard() {
 
@@ -10,6 +8,7 @@ function Dashboard() {
   const [numUsers, setNumUsers] = useState("");
   const [numRequests, setNumRequests] = useState("");
   const [numCategories, setNumCategories] = useState("");
+  const [ventesPerMes, setVentesPerMes] = useState([]);
 
   const dades_exemple = [
     { mes: 'Gen', valor: 97 },
@@ -17,13 +16,13 @@ function Dashboard() {
     { mes: 'Mar', valor: 39 },
     { mes: 'Abr', valor: 52 },
     { mes: 'Mai', valor: 21.5 },
-    { mes: 'Jun', valor: 10 },
-    { mes: 'Jul', valor: 39 },
-    { mes: 'Ago', valor: 22 },
-    { mes: 'Set', valor: 7.4 },
-    { mes: 'Oct', valor: 78 },
-    { mes: 'Nov', valor: 64 },
-    { mes: 'Des', valor: 85 },
+    { mes: 'Jun', valor: 0 },
+    { mes: 'Jul', valor: 0 },
+    { mes: 'Ago', valor: 0 },
+    { mes: 'Set', valor: 0 },
+    { mes: 'Oct', valor: 0 },
+    { mes: 'Nov', valor: 0 },
+    { mes: 'Des', valor: 0 },
   ];
 
   useEffect(() => {
@@ -35,49 +34,54 @@ function Dashboard() {
 
   return (
     <div className="dashboard-content">
-      <h2 style={{ color: "#444", fontSize: "24px" }}>Resum de vendes</h2>
-
-      <div className="basic-info-grid">
-        <div className="basic-grid-content">
-          {/* num Productos */}
-          <div>
-            <Package size={26} />
-            <p>Núm.De Productes</p>
+        <div className="basic-info-grid">
+          <div className="basic-grid-content">
+            {/* num Productos */}
+            <div>
+              <Package size={26} />
+              <p>Núm.De Productes</p>
+            </div>
+            <p className="numberOf">{numProducts}</p>
           </div>
-          <p className="numberOf">{numProducts}</p>
-        </div>
-        <div className="basic-grid-content">
-          {/* num solicitudes */}
-          <BookAlert size={26} />
-          <p>Núm.De Solicituds</p>
-          <p className="numberOf">{numProducts}</p>
+          <div className="basic-grid-content">
+            {/* num solicitudes */}
+            <div>
+              <BookAlert size={26} />
+              <p>Núm.De Solicituds</p>
+            </div>
+            <p className="numberOf">{numProducts}</p>
 
-        </div>
-        <div className="basic-grid-content">
-          {/* num Categorias */}
-          <Tags size={26} />
-          <p>Núm.De Categories</p>
-          <p className="numberOf">{numProducts}</p>
+          </div>
+          <div className="basic-grid-content">
+            {/* num Categorias */}
+            <div>
+              <Tags size={26} />
+              <p>Núm.De Categories</p>
+            </div>
+            <p className="numberOf">{numProducts}</p>
 
-        </div>
-        <div className="basic-grid-content">
-          {/* num usuaris */}
-          <User size={26} />
-          <p>Núm.De Usuaris</p>
-          <p className="numberOf">{numProducts}</p>
+          </div>
+          <div className="basic-grid-content">
+            {/* num usuaris */}
+            <div>
+              <User size={26} />
+              <p>Núm.De Usuaris</p>
+            </div>
+            <p className="numberOf">{numProducts}</p>
 
-        </div>
-
+          </div>
       </div>
 
       <div className="mainGrid">
-        <div className="circular-chart-grid">
-          {/* productes comprats per categories, productes per categories */}
+        <div className="linear-chart-grid">
+          {/* num. ventes per mes, */}
+
           <GraficLiniaVendes dades={dades_exemple} />
         </div>
       </div>
 
-      {/* num. ventes per mes, */}
+      {/* productes comprats per categories, productes per categories */}
+
 
     </div>
   );

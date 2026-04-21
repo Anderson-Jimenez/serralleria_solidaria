@@ -5,16 +5,15 @@ const GraficLiniaVendes = ({ dades }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    
+
     // Configuració general
     const padding = 40; // Més padding per eixos i etiquetes
     const ampleReal = canvas.width - padding * 2;
     const alcadaReal = canvas.height - padding * 2;
     const valors = dades.map(d => d.valor);
     const maxValorDades = 100; // Definim el màxim visible a l'eix (com '20k+', deixem espai)
-    
+
     // Netegem
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -25,11 +24,11 @@ const GraficLiniaVendes = ({ dades }) => {
     ctx.fillStyle = '#666'; // Color gris per al text
     ctx.textAlign = 'right';
 
-    const liniesGrid = 5; // 0, 5k, 10k, 15k, 20k
+    const liniesGrid = 9;
     for (let i = 0; i < liniesGrid; i++) {
       const yLabel = (i * maxValorDades) / (liniesGrid - 1);
       const yPos = (canvas.height - padding) - (yLabel / maxValorDades) * alcadaReal;
-      
+
       // Línia de quadrícula
       ctx.beginPath();
       ctx.moveTo(padding, yPos);
@@ -58,7 +57,7 @@ const GraficLiniaVendes = ({ dades }) => {
     // Creem un gradient lineal des d'on hi ha la línia cap avall
     const gradient = ctx.createLinearGradient(0, padding, 0, canvas.height - padding);
     gradient.addColorStop(0, 'rgba(255, 120, 60, 0.15)'); // Taronja molt suau a dalt
-    gradient.addColorStop(0.6, 'rgba(255, 120, 60, 0.03)'); // Gairebé transparent a mig camí
+    gradient.addColorStop(0.9, 'rgba(255, 120, 60, 0.03)'); // Gairebé transparent a mig camí
     gradient.addColorStop(1, 'rgba(255, 120, 60, 0.005)'); // Completament transparent a la base
 
     ctx.fillStyle = gradient;
@@ -97,37 +96,17 @@ const GraficLiniaVendes = ({ dades }) => {
 
   }, [dades]); // Es redibuixa si canvien les dades
 
-  // Estils per recrear el contenidor de la targeta blanca
-  const estilsContenidor = {
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-    padding: '24px',
-  };
-
-  const estilsCapcalera = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  };
-
-  const estilsTitol = {
-    margin: 0,
-    fontSize: '18px',
-    fontWeight: '600',
-    color: '#333',
-  };
 
   return (
-    <div style={estilsContenidor}>
-      <div style={estilsCapcalera}>
-        <h3 style={estilsTitol}>Vendes Mensuals</h3>
+    <div className="estilsContenidor">
+      <div className="estilsCapcalera">
+        <h3 className="estilsTitol">Vendes Mensuals</h3>
       </div>
-      <canvas 
-        ref={canvasRef} 
-        width={900} // Ajusta l'ample per a més espai lateral
-        height={400} 
-        style={{ display: 'block' }} // Evita marges estranys del canvas
+      <canvas
+        ref={canvasRef}
+        width={1400} // Ajusta l'ample per a més espai lateral
+        height={500}
+        //style={{ display: 'block' }} Evita marges estranys del canvas
       />
     </div>
   );
