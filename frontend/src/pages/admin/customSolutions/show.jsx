@@ -84,7 +84,7 @@ function CustomSolutionDetails() {
               key={img.id}
               src={`http://localhost:8000/storage/${img.path}`}
               alt="adjunta"
-              download
+              
             />
           ))
         ) : (
