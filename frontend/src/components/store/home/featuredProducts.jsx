@@ -27,9 +27,6 @@ function FeaturedProducts({ products, title }) {
           <span className="subtitle">SELECCIÓ DE L'EDITOR</span>
           <h2 className="main-title">{title || 'PRODUCTES'} <br/><span>DESTACATS</span></h2>
         </div>
-        <button className="view-all-btn" onClick={() => navigate('/products')}>
-          VEURE TOTS ELS PRODUCTES
-        </button>
       </div>
 
       <div className="grid-container">
@@ -69,7 +66,7 @@ function FeaturedProducts({ products, title }) {
                   <div className="small-info">
                     <span className="small-cat">CATEGORIA</span>
                     <h4 className="small-name">{product.name}</h4>
-                    <p className="small-desc">{product.description}</p>
+                    <p className="small-desc"  >{product.description}</p>
                     <span className="small-price">{product.sale_price}€</span>
                   </div>
                 </div>

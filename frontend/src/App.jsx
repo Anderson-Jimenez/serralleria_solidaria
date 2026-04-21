@@ -34,8 +34,11 @@ import ProductsEdit from "./pages/admin/products/edit";
 import PacksIndex from "./pages/admin/packs/index";
 import PacksCreate from "./pages/admin/packs/create";
 import PacksEdit from "./pages/admin/packs/edit";
+
 import CustomSolutionForm from "./pages/store/customSolutionForm";  
 import CustomSolutionPetitions from "./pages/admin/customSolutions/index";
+import CustomSolutionDetails from "./pages/admin/customSolutions/show";
+
 import LoginAdmin from "./pages/admin/loginAdmin";  
 
 
@@ -55,11 +58,13 @@ function App() {
         <Route path="producte/:id" element={<ProductDetail />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />
+        
       </Route>
 
       {/* PANEL ADMIN */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
+        <Route path="/admin/peticions/:id" element={<CustomSolutionDetails />} />
 
         <Route path="categories">
           <Route index element={<CategoriesIndex />} />

@@ -78,9 +78,10 @@ class ContactController extends Controller
     /**
      * Display the specified resource.
      */
-    public function showPetitions(string $id)
+    public function getCustomSolutions()
     {
-        $peticions = ContactForm::with('images')->find($id)->orderBy('created_at', 'desc')->get();
+        $peticions = ContactForm::with('images')->orderBy('created_at', 'desc')->get();
+
         return response()->json([
             'success' => true,
             'data'    => $peticions,
@@ -88,10 +89,17 @@ class ContactController extends Controller
     }
     public function showEspecificPetition(string $id)
     {
-        $peticions = ContactForm::with('images')->find($id)->orderBy('created_at', 'desc')->get();
+        $petition = ContactForm::with('images')->find($id);
+        if (!$petition) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Petición no encontrada'
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
-            'data'    => $peticions,
+            'data' => $petition
         ]);
     }
     /**

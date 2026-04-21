@@ -1,76 +1,109 @@
-import {useEffect} from 'react';
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, Tags, Boxes, Settings2, NotebookText, Menu, Users, Mails, Truck  } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Eye } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const CustomSolutionPetitions = () => {
-    useEffect(() => {
-        fetch("http://localhost:8000/api/")
-        .then(response => response.json())
-        .then(data => setData(data))
-        .catch(error => console.error(error));
-    }, []);
+function CustomSolutionPetitions() {
+  const [data, setData] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("all");
 
-    return (
-        <div className="dashboard-caracteristics">
-            <div className="caracteristics-content">
-                <div className="table-container">
-                <h1>Tipus de Caracteristiques</h1>
-                <div className="tableFilters">
-                    <input type="text" name="" id="" placeholder="Buscar Tipus de Caracteristiques..."/>
+  const statusClasses = {
+    pending: "pendingStatus",
+    in_progress: "inProgressStatus",
+    sent: "sentStatus",
+    solved: "solvedStatus",
+    rejected: "rejectedStatus",
+  };
 
-                    <select name="" id="">
+  const statusLabels = {
+    pending: "Pendent",
+    in_progress: "En procés",
+    sent: "Enviat",
+    solved: "Resolt",
+    rejected: "Rebutjat",
+  };
 
-                    </select>
+  useEffect(() => {
+    fetch("http://localhost:8000/api/solucionsPersonalitzades")
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.success) {
+          setData(res.data);
+        }
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
-                </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Usuari</th>
-                        <th></th>
-                        <th>Estat</th>
-                        <th>Accions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.map((characteristicTypes) => (
-                        <tr key={characteristicTypes.id}>
-                        <td>{characteristicTypes.id}</td>
-                        <td>{characteristicTypes.type}</td>
-                        <td>{characteristicTypes.filterType}</td>
-                        <td>
-                            <span className={characteristicTypes.status === 1 ? "status-active" : "status-inactive"}>
-                            {characteristicTypes.status === 1 ? "Actiu" : "Inactiu"}
-                            </span>
-                        </td>
-                        <td className="actions">
-                            {/*
-                                <Link className="action-icon edit" to={`/admin/types/edit/${characteristicTypes.id}`}>
-                                    <Pencil size={18} />
-                                </Link>
-                            
-                                <button className="action-icon power" onClick={() => changeStatusTypeCharacteristic(characteristicTypes.id)}>
-                                    <Power size={18} color={characteristicTypes.status === 1 ? "green" : "red"} /> {characteristicTypes.status === 1 ? "Desactivar" : "Activar"}
-                                </button>
-                            */}
+  const filteredData =
+    statusFilter === "all"
+      ? data
+      : data.filter((item) => item.status === statusFilter);
 
+  return (
+    <div className="dashboard-caracteristics">
+      <div className="caracteristics-content">
+        <div className="table-container">
+          <h1>Peticions de Solucions Personalitzades</h1>
 
-                        </td>
+          <div className="tableFilters">
+            <select
+              className="status-filter"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="all">Tots els estats</option>
+              <option value="pending">Pendent</option>
+              <option value="in_progress">En procés</option>
+              <option value="sent">Enviat</option>
+              <option value="solved">Resolt</option>
+              <option value="rejected">Rebutjat</option>
+            </select>
+          </div>
 
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Usuari</th>
+                <th>Email</th>
+                <th>Assumpte</th>
+                <th>Estat</th>
+                <th>Accions</th>
+              </tr>
+            </thead>
 
+            <tbody>
+              {filteredData.length > 0 ? (
+                filteredData.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.user_id ?? "Desconegut"}</td>
+                    <td>{item.user_email}</td>
+                    <td>{item.user_issue}</td>
 
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-                </div>
-            </div>
+                    <td>
+                      <span className={statusClasses[item.status] || ""}> {statusLabels[item.status] || item.status}</span>
+                    </td>
 
-
+                    <td className="actions">
+                        <Link to={`/admin/peticions/${item.id}`} className="action-icon edit" title="Veure Detalls">
+                          <Eye size={18} /> Veure Detalls
+                        </Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                    No hi ha peticions en aquest estat.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
+      </div>
+    </div>
   );
-};
+}
 
 export default CustomSolutionPetitions;

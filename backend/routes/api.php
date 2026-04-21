@@ -58,7 +58,7 @@ Route::apiResource('homescreens', HomeScreenController::class);
 
 //Solucions personalitzades
 Route::apiResource('contact', ContactController::class);
-Route::get('/solucionsPersonalitzades', [ContactController::class, 'showPetitions']);
+Route::get('/solucionsPersonalitzades', [ContactController::class, 'getCustomSolutions']);
 
 Route::get('/peticions/{id}', [ContactController::class, 'showEspecificPetition']);
 //Route::post('/contacte', [ContactController::class, 'store']);
