@@ -7,92 +7,123 @@ function CustomSolutionDetails() {
   const navigate = useNavigate();
 
   const [data, setData] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/peticions/" + id)
+    fetch(`http://localhost:8000/api/peticions/${id}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
           setData(res.data);
+          setSelectedStatus(res.data.status);
         }
       })
       .catch((err) => console.error(err));
   }, [id]);
 
+  const handleStatusChange = async (newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/peticions/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setSelectedStatus(newStatus);
+        setData({ ...data, status: newStatus });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   if (!data) {
     return <div className="loading">Cargando petición...</div>;
   }
 
-  const statusClasses = {
-    pending: "pendingStatus",
-    in_progress: "inProgressStatus",
-    sent: "sentStatus",
-    solved: "solvedStatus",
-    rejected: "rejectedStatus",
+  const statusLabels = {
+    pending: "Pendent",
+    in_progress: "En procés",
+    sent: "Enviat",
+    solved: "Resolt",
+    rejected: "Rebutjat",
   };
 
   return (
-    <div className="petition-details">
-
-      <button className="back-btn" onClick={() => navigate(-1)}>
+    <section className="customSolutionDetails">
+      <button className="backButton" onClick={() => navigate(-1)}>
         <ArrowLeft size={18} /> Volver
       </button>
+      
+      <div className="petitionDetails">
+        <div className="detailsHeader">
+          <div className="headerInfo">
+            <h1 className="petitionTitle">Petició #{data.id}</h1>
+            <p className="creationDate">Data de creació: {new Date(data.created_at).toLocaleDateString()}</p>
+          </div>
+          <div className="statusContainer">
+            <select 
+              className="statusSelect"
+              value={selectedStatus}
+              onChange={(e) => handleStatusChange(e.target.value)}
+            >
+              {Object.entries(statusLabels).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-      <div className="details-header">
-        <h1>Petición #{data.id}</h1>
+        <div className="detailsPetition">
+          <div className="petitionData">
+            <h2 className="dataTitle"><User size={16} /> Usuari</h2>
+            <p className="dataContent">{data.user_id ?? "No registrat"}</p>
+          </div>
+          <div className="petitionData">
+            <h2 className="dataTitle"><Mail size={16} /> Email</h2>
+            <p className="dataContent">{data.user_email}</p>
+          </div>
+          <div className="petitionData">
+            <h2 className="dataTitle"><Phone size={16} /> Telèfon</h2>
+            <p className="dataContent">{data.user_phone ?? "No disponible"}</p>
+          </div>
+          <div className="petitionData">
+            <h2 className="dataTitle"><FileText size={16} /> Assumpte</h2>
+            <p className="dataContent">{data.user_issue}</p>
+          </div>
+          <div className="petitionDataFull">
+            <h2 className="dataTitle"><BadgeInfo size={16} /> Missatge</h2>
+            <p className="dataContent">{data.message}</p>
+          </div>
+        </div>
 
-        <span className={statusClasses[data.status]}>
-          {data.status}
-        </span>
+        <div className="petitionDocs">
+          <h2 className="docsTitle">Documents adjunts</h2>
+          <div className="petitionDocsContainer">
+            {data.images?.length > 0 ? (
+              data.images.map((img) => (
+                <div key={img.id} className="imageWrapper">
+                  <img
+                    src={`http://localhost:8000/storage/${img.path}`}
+                    alt="adjunta"
+                    className="attachedImage"
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="noImages">No hi ha documents adjunts</p>
+            )}
+          </div>
+        </div>
       </div>
-
-      <div className="details-grid">
-
-        <div className="card">
-          <h2><User size={16} /> Usuario</h2>
-          <p>{data.user_id ?? "Desconocido"}</p>
-        </div>
-
-        <div className="card">
-          <h2><Mail size={16} /> Email</h2>
-          <p>{data.user_email}</p>
-        </div>
-
-        <div className="card">
-          <h2><Phone size={16} /> Teléfono</h2>
-          <p>{data.user_phone ?? "No disponible"}</p>
-        </div>
-
-        <div className="card full">
-          <h2><FileText size={16} /> Asunto</h2>
-          <p>{data.user_issue}</p>
-        </div>
-
-        <div className="card full">
-          <h2><BadgeInfo size={16} /> Mensaje</h2>
-          <p>{data.message}</p>
-        </div>
-
-      </div>
-
-      <h2 className="section-title">Imágenes adjuntas</h2>
-
-      <div className="images-grid">
-        {data.images?.length > 0 ? (
-          data.images.map((img) => (
-            <img
-              key={img.id}
-              src={`http://localhost:8000/storage/${img.path}`}
-              alt="adjunta"
-              
-            />
-          ))
-        ) : (
-          <p className="no-images">No hay imágenes</p>
-        )}
-      </div>
-
-    </div>
+    </section>
   );
 }
 

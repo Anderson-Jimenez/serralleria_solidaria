@@ -1,0 +1,220 @@
+@use "../../scss/variables" as *;
+
+.customSolutionDetails {
+  padding: 20px;
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+/* BOTÓN VOLVER */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #111827;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-bottom: 20px;
+
+  &:hover {
+    background: #374151;
+  }
+}
+
+/* LOADING */
+.loading {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: $text-color;
+}
+
+.petitionDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: $color-bg-container;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+
+  .detailsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    background-color: $color-accent;
+    color: white;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .headerInfo {
+      flex: 1;
+
+      .petitionTitle {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        color: white;
+      }
+
+      .creationDate {
+        font-size: 14px;
+        margin: 0;
+        opacity: 0.9;
+      }
+    }
+    .statusContainer .statusSelect {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      background: white;
+      color: $color-title;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #e4e3e3;
+      }
+    }
+  }
+
+  .detailsPetition {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 0 32px 24px 32px;
+
+    .petitionData,
+    .petitionDataFull {
+      background: $bg-light;
+      border: 1px solid $border-color;
+      border-radius: 10px;
+      padding: 16px 20px;
+      transition: all 0.2s;
+
+      &:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .dataTitle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        color: $color-title;
+        margin: 0 0 12px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid $border-color;
+      }
+
+      .dataContent {
+        font-size: 15px;
+        color: $text-color;
+        margin: 0;
+        line-height: 1.5;
+      }
+    }
+
+    .petitionDataFull {
+      grid-column: span 2;
+    }
+  }
+
+  .petitionDocs {
+    padding: 0 32px 32px 32px;
+    border-top: 1px solid $border-color;
+
+    .docsTitle {
+      font-size: 20px;
+      font-weight: 600;
+      color: $color-title;
+      margin: 0 0 20px 0;
+      padding-top: 24px;
+    }
+
+    .petitionDocsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+
+      .imageWrapper {
+        border: 1px solid $border-color;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.2s;
+        background: $bg-light;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          border-color: $color-accent;
+        }
+
+        .attachedImage {
+          width: 100%;
+          height: 180px;
+          object-fit: cover;
+          cursor: pointer;
+          transition: transform 0.2s;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+
+    .noImages {
+      text-align: center;
+      padding: 40px;
+      color: $color-text-header;
+      background: $bg-light;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .customSolutionDetails {
+    padding: 12px;
+  }
+
+  .petitionDetails {
+    .detailsHeader {
+      padding: 20px;
+      flex-direction: column;
+      align-items: flex-start;
+
+      .statusContainer {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    .detailsPetition {
+      grid-template-columns: 1fr;
+      padding: 0 20px 20px 20px;
+
+      .petitionDataFull {
+        grid-column: span 1;
+      }
+    }
+
+    .petitionDocs {
+      padding: 0 20px 20px 20px;
+
+      .petitionDocsContainer {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+  }
+}

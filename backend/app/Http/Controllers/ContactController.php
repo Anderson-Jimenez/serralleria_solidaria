@@ -113,9 +113,24 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updatePetitionStatus(Request $request, $id)
     {
-        //
+        try {
+            $contactForm = ContactForm::findOrFail($id);
+            $contactForm->status = $request->status;
+            $contactForm->save();
+            
+            return response()->json([
+                'success' => true,
+                'data' => $contactForm,
+                'message' => 'Status actualizado correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

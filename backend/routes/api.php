@@ -61,4 +61,4 @@ Route::apiResource('contact', ContactController::class);
 Route::get('/solucionsPersonalitzades', [ContactController::class, 'getCustomSolutions']);
 
 Route::get('/peticions/{id}', [ContactController::class, 'showEspecificPetition']);
-//Route::post('/contacte', [ContactController::class, 'store']);
+Route::put('/peticions/{id}', [ContactController::class, 'updatePetitionStatus']);
