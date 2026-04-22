@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             CharacteristicSeeder::class,
             ProductSeeder::class,
             zProductsInPacksSeeder::class,
-            AdminSeeder::class,
+            UserSeeder::class,
 
         ]);
     }

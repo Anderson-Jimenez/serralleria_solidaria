@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { Search, User, ShoppingCart, ChevronDown, KeyRound } from 'lucide-react';
+import { Search, User, ShoppingCart, ChevronDown, KeyRound, LogIn } from 'lucide-react';
+import LogInView from "../logIn";
+import { useAuth } from "../../hooks/useAuth";
 
 import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const navigate = useNavigate();
+  const {isAuthenticated, logOut} = useAuth();
+  
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -54,12 +58,14 @@ function Navbar() {
       {/* LADO DERECHO: ICONOS */}
       <div className="navbar-icons">
         <button><Search size={20} /></button>
-        <button><User size={20} /></button>
         <div className="cart-container">
           <ShoppingCart size={20} />
           <span className="badge">3</span>
         </div>
+        {isAuthenticated ? (<LogInView/>) : (<button onClick={logOut}>Logout</button>)}
+        
       </div>
+      
     </nav>
   );
 }

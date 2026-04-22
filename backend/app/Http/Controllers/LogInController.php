@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Administrator;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class LogInController extends Controller
@@ -75,17 +75,20 @@ class LogInController extends Controller
                 'password' => 'required',
             ]);
 
-            $admin = Administrator::where('username', $validated['username'])->first();         
+            $user = User::where('username', $validated['username'])
+                ->orWhere('email', $validated['username'])
+                ->first();         
             
-            if (!$admin || !Hash::check($validated['password'], $admin->password)) {
+            if (!$user || !Hash::check($validated['password'], $user->password)) {
                 return response()->json(['message' => 'Credencials incorrectes'], 401);
             }
 
-            $token = $admin->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
                 'success' => true,
                 'access_token' => $token,
+                'userType' => $user->userType,
                 'token_type' => 'Bearer',
                 'message' => 'Log In Correcte'
             ], 201);
