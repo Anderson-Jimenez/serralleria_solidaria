@@ -11,12 +11,10 @@ return new class extends Migration
         Schema::create('product_characteristics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->foreignId('characteristic_id')->constrained()->onDelete('cascade');
+            $table->foreignId('characteristic_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('value')->nullable();
             $table->timestamps();
-            
-            // Evitar duplicados de la misma característica para un producto
-            $table->unique(['product_id', 'characteristic_id']);
+        
             
             $table->index('product_id');
             $table->index('characteristic_id');

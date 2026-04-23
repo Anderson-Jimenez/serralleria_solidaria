@@ -39,8 +39,8 @@ function FeaturedProducts({ products, title }) {
             <h3 className="hero-name">{heroProduct.name}</h3>
             <p className="hero-desc">{heroProduct.description}</p>
             <div className="hero-price-row">
-              {heroProduct.discount > 0 && <span className="old-price">{heroProduct.base_price}€</span>}
-              <span className="current-price">{heroProduct.sale_price}€</span>
+              <span className="current-price">{(heroProduct.sale_price - (heroProduct.sale_price/100 *heroProduct.discount)).toFixed(2)}€</span>
+              {heroProduct.discount > 0 && <span className="old-price">{heroProduct.sale_price} €</span>}
             </div>
           </div>
         </div>

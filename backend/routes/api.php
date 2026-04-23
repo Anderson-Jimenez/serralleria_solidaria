@@ -42,15 +42,14 @@ Route::get('/characteristics/changeState/{id}', [CharacteristicController::class
 Route::get('/characteristics/searchCharacteristic/{text}', [CharacteristicController::class, 'searchCharacteristic']);
 
 
-Route::apiResource('characteristicTypes', CharacteristicTypeController::class);
+Route::apiResource('characteristic-types', CharacteristicTypeController::class);
 Route::get('/characteristicTypes/changeState/{id}', [CharacteristicTypeController::class, 'changeStatusTypeCharacteristic']);
 Route::get('/characteristicTypes/searchTypeCharacteristic/{text}',[CharacteristicTypeController::class,'searchTypeCharacteristic']);
 
 
-Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsNotInPack']);
 Route::apiResource('packs', ProductInPackController::class);
+Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsNotInPack']);
 
-Route::get('/characteristic-types',[CharacteristicTypeController::class,'getTypes']);
 
 
 // Rutas para el HomeScreen

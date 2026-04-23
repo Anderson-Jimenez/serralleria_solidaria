@@ -11,11 +11,9 @@ function ProductsCreate() {
     const [activeTab, setActiveTab] = useState("general");
     const [alert, setAlert] = useState({ show: false, type: "", message: "" });
 
-    // API
     const [categories, setCategories] = useState([]);
     const [types, setTypes] = useState([]);
 
-    // FORM
     const [name, setName] = useState("");
     const [price, setPrice] = useState(0);
     const [discount, setDiscount] = useState(0);
@@ -28,7 +26,6 @@ function ProductsCreate() {
     const [selectedCharacteristics, setSelectedCharacteristics] = useState({});
     const [extraValues, setExtraValues] = useState({});
 
-    // IMÁGENES
     const [images, setImages] = useState([]);
     const [previews, setPreviews] = useState([]);
     const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
@@ -40,15 +37,9 @@ function ProductsCreate() {
 
         fetch("http://localhost:8000/api/characteristic-types")
             .then(res => res.json())
-            .then(data => {
-                console.log("Types:", data);
-                setTypes(data);
-            });
+            .then(data => setTypes(data));
     }, []);
 
-    console.log(types);
-
-    // Auto-ocultar alerta tras 4 segundos
     useEffect(() => {
         if (alert.show) {
             const timer = setTimeout(() => setAlert({ ...alert, show: false }), 4000);
@@ -96,11 +87,37 @@ function ProductsCreate() {
         formData.append("primary_image_index", primaryImageIndex);
 
         let charIndex = 0;
+
         for (let typeId in selectedCharacteristics) {
+            const type = types.find(t => t.id == typeId);
             const val = selectedCharacteristics[typeId];
-            if (val !== "" && val !== null) {
+
+            if (type?.type === "Pes" && val !== "" && val !== null) {
                 formData.append(`characteristic[${charIndex}][type_id]`, typeId);
                 formData.append(`characteristic[${charIndex}][value]`, val);
+                formData.append(`characteristic[${charIndex}][is_value]`, 1);
+                charIndex++;
+            } else if (type?.type === "Duplicat de clau" && extraValues[typeId]?.enabled) {
+                const siChar = type.characteristics?.find(c => c.description === "Si");
+                if (siChar) {
+                    formData.append(`characteristic[${charIndex}][type_id]`, typeId);
+                    formData.append(`characteristic[${charIndex}][value]`, siChar.id);
+                    formData.append(`characteristic[${charIndex}][extra_value]`, extraValues[typeId]?.price ?? 0);
+                    formData.append(`characteristic[${charIndex}][is_value]`, 0);
+                    charIndex++;
+                }
+            } else if (type?.type === "Doble Embrague") {
+                const siChar = type.characteristics?.find(c => c.description === (val ? "Si" : "No"));
+                if (siChar) {
+                    formData.append(`characteristic[${charIndex}][type_id]`, typeId);
+                    formData.append(`characteristic[${charIndex}][value]`, siChar.id);
+                    formData.append(`characteristic[${charIndex}][is_value]`, 0);
+                    charIndex++;
+                }
+            } else if (val !== "" && val !== null && val !== false) {
+                formData.append(`characteristic[${charIndex}][type_id]`, typeId);
+                formData.append(`characteristic[${charIndex}][value]`, val);
+                formData.append(`characteristic[${charIndex}][is_value]`, 0);
                 charIndex++;
             }
         }
@@ -180,7 +197,7 @@ function ProductsCreate() {
                             <section className="tab-panel">
                                 <div className="form-group">
                                     <label>Categoria</label>
-                                    <select value={categoryId} onChange={e => setCategoryId(e.target.value)}>
+                                    <select value={categoryId} onChange={e => setCategoryId(e.target.value)} required>
                                         <option value="">Sense categoria</option>
                                         {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                                     </select>
@@ -222,11 +239,11 @@ function ProductsCreate() {
                                                     <div className="extra-group">
                                                         <label className="checkbox-label">
                                                             <input type="checkbox" checked={extraValues[type.id]?.enabled || false} onChange={(e) => handleExtraValueChange(type.id, "enabled", e.target.checked)} />
-                                                            <span>Incloure preu extra</span>
+                                                            <span>Permet duplicat de clau</span>
                                                         </label>
                                                         {extraValues[type.id]?.enabled && (
                                                             <div className="input-with-unit mt-10">
-                                                                <input type="number" placeholder="Preu" value={extraValues[type.id]?.price || ""} onChange={(e) => handleExtraValueChange(type.id, "price", e.target.value)} />
+                                                                <input type="number" placeholder="Preu per còpia" value={extraValues[type.id]?.price || ""} onChange={(e) => handleExtraValueChange(type.id, "price", e.target.value)} />
                                                                 <span className="unit-tag">€</span>
                                                             </div>
                                                         )}

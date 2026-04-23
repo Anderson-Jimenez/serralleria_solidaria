@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\Characteristic;
 use App\Models\ProductImg;
 use App\Models\ProductCharacteristic;
-
+use App\Models\CharacteristicType;
 class ProductController extends Controller
 {
     /**
@@ -49,28 +49,40 @@ class ProductController extends Controller
                 'sale_price'     => 'required|numeric|min:0',
                 'stock'          => 'required|integer|min:0',
                 'discount'       => 'nullable|integer|min:0|max:100',
-                'category_id'    => 'nullable',
+                'category_id'    => 'required',
                 'product_type'   => 'required|string'
             ]);
-            $validated['highlighted'] = (bool) $request->highlighted;
-            if (empty($validated['category_id'])) {
-                $validated['category_id'] = null;
-            }
+            $validated['highlighted'] = $request->boolean('highlighted');
             $product = Product::create($validated);
 
-            if ($request->has('characteristics')) {
-                foreach ($request->characteristics as $char) {
-                    
-                    if($char['value'] == "true" || $char['value'] == "false"){
-                        $valueBolean =  $char['value'] ? "Si" : "No";
-                        $char['value'] = Characteristic::where('characteristic_type_id',$char['type_id'])->where('description', $valueBolean)->first();
-                    }
+            if ($request->has('characteristic')) {
+                foreach ($request->characteristic as $char) {
+                    $typeId     = $char['type_id'];
+                    $value      = $char['value'];
+                    $extraValue = $char['extra_value'] ?? null;
 
-                    ProductCharacteristic::create([
-                        'product_id'        => $product->id,
-                        'characteristic_id' => $char['value'],
-                        'value'             => $char['type_id']
-                    ]);
+                    $type = CharacteristicType::find($typeId);
+
+                    if ($type->type === 'Pes') {
+                        ProductCharacteristic::create([
+                            'product_id'        => $product->id,
+                            'characteristic_id' => null,
+                            'value'             => $value
+                        ]);
+                    } 
+                    elseif ($type->type === 'Duplicat de clau') {
+                        ProductCharacteristic::create([
+                            'product_id'        => $product->id,
+                            'characteristic_id' => $value, //id del "Si"
+                            'value'             => $extraValue //precio por copia de duplicado
+                        ]);
+                    } else {
+                        ProductCharacteristic::create([
+                            'product_id'        => $product->id,
+                            'characteristic_id' => $value,
+                            'value'             => null
+                        ]);
+                    }
                 }
             }
 
@@ -98,6 +110,7 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
+                \Log::error($e->getMessage()),
                 'error'   => $e->getMessage()
             ], 500);
         }

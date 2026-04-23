@@ -44,8 +44,8 @@ function GeneralProducts({ products, title, columns = 4 }) {
                 
                 <div className="bottom">
                   <div className="priceGroup">
-                    <span className="currentPrice">{product.sale_price}€</span>
-                    {product.discount > 0 && <span className="oldPrice">{product.base_price}€</span>}
+                    <span className="current-price">{(product.sale_price - (product.sale_price/100 *product.discount)).toFixed(2)}€</span>
+                    {product.discount > 0 && <span className="old-price">{product.sale_price} €</span>}
                   </div>
                   
                   <button 

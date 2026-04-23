@@ -12,7 +12,9 @@ class CharacteristicTypeController extends Controller
      */
     public function index()
     {
-        return CharacteristicType::where('status',1)->with('characteristics')->get();
+        return CharacteristicType::with(['characteristics' => function($query) {
+            $query->where('status', 1);
+        }])->where('status', 1)->get();
     }
 
     /**
@@ -86,14 +88,6 @@ class CharacteristicTypeController extends Controller
     {
         $characteristic = CharacteristicType::findOrFail($id);
         $characteristic->delete();
-    }
-
-    public function getTypes(){
-        $types=CharacteristicType::with(['characteristics'=>function($query){
-            $query->where('status',1);
-        }])->where('status',1)->get();
-
-        return response()->json($types);
     }
 
     public function changeStatusTypeCharacteristic($id)
