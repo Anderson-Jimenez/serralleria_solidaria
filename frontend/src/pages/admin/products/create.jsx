@@ -40,7 +40,10 @@ function ProductsCreate() {
 
         fetch("http://localhost:8000/api/characteristic-types")
             .then(res => res.json())
-            .then(data => setTypes(data));
+            .then(data => {
+                console.log("Types:", data);
+                setTypes(data);
+            });
     }, []);
 
     console.log(types);
@@ -96,8 +99,8 @@ function ProductsCreate() {
         for (let typeId in selectedCharacteristics) {
             const val = selectedCharacteristics[typeId];
             if (val !== "" && val !== null) {
-                formData.append(`characteristics[${charIndex}][type_id]`, typeId);
-                formData.append(`characteristics[${charIndex}][value]`, val);
+                formData.append(`characteristic[${charIndex}][type_id]`, typeId);
+                formData.append(`characteristic[${charIndex}][value]`, val);
                 charIndex++;
             }
         }
@@ -232,7 +235,7 @@ function ProductsCreate() {
                                                 {type.type !== "Doble Embrague" && type.type !== "Pes" && type.type !== "Duplicat de clau" && (
                                                     <select className="full-select" value={selectedCharacteristics[type.id] || ""} onChange={(e) => handleCharacteristicChange(type.id, e.target.value)}>
                                                         <option value="">Selecciona...</option>
-                                                        {type.characteristic?.map(char => <option key={char.id} value={char.id}>{char.description}</option>)}
+                                                        {type.characteristics?.map(char => <option key={char.id} value={char.id}>{char.description}</option>)}
                                                     </select>
                                                 )}
                                             </div>

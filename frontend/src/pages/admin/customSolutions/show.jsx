@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Mail, Phone, FileText, User, BadgeInfo } from "lucide-react";
+import { ArrowLeft, Mail, Phone, FileText, User, BadgeInfo, RefreshCw, CheckCircle } from "lucide-react";
 
 function CustomSolutionDetails() {
   const { id } = useParams();
@@ -8,6 +8,8 @@ function CustomSolutionDetails() {
 
   const [data, setData] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/peticions/${id}`)
@@ -22,6 +24,10 @@ function CustomSolutionDetails() {
   }, [id]);
 
   const handleStatusChange = async (newStatus) => {
+    if (newStatus === selectedStatus || updating) return;
+    
+    setUpdating(true);
+    
     try {
       const response = await fetch(`http://localhost:8000/api/peticions/${id}`, {
         method: "PUT",
@@ -36,15 +42,26 @@ function CustomSolutionDetails() {
       if (result.success) {
         setSelectedStatus(newStatus);
         setData({ ...data, status: newStatus });
+        setShowConfirm(true);
+        setTimeout(() => setShowConfirm(false), 3000);
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setUpdating(false);
     }
   };
 
-  if (!data) {
-    return <div className="loading">Cargando petición...</div>;
-  }
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "pending": return "pendingStatus";
+      case "in_progress": return "inProgressStatus";
+      case "sent": return "sentStatus";
+      case "solved": return "solvedStatus";
+      case "rejected": return "rejectedStatus";
+      default: return "";
+    }
+  };
 
   const statusLabels = {
     pending: "Pendent",
@@ -53,6 +70,10 @@ function CustomSolutionDetails() {
     solved: "Resolt",
     rejected: "Rebutjat",
   };
+
+  if (!data) {
+    return <div className="loading">Cargando petición...</div>;
+  }
 
   return (
     <section className="customSolutionDetails">
@@ -66,19 +87,38 @@ function CustomSolutionDetails() {
             <h1 className="petitionTitle">Petició #{data.id}</h1>
             <p className="creationDate">Data de creació: {new Date(data.created_at).toLocaleDateString()}</p>
           </div>
-          <div className="statusContainer">
-            <select 
-              className="statusSelect"
-              value={selectedStatus}
-              onChange={(e) => handleStatusChange(e.target.value)}
-            >
-              {Object.entries(statusLabels).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {label}
-                </option>
-              ))}
-            </select>
+        </div>
+
+        {/* Sección Cambiar Estado */}
+        <div className="statusSection">
+          <div className="statusSectionHeader">
+            <RefreshCw size={18} />
+            <span>Canviar estat de la petició</span>
           </div>
+          <div className="statusButtonsContainer">
+            {Object.entries(statusLabels).map(([key, label]) => {
+              const statusClass = getStatusClass(key);
+              const isActive = selectedStatus === key;
+              
+              return (
+                <button
+                  key={key}
+                  className={`statusButton ${statusClass} ${isActive ? "active" : ""} ${updating ? "disabled" : ""}`}
+                  onClick={() => handleStatusChange(key)}
+                  disabled={updating}
+                >
+                  <span>{label}</span>
+                  {isActive && <CheckCircle size={14} className="activeIndicator" />}
+                </button>
+              );
+            })}
+          </div>
+          {showConfirm && (
+            <div className="confirmMessage">
+              <CheckCircle size={16} />
+              <span>Estat actualitzat correctament a {statusLabels[selectedStatus]}</span>
+            </div>
+          )}
         </div>
 
         <div className="detailsPetition">

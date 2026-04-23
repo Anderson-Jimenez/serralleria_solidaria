@@ -218,3 +218,98 @@
     }
   }
 }
+.statusSection {
+  padding: 20px 32px;
+  background: $bg-light;
+  border-bottom: 1px solid $border-color;
+
+  .statusSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $color-text-header;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .statusButtonsContainer {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .statusButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    /* Override para que los badges existentes se comporten como botones */
+    min-width: auto;
+    justify-content: center;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(0.97);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .activeIndicator {
+      margin-left: 4px;
+    }
+    
+    /* Estilo activo resaltado */
+    &.active {
+      box-shadow: 0 0 0 2px currentColor, 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: scale(1.02);
+    }
+  }
+
+  .confirmMessage {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 16px;
+    background: #d1fae5;
+    color: #065f46;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive para los botones */
+@media (max-width: 768px) {
+  .statusSection {
+    padding: 16px 20px;
+
+    .statusButtonsContainer {
+      gap: 8px;
+    }
+  }
+}

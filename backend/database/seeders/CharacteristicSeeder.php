@@ -17,83 +17,87 @@ class CharacteristicSeeder extends Seeder
         DB::table('characteristics')->insert([
             [
                 'description' => 'Securemme',
-                'characteristic_type_id' => 1,
+                'characteristic_types_id' => 1,
             ],
             [
                 'description' => 'M&C',
-                'characteristic_type_id' => 1,
+                'characteristic_types_id' => 1,
             ],
             [
                 'description' => 'Keso',
-                'characteristic_type_id' => 1,
+                'characteristic_types_id' => 1,
             ],
             [
                 'description' => 'Abus',
-                'characteristic_type_id' => 1,
+                'characteristic_types_id' => 1,
             ],
             [
                 'description' => 'DMC',
-                'characteristic_type_id' => 1,
+                'characteristic_types_id' => 1,
             ],
             [
                 'description' => 'Disec',
-                'characteristic_type_id' => 1,
+                'characteristic_types_id' => 1,
             ],
             [
                 'description' => 'Si',
-                'characteristic_type_id' => 2,
+                'characteristic_types_id' => 2,
             ],
             [
                 'description' => 'No',
-                'characteristic_type_id' => 2,
+                'characteristic_types_id' => 2,
             ],
             [
                 'description' => 'Plata',
-                'characteristic_type_id' => 3,
+                'characteristic_types_id' => 3,
             ],
             [
                 'description' => 'Daurat',
-                'characteristic_type_id' => 3,
+                'characteristic_types_id' => 3,
             ],
             [
                 'description' => 'Punts copiable',
-                'characteristic_type_id' => 4,
+                'characteristic_types_id' => 4,
             ],
             [
                 'description' => 'Punts incopiable',
-                'characteristic_type_id' => 4,
+                'characteristic_types_id' => 4,
             ],
             [
                 'description' => 'Element Mòvil',
-                'characteristic_type_id' => 4,
+                'characteristic_types_id' => 4,
             ],
             [
                 'description' => 'Codif. Magnèt.',
-                'characteristic_type_id' => 4,
-            ],
-            [
-                'description' => '26',
-                'characteristic_type_id' => 5,
+                'characteristic_types_id' => 4,
             ],
             [
                 'description' => 'Si',
-                'characteristic_type_id' => 6,
+                'characteristic_types_id' => 5,
             ],
             [
                 'description' => 'No',
-                'characteristic_type_id' => 6,
+                'characteristic_types_id' => 5,
+            ],
+            [
+                'description' => 'Si',
+                'characteristic_types_id' => 6,
+            ],
+            [
+                'description' => 'No',
+                'characteristic_types_id' => 6,
             ],
             [
                 'description' => 'Seguretat',
-                'characteristic_type_id' => 8,
+                'characteristic_types_id' => 8,
             ],
             [
                 'description' => 'Alta Seguretat',
-                'characteristic_type_id' => 8,
+                'characteristic_types_id' => 8,
             ],
             [
                 'description' => 'MOLT ALTA SEGURETAT',
-                'characteristic_type_id' => 8,
+                'characteristic_types_id' => 8,
             ],
         ]);
 

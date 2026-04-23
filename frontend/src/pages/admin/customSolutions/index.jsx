@@ -94,7 +94,7 @@ function CustomSolutionPetitions() {
               ) : (
                 <tr>
                   <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-                    No hi ha peticions en aquest estat.
+                    No hi ha peticions disponibles.
                   </td>
                 </tr>
               )}

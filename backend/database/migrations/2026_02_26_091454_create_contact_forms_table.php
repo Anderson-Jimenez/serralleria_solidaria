@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('user_phone');
             $table->string('user_issue');
             $table->text('message');
-            $table->enum('status', ['pending', 'in_progress','sent', 'resolved'])->default('pending');
+            $table->enum('status', ['pending', 'in_progress','sent', 'solved','rejected'])->default('pending');
             $table->timestamps();
             
             $table->index('user_id');

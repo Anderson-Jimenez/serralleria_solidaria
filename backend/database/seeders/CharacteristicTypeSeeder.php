@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class C1haracteristicTypeSeeder extends Seeder
+class CharacteristicTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,7 +20,7 @@ class C1haracteristicTypeSeeder extends Seeder
             ],
             [
                 'type' => 'Doble Embrague',
-                'filterType' => 'select',
+                'filterType' => 'checkbox',
             ],
             [
                 'type' => 'Color',
@@ -28,15 +28,15 @@ class C1haracteristicTypeSeeder extends Seeder
             ],
             [
                 'type' => 'Tipus de clau',
-                'filterType' => 'select',
+                'filterType' => 'checkbox',
             ],
             [
                 'type' => 'Duplicat de clau',
-                'filterType' => 'select',
+                'filterType' => 'checkbox',
             ],
             [
                 'type' => 'Tarjeta',
-                'filterType' => 'select',
+                'filterType' => 'checkbox',
             ],
             [
                 'type' => 'Pes',
@@ -44,7 +44,7 @@ class C1haracteristicTypeSeeder extends Seeder
             ],
             [
                 'type' => 'Nivell de Seguretat',
-                'filterType' => 'select',
+                'filterType' => 'checkbox',
             ],
         ]);
     }
