@@ -1,7 +1,26 @@
 import React from 'react';
-
+import { useEffect, useState } from "react";
+import { apiFetch } from '../hooks/apiUtils'; // 👈 ajusta el path
 
 function Header() {
+
+  const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        apiFetch("/me", { method: "GET" })
+            .then(async res => {
+                if (!res.ok) throw new Error('No autenticat');
+                return res.json();
+            })
+            .then(data => {
+                setUser(data);
+            })
+            .catch(err => {
+                console.error('Error:', err);
+            });
+    }, []);
+
+  
   return (
     <header className="admin-header">
       <div className="search-container">
@@ -14,7 +33,7 @@ function Header() {
 
       <div className="header-right">
         <div className="user-greeting">
-          Hola, <span>Administrador</span>
+           Hola, <span>{user ? user.username || user.email : 'Administrador'}</span>
         </div>
 
         <div className="header-icons">

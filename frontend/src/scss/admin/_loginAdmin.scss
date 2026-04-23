@@ -24,6 +24,22 @@
         transform: translateY(0); 
     }
     
+    .loginSlider {
+        display: flex;
+        flex-direction: column;
+        // 👇 clau: cada fill ocupa exactament l'alçada del contenidor
+        transition: transform 0.4s ease;
+        transform: translateY(0);
+
+        &.showRegister {
+            transform: translateY(-50%); // 👈 -50% perquè hi ha 2 fills (login + registre)
+        }
+
+        .logInHalf,
+        .registerHalf {
+            flex-shrink: 0; // 👈 evita que es comprimeixin
+        }
+    }
 
     .logInHalf{
         color: black;
@@ -122,5 +138,58 @@
 
     p, h3{
         margin: 0;
+    }
+
+    .registerHalf {
+        // Mateixos estils que .logInHalf
+        color: black;
+        padding: 20px;
+        text-align: center;
+        min-height: 100%;  // ocupa el mateix espai que el login
+
+        h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        a {
+            color: variables.$color-accent;
+            cursor: pointer;
+        }
+
+        form {
+            padding-bottom: 20px;
+
+            .loginCredentials {
+                padding: 2px 0px;
+                display: flex;
+
+                input {
+                    border: none;
+                    background-color: rgb(240, 240, 240);
+                    padding: 8px 5px;
+                    width: 100%;
+                }
+            }
+
+            button {
+                font-size: 1rem;
+                display: flex;
+                margin-top: 20px;
+                background-color: variables.$color-accent;
+                color: white;
+                border: none;
+                padding: 9.5px 14px;
+                width: 100%;
+                border-radius: 8px;
+                font-weight: 700;
+                align-items: center;
+                justify-content: center;
+
+                svg {
+                    padding-right: 5px;
+                }
+            }
+        }
     }
 }

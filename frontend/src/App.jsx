@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import StoreLayout from "./layouts/storeLayout";
 import AdminLayout from "./layouts/adminLayout";
 import Dashboard from "./pages/admin/dashboard";
-import {PrivateRoute} from "./components/protectedRoute"; // <-- importa el component
+
 //Store
 import Home from "./pages/store/home";
 import Products from "./pages/store/products";
@@ -26,7 +26,7 @@ import PacksIndex from "./pages/admin/packs/index";
 import PacksCreate from "./pages/admin/packs/create";
 import PacksEdit from "./pages/admin/packs/edit";
 import CustomSolutionForm from "./pages/store/customSolutionForm";
-import LoginAdmin from "./pages/admin/loginAdmin";
+import AdminRoute from './components/AdminRoute';
 
 function App() {
   return (
@@ -41,14 +41,13 @@ function App() {
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
       </Route>
 
-      <Route path="loginAdmin" element={<LoginAdmin />} />
 
       {/* PANEL ADMIN - protegit */}
       <Route path="/admin" element={
-        <PrivateRoute>
-          <AdminLayout />
-        </PrivateRoute>
-      }>
+          <AdminRoute>
+              <AdminLayout />
+          </AdminRoute>
+      } >
         <Route index element={<Dashboard />} />
         <Route path="categories">
           <Route index element={<CategoriesIndex />} />
