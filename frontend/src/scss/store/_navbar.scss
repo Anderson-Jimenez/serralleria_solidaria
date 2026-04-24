@@ -1,11 +1,14 @@
 @import '../variables';
 .navbar {
+  z-index: 10;
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 1.5rem 2rem;
   background: $color-bg-container;
   border-bottom: 1px solid $color-border;
+  position: fixed;
+  width: 100%;
 
   .navbar-brand {
     display: flex;
@@ -105,4 +108,49 @@
       }
     }
   }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        position: absolute;  // 👈 clau perquè no mogui res
+        top: 100%;
+        right: 0;
+        z-index: 100;
+        
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        min-width: 150px;
+        list-style: none;
+        padding: 6px 0;
+        margin: 0;
+
+        li {
+            a, button {
+                display: block;
+                width: 100%;
+                padding: 8px 16px;
+                text-align: left;
+                background: none;
+                border: none;
+                cursor: pointer;
+                text-decoration: none;
+                color: #333;
+
+                &:hover {
+                    background: #f5f5f5;
+                }
+            }
+        }
+    }
+}
 }

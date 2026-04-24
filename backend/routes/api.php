@@ -8,6 +8,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductInPackController;
 use App\Http\Controllers\HomeScreenController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AuthController;
+
+
 
 Route::get('/test', function () {
     return response()->json([
@@ -25,6 +28,8 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 Route::apiResource('categories', CategoryController::class);
 Route::get('/categories/searchCategories/{text}', [CategoryController::class, 'searchCategories']);
 
+
+
 Route::apiResource('products', ProductController::class);
 Route::get('/products/searchProducts/{text}', [ProductController::class, 'searchProducts']);
 Route::post('/products/searchProductsInStore', [ProductController::class, 'searchProductsInStore']);
@@ -34,6 +39,8 @@ Route::get('/productes/getProductLatest', [ProductController::class, 'getProduct
 Route::get('/products/changeState/{id}', [ProductController::class, 'changeStatusProduct']);
 Route::get('/products/getProductCategory/{category}', [ProductController::class, 'getProductCategory']);
 Route::get('/products/getProductCategoryLatest/{category}', [ProductController::class, 'getProductCategoryLatest']);
+Route::get('/productes/countProducts', [ProductController::class, 'countProducts']);
+
 
 
 
@@ -61,3 +68,21 @@ Route::get('/solucionsPersonalitzades', [ContactController::class, 'getCustomSol
 
 Route::get('/peticions/{id}', [ContactController::class, 'showEspecificPetition']);
 Route::put('/peticions/{id}', [ContactController::class, 'updatePetitionStatus']);
+
+
+//Log In
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/signin', [AuthController::class, 'signin']);
+
+
+// Rutas protegidas — solo con token válido
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
+
+    // Rutas solo para admin
+    Route::middleware('can:admin')->group(function () {
+        // Route::get('/admin/...', [...]);
+    });
+});

@@ -1,0 +1,83 @@
+@use '../_variables';
+
+.dashboard-content {
+
+    .basic-info-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+
+
+        .basic-grid-content {
+            //width: 25%;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            justify-content: space-between;
+
+            .numberOf {
+                font-size: 3.6rem;
+                justify-content: end;
+                align-content: end;
+            }
+
+            div {
+                width: 70%;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            svg {
+                padding: 20px;
+                color: variables.$color-accent;
+                background-color: #ffede6;
+                border-radius: 8px;
+            }
+        }
+
+    }
+
+    .mainGrid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+
+        gap: 10px;
+
+        .linear-chart-grid {
+            //background-color: white;
+            border-radius: 4px;
+
+            div {
+                margin: 0;
+            }
+        }
+    }
+}
+
+
+/* Grafics canvas */
+
+.estilsContenidor {
+    background-color: white;
+    border-radius: 16px;
+    //box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 24px;
+}
+
+.estilsCapcalera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.estilsTitol {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}

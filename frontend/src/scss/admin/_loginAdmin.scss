@@ -1,15 +1,185 @@
 @use '../_variables';
 
-.loginSection{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
+.logInContainer {
+    width: 15%;
+    position: absolute;
+    background-color: white;
+    border-radius: 0px 0px 5px 5px;
+    overflow: hidden;
+    right: 5vw;
+    top: 100%;
 
-    .loginContainer{
-        padding: 50px;
-        border-radius: 8px;
-        border: solid 0.5px #88888842;
-        background-color: white;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: transform 0.4s ease, opacity 0.4s ease, visibility 0.4s;
+
+    &:not(.hiddenLogIn) {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .loginContent {
+        transition: opacity 0.3s ease;
+
+        &.fadeIn { 
+            opacity: 1; 
+        }
+        
+        &.fadeOut { 
+            opacity: 0; 
+        }
+    }
+
+    .logInHalf {
+        color: black;
+        padding: 20px;
+        text-align: center;
+
+        h3 { 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
+        }
+
+        a { 
+            color: variables.$color-accent; 
+        }
+
+        form {
+            padding-bottom: 20px;
+
+            .loginCredentials {
+                padding: 2px 0;
+                display: flex;
+
+                input {
+                    border: none;
+                    background-color: rgb(240, 240, 240);
+                    padding: 8px 5px;
+                    width: 100%;
+                }
+
+                label { 
+                    display: none; 
+                }
+            }
+
+            button {
+                font-size: 1rem;
+                display: flex;
+                margin-top: 20px;
+                background-color: variables.$color-accent;
+                color: white;
+                border: none;
+                padding: 9.5px 14px;
+                width: 100%;
+                border-radius: 8px;
+                font-weight: 700;
+                align-items: center;
+                justify-content: center;
+
+                svg { 
+                    padding-right: 5px; 
+                }
+            }
+        }
+    }
+
+    .signInHalf {
+        background-color: variables.$color-accent;
+        color: white;
+        padding: 20px;
+
+        h3 { 
+            margin-bottom: 5px; 
+        }
+
+        p { 
+            line-height: 20px; 
+        }
+
+        a {
+            font-size: 1rem;
+            display: flex;
+            margin-top: 20px;
+            background-color: white;
+            color: variables.$color-accent;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+
+            svg { 
+                padding-right: 5px; 
+            }
+        }
+    }
+
+    .registerHalf {
+        background-color: variables.$color-accent;
+        color: white;
+        padding: 20px;
+        text-align: center;
+
+        h3 { 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
+            color: white; 
+        }
+
+        a { 
+            color: white; 
+            cursor: pointer; 
+            display: block; 
+            text-decoration: underline; 
+        }
+
+        form {
+            padding-bottom: 20px;
+
+            .loginCredentials {
+                padding: 2px 0;
+                display: flex;
+
+                input {
+                    border: none;
+                    background-color: rgba(255, 255, 255, 0.3);
+                    padding: 8px 5px;
+                    width: 100%;
+                    color: white;
+
+                    &::placeholder { 
+                        color: rgba(255, 255, 255, 0.8); 
+                    }
+                }
+            }
+
+            button {
+                font-size: 1rem;
+                display: flex;
+                margin-top: 20px;
+                background-color: white;
+                color: variables.$color-accent;
+                border: none;
+                padding: 9.5px 14px;
+                width: 100%;
+                border-radius: 8px;
+                font-weight: 700;
+                align-items: center;
+                justify-content: center;
+
+                svg { 
+                    padding-right: 5px; 
+                }
+            }
+        }
+    }
+
+    p, h3 { 
+        margin: 0; 
     }
 }
