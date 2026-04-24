@@ -1,11 +1,14 @@
 @import '../variables';
 .navbar {
+  z-index: 10;
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 1.5rem 2rem;
   background: $color-bg-container;
   border-bottom: 1px solid $color-border;
+  position: fixed;
+  width: 100%;
 
   .navbar-brand {
     display: flex;

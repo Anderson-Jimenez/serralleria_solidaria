@@ -41,6 +41,38 @@ class AuthController extends Controller
         ]);
     }
 
+    public function signin(Request $request){
+        try{
+            $validated = $request->validate([
+                'username' => 'required|string|max:50|unique:users,username',
+                'email'    => 'required|email|unique:users,email',
+                'phone'    => 'required|digits:9',
+                'password' => 'required|min:8',
+            ]);
+
+            User::Create([
+                'username' => $validated['username'],
+                'email'    => $validated['email'],
+                'phone'    => $validated['phone'],
+                'userType' => 'user',
+                'password' => Hash::make($validated['password']),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuari creat correctament'
+            ], 201);
+        } 
+        
+        catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+
+    }
+
     public function logout(Request $request){
         // Elimina el token actual del servidor
         $request->user()->currentAccessToken()->delete();

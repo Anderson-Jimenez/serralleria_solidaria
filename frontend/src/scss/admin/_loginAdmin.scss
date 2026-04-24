@@ -1,167 +1,56 @@
 @use '../_variables';
 
-
-.logInContainer{
+.logInContainer {
     width: 15%;
-    z-index: 1;
     position: absolute;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 0px 0px 5px 5px;
     overflow: hidden;
     right: 5vw;
-    top: 7vh;
+    top: 100%;
 
-    /* --- ANIMACIÓ D'ENTRADA --- */
-    opacity: 0;                  
-    visibility: hidden;         
-    transform: translateY(-20px); 
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
     transition: transform 0.4s ease, opacity 0.4s ease, visibility 0.4s;
-    /* -------------------------- */
 
     &:not(.hiddenLogIn) {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0); 
-    }
-    
-    .loginSlider {
-        display: flex;
-        flex-direction: column;
-        // 👇 clau: cada fill ocupa exactament l'alçada del contenidor
-        transition: transform 0.4s ease;
         transform: translateY(0);
-
-        &.showRegister {
-            transform: translateY(-50%); // 👈 -50% perquè hi ha 2 fills (login + registre)
-        }
-
-        .logInHalf,
-        .registerHalf {
-            flex-shrink: 0; // 👈 evita que es comprimeixin
-        }
     }
 
-    .logInHalf{
-        color: black;
-        padding: 20px;
-        text-align: center;
+    .loginContent {
+        transition: opacity 0.3s ease;
 
-        h3{
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+        &.fadeIn { 
+            opacity: 1; 
         }
-
-        a{
-            
-            color: variables.$color-accent;
-        }
-
-        form{
-            padding-bottom: 20px;
-
-            //text-align: end;
-
-            .loginCredentials{
-                padding: 2px 0px;
-                display: flex;
-
-                input{
-                    border: none;
-                    background-color: rgb(240, 240, 240);
-                    padding: 8px 5px;
-                    width: 100%;
-
-                }
-
-                label{
-                    display: none;
-                }
-            }
-
-            button{
-                font-size: 1rem;
-                display: flex;
-                margin-top: 20px;
-                background-color: variables.$color-accent;
-                color: white;
-                border: none;
-                padding: 9.5px 14px;
-                width: 100%;
-                border-radius: 8px;
-                font-weight: 700;
-                align-items: center;
-                justify-content: center;
-
-                svg{
-                    padding-right: 5px;
-                }
-
-                
-            }
-        }       
         
-    }
-
-    .signInHalf{
-        background-color: variables.$color-accent;
-        color: white;
-        padding: 20px;
-
-        h3{
-            margin-bottom: 5px;
-        }
-
-        p{
-            line-height: 20px;
-        }
-
-        a{
-                font-size: 1rem;
-
-            display: flex;
-            margin-top: 20px;
-            background-color: white;
-            color: variables.$color-accent;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-weight: 700;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-
-            svg{
-                padding-right: 5px;
-            }
+        &.fadeOut { 
+            opacity: 0; 
         }
     }
 
-    p, h3{
-        margin: 0;
-    }
-
-    .registerHalf {
-        // Mateixos estils que .logInHalf
+    .logInHalf {
         color: black;
         padding: 20px;
         text-align: center;
-        min-height: 100%;  // ocupa el mateix espai que el login
 
-        h3 {
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+        h3 { 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
         }
 
-        a {
-            color: variables.$color-accent;
-            cursor: pointer;
+        a { 
+            color: variables.$color-accent; 
         }
 
         form {
             padding-bottom: 20px;
 
             .loginCredentials {
-                padding: 2px 0px;
+                padding: 2px 0;
                 display: flex;
 
                 input {
@@ -169,6 +58,10 @@
                     background-color: rgb(240, 240, 240);
                     padding: 8px 5px;
                     width: 100%;
+                }
+
+                label { 
+                    display: none; 
                 }
             }
 
@@ -186,10 +79,107 @@
                 align-items: center;
                 justify-content: center;
 
-                svg {
-                    padding-right: 5px;
+                svg { 
+                    padding-right: 5px; 
                 }
             }
         }
+    }
+
+    .signInHalf {
+        background-color: variables.$color-accent;
+        color: white;
+        padding: 20px;
+
+        h3 { 
+            margin-bottom: 5px; 
+        }
+
+        p { 
+            line-height: 20px; 
+        }
+
+        a {
+            font-size: 1rem;
+            display: flex;
+            margin-top: 20px;
+            background-color: white;
+            color: variables.$color-accent;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+
+            svg { 
+                padding-right: 5px; 
+            }
+        }
+    }
+
+    .registerHalf {
+        background-color: variables.$color-accent;
+        color: white;
+        padding: 20px;
+        text-align: center;
+
+        h3 { 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
+            color: white; 
+        }
+
+        a { 
+            color: white; 
+            cursor: pointer; 
+            display: block; 
+            text-decoration: underline; 
+        }
+
+        form {
+            padding-bottom: 20px;
+
+            .loginCredentials {
+                padding: 2px 0;
+                display: flex;
+
+                input {
+                    border: none;
+                    background-color: rgba(255, 255, 255, 0.3);
+                    padding: 8px 5px;
+                    width: 100%;
+                    color: white;
+
+                    &::placeholder { 
+                        color: rgba(255, 255, 255, 0.8); 
+                    }
+                }
+            }
+
+            button {
+                font-size: 1rem;
+                display: flex;
+                margin-top: 20px;
+                background-color: white;
+                color: variables.$color-accent;
+                border: none;
+                padding: 9.5px 14px;
+                width: 100%;
+                border-radius: 8px;
+                font-weight: 700;
+                align-items: center;
+                justify-content: center;
+
+                svg { 
+                    padding-right: 5px; 
+                }
+            }
+        }
+    }
+
+    p, h3 { 
+        margin: 0; 
     }
 }

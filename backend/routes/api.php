@@ -69,6 +69,8 @@ Route::post('/contacte', [ContactController::class, 'store']);
 //Log In
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/signin', [AuthController::class, 'signin']);
+
 
 // Rutas protegidas — solo con token válido
 Route::middleware('auth:sanctum')->group(function () {
