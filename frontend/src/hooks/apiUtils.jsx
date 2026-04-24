@@ -23,7 +23,7 @@ export async function apiFetch(endpoint, options = {}) {
         // Token expirado o inválido — limpia y redirige
         localStorage.removeItem('token');
         localStorage.removeItem('userType');
-        window.location.href = '/';
+        //window.location.href = '/';
     }
 
     return res;

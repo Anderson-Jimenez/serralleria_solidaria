@@ -16,15 +16,22 @@ import CategoriesEdit from "./pages/admin/categories/edit";
 import CharacteristicsIndex from "./pages/admin/characteristics/index";
 import CharacteristicsCreate from "./pages/admin/characteristics/create";
 import CharacteristicsEdit from "./pages/admin/characteristics/edit";
+
 import TypeIndex from "./pages/admin/characteristicTypes/index";
 import TypeCreate from "./pages/admin/characteristicTypes/create";
 import TypeEdit from "./pages/admin/characteristicTypes/edit";
+
 import ProductsIndex from "./pages/admin/products/index";
 import ProductsCreate from "./pages/admin/products/create";
 import ProductsEdit from "./pages/admin/products/edit";
+
 import PacksIndex from "./pages/admin/packs/index";
 import PacksCreate from "./pages/admin/packs/create";
 import PacksEdit from "./pages/admin/packs/edit";
+
+import UsersIndex from "./pages/admin/users/index";
+import UsersCreate from "./pages/admin/users/create";
+import UsersEdit from "./pages/admin/users/edit";
 
 import CustomSolutionForm from "./pages/store/customSolutionForm";
 import CustomSolutionPetitions from "./pages/admin/customSolutions/index";
@@ -78,6 +85,11 @@ function App() {
           <Route index element={<PacksIndex />} />
           <Route path="create" element={<PacksCreate />} />
           <Route path="edit/:id" element={<PacksEdit />} />
+        </Route>
+        <Route path="users">
+          <Route index element={<UsersIndex />} />
+          <Route path="create" element={<UsersCreate />} />
+          <Route path="edit/:id" element={<UsersEdit />} />
         </Route>
         <Route path="solucionsPersonalitzades" element={<CustomSolutionPetitions />} />
       </Route>

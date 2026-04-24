@@ -9,7 +9,7 @@ use App\Http\Controllers\ProductInPackController;
 use App\Http\Controllers\HomeScreenController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\UserController;
 
 
 Route::get('/test', function () {
@@ -57,7 +57,8 @@ Route::get('/characteristicTypes/searchTypeCharacteristic/{text}',[Characteristi
 Route::apiResource('packs', ProductInPackController::class);
 Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsNotInPack']);
 
-
+// Rutes per a users
+Route::apiResource('users', UserController::class);
 
 // Rutas para el HomeScreen
 Route::apiResource('homescreens', HomeScreenController::class);
