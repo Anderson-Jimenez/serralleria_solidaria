@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->decimal('total_price', 10, 2);
+            $table->enum('status', ['cart','pending','paid','processing','shipped','completed','cancelled'])->default('cart');
+            $table->decimal('total_price', 10, 2)->default(0);
             $table->text('observations')->nullable();
-            $table->string('status')->default('pending');
+
             $table->timestamps();
-            
+
             $table->index('user_id');
             $table->index('status');
             $table->index('created_at');
@@ -26,4 +28,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('orders');
     }
-}; 
+};

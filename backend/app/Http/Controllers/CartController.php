@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Characteristic;
+use App\Models\ProductImg;
+use App\Models\ProductCharacteristic;
+use App\Models\CharacteristicType;
 
 class CartController extends Controller
 {
@@ -11,7 +16,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**

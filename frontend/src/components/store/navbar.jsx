@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Search, User, ShoppingCart, ChevronDown, KeyRound, LogIn } from 'lucide-react';
 import LogInView from "../logIn";
 import { apiFetch } from '../../hooks/apiUtils';
-
-
+import CartSidebar from './cartSidebar';
 import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cartOpen, setCartOpen] = useState(false);
   const [loggedUser, setLoggedUser] = useState(() => {
     // Inicialitza llegint el localStorage al carregar
     const saved = localStorage.getItem('user');
@@ -74,54 +74,56 @@ function Navbar() {
   }, []);
 
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
-        <KeyRound size={24} color="#ff6b35" />
-        <span className="brand-name">Serralleria Solidaria</span>
-      </div>
-
-      <ul className="nav-links">
-        <li><a href="/">Inici</a></li>
-
-        <li className="dropdown">
-          <a href="#">Productes <ChevronDown size={14} /></a>
-          <ul className="dropdown-menu">
-            {categories.map(category => (
-              <li key={category.id}>
-                <a onClick={() => navigate(`/products/${category.name}`)}>{category.name}</a>
-              </li>
-            ))
-
-            }
-          </ul>
-        </li>
-        <li><a href="/solucions_personalitzades">Solucions Personalitzades</a></li>
-      </ul>
-
-      {/* LADO DERECHO: ICONOS */}
-      <div className="navbar-icons">
-        <button><Search size={20} /></button>
-        <div className="cart-container">
-          <ShoppingCart size={20} />
-          <span className="badge">3</span>
+    <div className="navbar-container">
+      <nav className="navbar">
+        <div className="navbar-brand">
+          <KeyRound size={24} color="#ff6b35" />
+          <span className="brand-name">Serralleria Solidaria</span>
         </div>
 
-        {loggedUser ? (
-          <div className="dropdown" onMouseLeave={() => setOpen(false)}>
-            <button onClick={() => setOpen(!open)}>
-                Benvingut, {loggedUser.username} ▾
-            </button>
-            {open && (
-                <ul className="dropdown-menu">
-                    <li><a href="/perfil">Perfil</a></li>
-                    <li><button onClick={logOut}>Tancar Sessió</button></li>
-                </ul>
-            )}
+        <ul className="nav-links">
+          <li><a href="/">Inici</a></li>
+
+          <li className="dropdown">
+            <a href="#">Productes <ChevronDown size={14} /></a>
+            <ul className="dropdown-menu">
+              {categories.map(category => (
+                <li key={category.id}>
+                  <a onClick={() => navigate(`/products/${category.name}`)}>{category.name}</a>
+                </li>
+              ))}
+            </ul>
+          </li>
+          <li><a href="/solucions_personalitzades">Solucions Personalitzades</a></li>
+        </ul>
+
+        {/* LADO DERECHO: ICONOS */}
+        <div className="navbar-icons">
+          <button><Search size={20} /></button>
+
+          <div className="cart-container" onClick={() => setCartOpen(true)}>
+            <ShoppingCart size={20} />
+            <span className="badge">3</span>
           </div>
 
-        ) : (<LogInView />)}
-      </div>
-    </nav>
+          {loggedUser ? (
+            <div className="dropdown" onMouseLeave={() => setOpen(false)}>
+              <button onClick={() => setOpen(!open)}>
+                  Benvingut, {loggedUser.username} ▾
+              </button>
+              {open && (
+                  <ul className="dropdown-menu">
+                      <li><a href="/perfil">Perfil</a></li>
+                      <li><button onClick={logOut}>Tancar Sessió</button></li>
+                  </ul>
+              )}
+            </div>
+          ) : (<LogInView />)}
+        </div>
+      </nav>
+      
+      <CartSidebar isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+    </div>
   );
 }
 

@@ -24,6 +24,9 @@ function FeaturedProducts({ products, title }) {
   const getDiscountedPrice = (price, discount) => {
     return (price - (price / 100) * discount).toFixed(2);
   };
+  const handleAddToCart = (product) => {
+    console.log('Añadir al carrito:', product.id);
+  };
 
   return (
     <section className="featured-layout">
@@ -155,18 +158,19 @@ function FeaturedProducts({ products, title }) {
                           </span>
                         )}
                       </div>
-
-                      <button
-                        className="small-cart-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        <ShoppingCart
-                          size={18}
-                          color="white"
-                        />
-                      </button>
+                        <button
+                          className="small-cart-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                          disabled={product.stock === 0}
+                        >
+                          <ShoppingCart
+                            size={18}
+                            color="white"
+                          />
+                        </button>
                     </div>
                   </div>
                 </div>

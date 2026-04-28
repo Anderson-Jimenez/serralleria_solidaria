@@ -381,6 +381,7 @@
       }
 
       .small-cart-btn {
+        z-index: 10;
         background: variables.$color-accent;
         border: none;
         width: 2.125rem;
