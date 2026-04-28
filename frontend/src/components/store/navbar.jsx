@@ -5,7 +5,6 @@ import { apiFetch } from '../../hooks/apiUtils';
 
 
 import { useNavigate } from 'react-router-dom';
-import { div } from "three/src/nodes/math/OperatorNode.js";
 
 function Navbar() {
   const navigate = useNavigate();

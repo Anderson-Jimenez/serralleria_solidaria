@@ -10,7 +10,7 @@ use App\Http\Controllers\HomeScreenController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-
+Use App\Http\Controllers\CartController;
 
 Route::get('/test', function () {
     return response()->json([

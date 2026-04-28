@@ -24,12 +24,10 @@ function GeneralProducts({ products, title, columns = 4 }) {
         <div className={`productsGrid columns-${gridColumns}`}>
           {products.slice(0, 12).map((product) => (
             <div className="card" key={product.id} onClick={() => handleProductClick(product.id)}>
-              {product.discount > 0 ? (
-                <span className="badge discount">-{product.discount}%</span>
-              ) : product.is_new ? (
-                <span className="badge new">Nou</span>
-              ) : null}
-              
+              {product.discount > 0 && (
+                <span className="badge discount">-{product.discount}% DTO</span>
+              )}
+
               <div className="imageContainer">
                 {product.primary_image ? (
                   <img src={`http://localhost:8000/storage/${product.primary_image.path}`} alt={product.name} />
