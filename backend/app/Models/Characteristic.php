@@ -10,7 +10,7 @@ class Characteristic extends Model
     protected $fillable = ['description','status','characteristic_type_id'];
 
     public function type(){
-        return $this->belongsTo(CharacteristicType::class,'characteristic_types_id');
+        return $this->belongsTo(CharacteristicType::class,'characteristic_type_id');
     }
 
 }

@@ -10,6 +10,6 @@ class CharacteristicType extends Model
     protected $fillable = ['type','status','filterType'];
 
     public function characteristics(){
-        return $this->hasMany(Characteristic::class, 'characteristic_types_id');
+        return $this->hasMany(Characteristic::class, 'characteristic_type_id');
     }
 }
