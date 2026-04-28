@@ -9,6 +9,7 @@ function Characteristics() {
   let [data, setData] = useState([]);
   let [id, setId] = useState("");
 
+  console.log(data);
 
   const changeStatusTypeCharacteristic = (id) => {
     fetch(`http://localhost:8000/api/characteristicTypes/changeState/${id}`, {
@@ -84,7 +85,7 @@ function Characteristics() {
   */}
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/solucionsPersonalitzades")
+    fetch("http://localhost:8000/api/characteristic-types")
       .then(response => response.json())
       .then(data => setData(data))
       .catch(error => console.error(error));

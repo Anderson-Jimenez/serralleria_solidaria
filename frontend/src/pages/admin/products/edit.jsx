@@ -54,9 +54,15 @@ function ProductsEdit() {
                     
                     // Cargar características existentes
                     if (product.characteristics) {
+                        console.log("CHARACTERISTICS:", product.characteristics);
                         const chars = {};
                         product.characteristics.forEach(char => {
-                            chars[char.characteristic_id] = char.value;
+                            const typeId = char.characteristic?.characteristic_type_id;
+                            if (typeId) {
+                                // Per selects: guarda l'ID de la característica seleccionada
+                                // Per valors lliures (Pes): guarda el value
+                                chars[typeId] = char.characteristic_id ?? char.value;
+                            }
                         });
                         setSelectedCharacteristics(chars);
                     }
@@ -71,6 +77,7 @@ function ProductsEdit() {
                     }
                 }
                 setLoading(false);
+                console.log(data);
             })
             .catch(err => {
                 console.error("Error:", err);
@@ -82,7 +89,7 @@ function ProductsEdit() {
             .then(res => res.json())
             .then(data => setCategories(data.categories ?? data));
 
-        fetch("http://localhost:8000/api/characteristicTypes")
+        fetch("http://localhost:8000/api/characteristic-types")
             .then(res => res.json())
             .then(data => setTypes(data));
     }, [id]);

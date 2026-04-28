@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { LogIn, UserRoundPlus, User } from "lucide-react";
+import { LogIn, UserRoundPlus, User, Eye, EyeClosed } from "lucide-react";
 import { apiFetch } from '../hooks/apiUtils';
 
 function LogInView() {
@@ -19,6 +19,13 @@ function LogInView() {
     const [error, setError] = useState("");
 
     const toggleLogIn = () => setIsDisplayed(!isDisplayed);
+
+    const [showPasswordLogin, setShowPasswordLogin] = useState(false);
+    const togglePasswordLogin = () => setShowPasswordLogin(prev => !prev);
+
+    const [showPasswordSignin, setShowPasswordSignin] = useState(false);
+    const togglePasswordSignin = () => setShowPasswordSignin(prev => !prev);
+
 
     const switchToRegister = (e) => {
         e.preventDefault();
@@ -146,7 +153,17 @@ function LogInView() {
                                         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required placeholder='Usuari o Correu' />
                                     </div>
                                     <div className="loginCredentials">
-                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder='Contrasenya' />
+                                        <input 
+                                            type={showPasswordLogin ? "text" : "password"} 
+                                            value={password} 
+                                            onChange={(e) => setPassword(e.target.value)} 
+                                            required 
+                                            placeholder='Contrasenya' 
+                                        />
+                                        {showPasswordLogin 
+                                            ? <EyeClosed size={20} onClick={togglePasswordLogin}/> 
+                                            : <Eye size={20} onClick={togglePasswordLogin}/>
+                                        }
                                     </div>
                                     <button type="submit"><LogIn size={20} /> Iniciar Sessió</button>
                                 </form>
@@ -178,7 +195,18 @@ function LogInView() {
                                     <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={9} required placeholder='Telèfon' />
                                 </div>
                                 <div className="loginCredentials">
-                                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder='Contrasenya' />
+                                    <input 
+                                        type={showPasswordSignin ? "text" : "password"} 
+                                        value={password} 
+                                        onChange={(e) => 
+                                        setPassword(e.target.value)} 
+                                        required 
+                                        placeholder='Contrasenya' 
+                                    />
+                                    {showPasswordSignin 
+                                        ? <EyeClosed size={20} onClick={togglePasswordSignin}/> 
+                                        : <Eye size={20} onClick={togglePasswordSignin}/>
+                                    }
                                 </div>
                                 <button type="submit"><UserRoundPlus size={20} /> Crear Compte</button>
                             </form>
