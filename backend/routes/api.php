@@ -11,6 +11,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 Use App\Http\Controllers\CartController;
+Use App\Http\Controllers\OrderController;
+
 
 Route::get('/test', function () {
     return response()->json([
@@ -42,6 +44,7 @@ Route::get('/products/getProductCategoryLatest/{category}', [ProductController::
 Route::get('/productes/countProducts', [ProductController::class, 'countProducts']);
 
 
+Route::apiResource('orders', OrderController::class);
 
 
 Route::apiResource('characteristics', CharacteristicController::class);

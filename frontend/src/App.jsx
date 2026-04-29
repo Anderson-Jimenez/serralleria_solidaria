@@ -33,6 +33,10 @@ import UsersIndex from "./pages/admin/users/index";
 import UsersCreate from "./pages/admin/users/create";
 import UsersEdit from "./pages/admin/users/edit";
 
+import OrdersIndex from "./pages/admin/orders/index";
+import OrdersPDF from "./pages/admin/orders/orderPDF";
+
+
 import CustomSolutionForm from "./pages/store/customSolutionForm";
 import CustomSolutionPetitions from "./pages/admin/customSolutions/index";
 import CustomSolutionDetails from "./pages/admin/customSolutions/show";
@@ -85,6 +89,10 @@ function App() {
           <Route index element={<PacksIndex />} />
           <Route path="create" element={<PacksCreate />} />
           <Route path="edit/:id" element={<PacksEdit />} />
+        </Route>
+        <Route path="orders">
+          <Route index element={<OrdersIndex />} />
+          <Route path="orderInfo/:id" element={<OrdersPDF />} />
         </Route>
         <Route path="users">
           <Route index element={<UsersIndex />} />

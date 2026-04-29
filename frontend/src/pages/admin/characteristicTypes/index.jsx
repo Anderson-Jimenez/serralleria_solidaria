@@ -38,7 +38,7 @@ function Characteristics() {
     let text = e.target.value;
 
     if(text===""){
-      fetch("http://localhost:8000/api/characteristicTypes", {
+      fetch("http://localhost:8000/api/characteristic-types", {
         method: 'GET',
         headers: {
           "Content-Type": "application/json",
@@ -93,9 +93,11 @@ function Characteristics() {
 
   return (
     <div className="dashboard-caracteristics">
+      <h1 className="dashboard-title">Gestió de tipus de Característiques</h1>
+      <h3 className="dashboard-subtitle">Administra totes els tipus característiques de la Serralleria</h3>
+
       <div className="caracteristics-content">
         <div className="table-container">
-          <h1>Tipus de Caracteristiques</h1>
           <div className="tableFilters">
             <input type="text" name="" id="" placeholder="Buscar Tipus de Caracteristiques..." onChange={buscarTipus}/>
 

@@ -40,9 +40,11 @@ function CustomSolutionPetitions() {
 
   return (
     <div className="dashboard-caracteristics">
+      <h1 className="dashboard-title">Peticions de Solucions Personalitzades</h1>
+      <h3 className="dashboard-subtitle">Administra totes les peticions</h3>
+
       <div className="caracteristics-content">
         <div className="table-container">
-          <h1>Peticions de Solucions Personalitzades</h1>
 
           <div className="tableFilters">
             <select

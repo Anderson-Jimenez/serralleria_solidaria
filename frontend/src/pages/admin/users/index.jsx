@@ -18,9 +18,12 @@ function Users() {
 
   return (
     <div className="dashboard-caracteristics">
+      <h1 className="dashboard-title">Gestió d'usuaris</h1>
+      <h3 className="dashboard-subtitle">Administra tots els usuaris</h3>
+
       <div className="caracteristics-content">
         <div className="table-container">
-          <h1>Usuaris</h1>
+
           <div className="tableFilters">
             <input type="text" name="" id="" placeholder="Buscar Usuaris..."/>
 

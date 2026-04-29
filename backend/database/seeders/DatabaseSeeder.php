@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             //zProductsInPacksSeeder::class,
             UserSeeder::class,
-
+            OrderSeeder::class,
         ]);
     }
 }
