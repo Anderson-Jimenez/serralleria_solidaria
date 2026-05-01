@@ -36,13 +36,13 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        $order=Order::findOrFail($id);
+        return Order::with('user')->findOrFail($id);
 
+        /*
         if ($order->user_id !== auth()->id() && auth()->user->userType !=='admin') {
             return response()->json(['error' => 'No autoritzat'], 403);
         }
-        
-        return response()->json($order);
+        */
     }
 
     /**
@@ -50,7 +50,7 @@ class OrderController extends Controller
      */
     public function edit(string $id)
     {
-        return Order::findOrFail($id);
+        return Order::with('user')->findOrFail($id)->get();
     }
 
     /**
@@ -68,4 +68,5 @@ class OrderController extends Controller
     {
         //
     }
+
 }

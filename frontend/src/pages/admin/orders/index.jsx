@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Plus, Pencil, Power, Trash2 } from "lucide-react";
+import { Search, Plus, Pencil, Power, Trash2, FileText  } from "lucide-react";
 
 function OrderIndex() {
 
@@ -9,9 +9,40 @@ function OrderIndex() {
 
   console.log(orders);
 
-  const openOrder = (order) => {
-    navigate(`/admin/orders/${order.id}`);
-  };
+  const searchOrders = (e) => {
+    let text = e.target.value;
+
+    if(text===""){
+      fetch("http://localhost:8000/api/orders", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => setUsers(data))
+      .catch(error => console.error('Error en la petició:', error));
+    }
+    else{
+      fetch(`http://localhost:8000/api/users/searchUsers/${text}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.success) {
+          setUsers(data.users)
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));
+    }
+  }
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/orders`)
@@ -34,7 +65,7 @@ function OrderIndex() {
             <input
               type="text"
               placeholder="Cerca per nom, codi o descripció..."
-            /*onChange={searchProducts}*/
+            /*onChange={searchOrders}*/
             />
 
             <select
@@ -59,7 +90,7 @@ function OrderIndex() {
                 <th>ID</th>
                 <th>Client</th>
                 <th>Direcció</th>
-                <th>Data entrega</th>
+                <th>Observacions</th>
                 <th>Preu</th>
                 <th>Estat</th>
                 <th className="text-center">Accions</th>
@@ -68,13 +99,14 @@ function OrderIndex() {
 
             <tbody>
                 {orders.map(order => (
-                  <tr>
+                  <tr key={order.id}>
                       <td>{order.id}</td>
                       <td>{order.user.username}</td>
+                      <td>Res de direccio de moment</td>
                       <td>{order.observations}</td>
                       <td>{order.total_price}€</td>
                       <td>{order.status}</td>
-                      <td><button onClick={openOrder(order)}>Veure Albaran</button></td>
+                      <td><a className="action-icon" href={`/orders/pdf/${order.id}`}><FileText size={20}/></a></td>
                   </tr>
                 ))}
             </tbody>

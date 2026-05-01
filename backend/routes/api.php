@@ -62,6 +62,7 @@ Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsN
 
 // Rutes per a users
 Route::apiResource('users', UserController::class);
+Route::get('/users/searchUsers/{text}',[UserController::class,'searchUsers']);
 
 // Rutas para el HomeScreen
 Route::apiResource('homescreens', HomeScreenController::class);

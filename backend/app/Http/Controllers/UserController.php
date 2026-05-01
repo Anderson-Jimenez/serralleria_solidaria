@@ -127,4 +127,32 @@ class UserController extends Controller
     {
         //
     }
+
+    public function searchUsers($text)
+    {
+        try {
+            if($text===""){
+                $users = User::all();
+            }
+            else{
+                $users = User::where('username', 'LIKE','%' . $text . '%')
+                                ->orWhere('email', 'LIKE', '%' . $text . '%')
+                                ->orWhere('phone', 'LIKE', '%' . $text . '%')
+                                ->get();
+            }
+
+            return response()->json([
+                'success' => true,
+                'users' => $users,
+                'message' => 'Usuaris passan',
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al buscar el camp',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

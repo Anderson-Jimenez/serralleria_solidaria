@@ -8,6 +8,40 @@ function Users() {
 
   let [users, setUsers] = useState([]);
 
+  const buscarUsuari = (e) => {
+    let text = e.target.value;
+
+    if(text===""){
+      fetch("http://localhost:8000/api/users", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => setUsers(data))
+      .catch(error => console.error('Error en la petició:', error));
+    }
+    else{
+      fetch(`http://localhost:8000/api/users/searchUsers/${text}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.success) {
+          setUsers(data.users)
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));
+    }
+  }
 
   useEffect(() => {
     fetch("http://localhost:8000/api/users")
@@ -25,7 +59,7 @@ function Users() {
         <div className="table-container">
 
           <div className="tableFilters">
-            <input type="text" name="" id="" placeholder="Buscar Usuaris..."/>
+            <input type="text" name="" id="" placeholder="Buscar Usuaris..." onChange={buscarUsuari}/>
 
             <select name="" id="">
 

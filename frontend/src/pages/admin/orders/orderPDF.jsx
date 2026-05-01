@@ -5,19 +5,17 @@ import OrderDocument from '../../../components/pdfs/orderDocument';
 
 const OrderPDF = () => {
   const { id } = useParams();
-  const [order, setOrder] = useState(null);
+  const [order, setOrder] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/orders/${id}`)
       .then(response => response.json())
-      .then(data => setOrder(data))
+      .then(data => {
+        setOrder(data);
+        console.log(data);
+      })
       .catch(error => console.error(error));
-
-    console.log(order);
   }, [id]);
-
-
-  if (!order) return <p>Carregant...</p>;
 
   return (
     <PDFViewer style={{ width: '100vw', height: '100vh' }}>

@@ -45,53 +45,59 @@ const styles = StyleSheet.create({
   },
 });
 
-const OrderDocument = ({ order }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
+const OrderDocument = ({ order }) => {
+  console.log(order);
 
-      {/* Capçalera */}
-      <Text style={styles.header}>Albarà #{order.id}</Text>
+  return(
+    <Document>
+      <Page size="A4" style={styles.page}>
 
-      {/* Dades client */}
-      <View style={styles.section}>
-        <Text style={styles.label}>Client</Text>
-        <Text style={styles.value}>{order.client.nom}</Text>
-        <Text style={styles.value}>{order.client.adreca}</Text>
-        <Text style={styles.value}>{order.client.email}</Text>
-      </View>
+        {/* Capçalera */}
+        <Text style={styles.header}>Albarà #{order.id}</Text>
 
-      {/* Data */}
-      <View style={styles.section}>
-        <Text style={styles.label}>Data</Text>
-        <Text style={styles.value}>{order.data}</Text>
-      </View>
-
-      {/* Línies de comanda */}
-      <View style={styles.table}>
-        {/* Capçalera taula */}
-        <View style={[styles.tableRow, styles.tableHeader]}>
-          <Text style={styles.col1}>Producte</Text>
-          <Text style={styles.col2}>Quantitat</Text>
-          <Text style={styles.col3}>Preu</Text>
+        {/* Dades client */}
+        <View style={styles.section}>
+          <Text style={styles.label}>Client</Text>
+          <Text style={styles.value}>{order.user.username}</Text>
+          <Text style={styles.value}>{order.user.phone}</Text>
+          <Text style={styles.value}>{order.user.email}</Text>
         </View>
 
-        {/* Files */}
-        {order.linies.map((linia, i) => (
-          <View key={i} style={styles.tableRow}>
-            <Text style={styles.col1}>{linia.producte}</Text>
-            <Text style={styles.col2}>{linia.quantitat}</Text>
-            <Text style={styles.col3}>{linia.preu.toFixed(2)} €</Text>
+        {/* Data */}
+        <View style={styles.section}>
+          <Text style={styles.label}>Data</Text>
+          <Text style={styles.value}>{order.created_at}</Text>
+        </View>
+
+        {/* Línies de comanda */}
+        <View style={styles.table}>
+          {/* Capçalera taula */}
+          <View style={[styles.tableRow, styles.tableHeader]}>
+            <Text style={styles.col1}>Producte</Text>
+            <Text style={styles.col2}>Quantitat</Text>
+            <Text style={styles.col3}>Preu</Text>
           </View>
-        ))}
-      </View>
 
-      {/* Total */}
-      <View style={styles.total}>
-        <Text>Total: {order.total.toFixed(2)} €</Text>
-      </View>
+          {/* Files 
+          {order.linies.map((linia, i) => (
+            <View key={i} style={styles.tableRow}>
+              <Text style={styles.col1}>{linia.producte}</Text>
+              <Text style={styles.col2}>{linia.quantitat}</Text>
+              <Text style={styles.col3}>{linia.preu.toFixed(2)} €</Text>
+            </View>
+          ))}
+            */}
+        </View>
 
-    </Page>
-  </Document>
-);
+        {/* Total 
+        <View style={styles.total}>
+          <Text>Total: {order.total.toFixed(2)} €</Text>
+        </View>
+          */}
+      </Page>
+    </Document>
+    );
+};
+
 
 export default OrderDocument;

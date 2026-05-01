@@ -92,7 +92,6 @@ function App() {
         </Route>
         <Route path="orders">
           <Route index element={<OrdersIndex />} />
-          <Route path="orderInfo/:id" element={<OrdersPDF />} />
         </Route>
         <Route path="users">
           <Route index element={<UsersIndex />} />
@@ -102,6 +101,7 @@ function App() {
         <Route path="solucionsPersonalitzades" element={<CustomSolutionPetitions />} />
       </Route>
 
+      <Route path="/orders/pdf/:id" element={<OrdersPDF />} />
 
     </Routes>
   );
