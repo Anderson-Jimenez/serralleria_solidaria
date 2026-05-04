@@ -113,7 +113,7 @@ function Navbar() {
             </button>
             {open && (
                 <ul className="dropdown-menu">
-                    <li><a href="/perfil">Perfil</a></li>
+                    <li><a href="/profile">Perfil</a></li>
                     <li><button onClick={logOut}>Tancar Sessió</button></li>
                 </ul>
             )}

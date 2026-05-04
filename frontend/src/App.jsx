@@ -6,7 +6,9 @@ import Dashboard from "./pages/admin/dashboard";
 //Store
 import Home from "./pages/store/home";
 import Products from "./pages/store/products";
-import ProductDetail from "./pages/store/productDetails"
+import ProductDetail from "./pages/store/productDetails";
+import Profile from "./pages/store/profile";
+
 //Admin
 //Categories
 import CategoriesIndex from "./pages/admin/categories/index";
@@ -52,6 +54,7 @@ function App() {
         <Route path="products/:title" element={<Products />} />
         <Route path="producte/:id" element={<ProductDetail />} />
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
         
       </Route>

@@ -378,7 +378,7 @@ class ProductController extends Controller
                     $filterId = (int) $filter;
                     
                     $query->orWhereHas('characteristics', function($q) use ($filterId) {
-                        $q->where('characteristics.id', $filterId); 
+                        $q->where('characteristic_id', $filterId); 
                     });
                     
                 }
@@ -389,7 +389,7 @@ class ProductController extends Controller
                 foreach($validated['selectFilters'] as $value => $id){
                     if (!empty($id)) {
                         $query->whereHas('characteristics', function($q) use ($id) {
-                            $q->where('characteristics.id', $id);
+                            $q->where('characteristic_id', $id);
                         });
                         
                     }
@@ -445,7 +445,7 @@ class ProductController extends Controller
                     $filterId = (int) $filter;
                     
                     $query->orWhereHas('characteristics', function($q) use ($filterId) {
-                        $q->where('characteristics.id', $filterId); 
+                        $q->where('characteristic_id', $filterId); 
                     });
                     
                 }
@@ -456,7 +456,7 @@ class ProductController extends Controller
                 foreach($validated['selectFilters'] as $value => $id){
                     if (!empty($id)) {
                         $query->whereHas('characteristics', function($q) use ($id) {
-                            $q->where('characteristics.id', $id);
+                            $q->where('characteristic_id', $id);
                         });
                         
                     }
@@ -483,6 +483,7 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
+
     public function changeStatusProduct($id)
     {
         try {

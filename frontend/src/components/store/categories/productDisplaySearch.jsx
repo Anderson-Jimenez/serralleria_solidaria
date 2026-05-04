@@ -1,6 +1,6 @@
 import React from 'react';
-import { useRef, useState, useEffect } from 'react';
-import { Star, ShoppingCart, Plus, Minus} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -34,35 +34,30 @@ function productDisplaySearch({ products, characteristics, title }) {
         const filterValue = e.target.value;
         let updatedFilters;
 
-        if (filterValue != "") {
+        if (filterValue !== "") {
             if (savedFilters.includes(filterValue)) {
                 updatedFilters = savedFilters.filter(item => item !== filterValue);
-            }
-            else {
+            } else {
                 updatedFilters = [...savedFilters, filterValue];
             }
-        }
-        else{
+        } else {
             updatedFilters = [...savedFilters];
         }
 
-
         setSavedFilters(updatedFilters);
-
         searchProductsInStore(savedText, updatedFilters, dinamicFilters);
-    }
+    };
 
     const handleSelectChange = (e) => {
         const { name, value } = e.target;
 
-        let updatedFilters = {...dinamicFilters, [name]: value};
+        let updatedFilters = { ...dinamicFilters, [name]: value };
 
         if (value === "") {
-          delete updatedFilters[name];
+            delete updatedFilters[name];
         }
 
         setDinamicFilters(updatedFilters);
-
         searchProductsInStore(savedText, savedFilters, updatedFilters);
     };
 
@@ -89,65 +84,91 @@ function productDisplaySearch({ products, characteristics, title }) {
 
                 if (data.success) {
                     setProductsFiltrats(data.products);
-                }
-                else {
+                } else {
                     console.warn("El servidor diu que no ha tingut èxit:", data.message);
                 }
             })
             .catch(error => console.error('Error en la petició:', error));
-    }
+    };
 
     return (
         <section className='categoryProductDisplay'>
-            <h2 className="title">Tots els {title}</h2>
+
+            {/* Section header — same as FeaturedProducts */}
+            <div className="section-header">
+                <div className="title-group">
+                    <span className="subtitle">CATÀLEG</span>
+                    <h2 className="main-title">
+                        Tots els<br />
+                        <span>{title}</span>
+                    </h2>
+                </div>
+            </div>
+
             <div id='categoryProductDisplayAll'>
+
+                {/* ---- Filters panel ---- */}
                 <div className='displayFilters'>
                     <h2>Filtres</h2>
                     <div className="allFilters">
+
                         <div className="uniqueCharacteristic" key="sale_price">
                             <h3>Preu</h3>
                             <p>No vull fer mes o menys ara</p>
                         </div>
+
                         {characteristics.map((characteristic) => (
                             <div className="uniqueCharacteristic" key={characteristic.id}>
                                 <h3>{characteristic.type}</h3>
 
-                                {characteristic.filterType === 'checkbox' ?
+                                {characteristic.filterType === 'checkbox' ? (
 
-                                        <div className='checkboxFilter'>
-                                            {characteristic.characteristic && characteristic.characteristic.map((char) => (
-                                                <div key={char.id}>
-                                                    <input className='checkmark' type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
-                                                    <label className='checkmarkLabel' htmlFor={`check-${char.id}`}>{char.description}</label>
-                                                </div>
-                                            ))} 
-                                        </div>
-                                        
-                                        : characteristic.filterType === 'select' ? (
-
-                                        <select name={characteristic.id} key={characteristic.id} onChange={handleSelectChange}>
-                                            <option value="" >Selecciona...</option>
-
-                                            {characteristic.characteristic?.map((char) => (
-
-                                                <option value={`${char.id}`} key={char.id}>
+                                    <div className='checkboxFilter'>
+                                        {characteristic.characteristics && characteristic.characteristics.map((char) => (
+                                            <div key={char.id}>
+                                                <input
+                                                    className='checkmark'
+                                                    type="checkbox"
+                                                    id={`check-${char.id}`}
+                                                    value={`${char.id}`}
+                                                    onChange={saveFilter}
+                                                />
+                                                <label className='checkmarkLabel' htmlFor={`check-${char.id}`}>
                                                     {char.description}
-                                                </option>
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
 
-                                            ))}
+                                ) : characteristic.filterType === 'select' ? (
 
-                                        </select>) : (
-                                        <p>No vull fer mes o menys ara</p>
-                                    )}
+                                    <select name={characteristic.id} key={characteristic.id} onChange={handleSelectChange}>
+                                        <option value="">Selecciona...</option>
+                                        {characteristic.characteristic?.map((char) => (
+                                            <option value={`${char.id}`} key={char.id}>
+                                                {char.description}
+                                            </option>
+                                        ))}
+                                    </select>
 
+                                ) : (
+                                    <p>No vull fer mes o menys ara</p>
+                                )}
 
                             </div>
-
                         ))}
                     </div>
                 </div>
+
+                {/* ---- Search + product grid ---- */}
                 <div className='searchDisplay'>
-                    <input type="text" placeholder='Buscar Escuts...' onChange={(e) => { setSavedText(e.target.value); }} onKeyUp={(e) => { searchProductsInStore(e.target.value, savedFilters, dinamicFilters) }} />
+                    <input
+                        type="text"
+                        placeholder='Buscar...'
+                        onChange={(e) => { setSavedText(e.target.value); }}
+                        onKeyUp={(e) => { searchProductsInStore(e.target.value, savedFilters, dinamicFilters); }}
+                    />
+
                     <div className='searchDisplayResult'>
                         {productsFiltrats.map((product) => (
                             <div
@@ -155,45 +176,53 @@ function productDisplaySearch({ products, characteristics, title }) {
                                 key={product.id}
                                 onClick={() => handleProductClick(product.id)}
                             >
+                                {/* Badge */}
                                 {product.discount > 0 ? (
-                                    <span className="badge discount">-{product.discount}%</span>
+                                    <span className="badge-discount">-{product.discount}% DTO</span>
                                 ) : product.is_new ? (
-                                    <span className="badge new">Nou</span>
+                                    <span className="badge-new">Nou</span>
                                 ) : null}
 
+                                {/* Image */}
                                 <div className="imageContainer">
                                     {product.primary_image ? (
-                                        <img src={`http://localhost:8000/storage/${product.primary_image.path}`} alt={product.name} />
+                                        <img
+                                            src={`http://localhost:8000/storage/${product.primary_image.path}`}
+                                            alt={product.name}
+                                        />
                                     ) : (
                                         <div className="noImage">No Image</div>
                                     )}
                                 </div>
 
+                                {/* Info */}
                                 <div className="info">
+                                    <span className="cat-label">CATEGORIA</span>
                                     <h4>{product.name}</h4>
                                     <p className="desc">{product.description}</p>
 
                                     <div className="bottom">
                                         <div className="priceGroup">
                                             <span className="currentPrice">{product.sale_price}€</span>
-                                            {product.discount > 0 && <span className="oldPrice">{product.base_price}€</span>}
+                                            {product.discount > 0 && (
+                                                <span className="oldPrice">{product.base_price}€</span>
+                                            )}
                                         </div>
 
                                         <button
                                             className="cartBtn"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                            }}
+                                            onClick={(e) => { e.stopPropagation(); }}
                                         >
-                                            <ShoppingCart size={20} color="white" />
+                                            <ShoppingCart size={18} color="white" />
                                         </button>
                                     </div>
                                 </div>
+
                             </div>
                         ))}
                     </div>
-
                 </div>
+
             </div>
         </section>
     );

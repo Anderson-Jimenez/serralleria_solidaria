@@ -49,7 +49,7 @@ function Products() {
 
       <FeaturedProducts products={products} title={changedTitle} />
 
-      <GeneralProducts products={latestProducts} title={"Ultims " + changedTitle} />
+      {/* <GeneralProducts products={latestProducts} title={"Ultims " + changedTitle} /> */}
 
       { title ? <ProductSearchCategories products={products} characteristics={characteristicType} title={changedTitle} /> : <ProductSearch products={products} characteristics={characteristicType} title={changedTitle} />}
 
