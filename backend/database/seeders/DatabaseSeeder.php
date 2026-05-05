@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CategorySeeder::class,
-            //C1haracteristicTypeSeeder::class,
-            //CharacteristicSeeder::class,
-            //ProductSeeder::class,
-            //zProductsInPacksSeeder::class,
+            CharacteristicTypeSeeder::class,
+            CharacteristicSeeder::class,
+            ProductSeeder::class,
+            zProductsInPacksSeeder::class,
             UserSeeder::class,
 
         ]);
