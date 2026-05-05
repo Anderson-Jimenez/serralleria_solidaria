@@ -1,20 +1,20 @@
-.productsInPack{
-    display: flex;
-    gap: 20px;
-
-    h3{
-        margin: 0;
+.product-data-box{
+    .productsInPack{
+        display: flex;
+        gap: 20px;
     }
-    div.table-container{
-        width: 50%;
+
+    .tableFiltersInPacks{
+        width: 100%;
     }
-}
 
-.tableFiltersInPacks{
-    width: 100%;
-}
+    .scrollable{
+        max-height: 410px;
+        overflow-y: auto;
+    }
 
-.scrollable{
-    max-height: 410px;
-    overflow-y: auto;
+    .table-container{
+        border: 0;
+        padding: 0;
+    }
 }

@@ -9,47 +9,29 @@ function ProductsCreate() {
   const navigate = useNavigate();
   const [isDragging, setIsDragging] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
+  const [alert, setAlert] = useState({ show: false, type: "", message: "" });
 
-  // API
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
-  const [products, setProducts] = useState([]);
 
+  const [products, setProducts] = useState([]);
   const [productsInPack, setProductsInPack] = useState([]);
 
-
-  // FORM
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [description, setDescription] = useState("");
-
   const [code, setCode] = useState("");
   const [stock, setStock] = useState(0);
-
   const [categoryId, setCategoryId] = useState("");
   const [highlighted, setHighlighted] = useState(0);
 
-  // ✅ CARACTERÍSTICAS
   const [selectedCharacteristics, setSelectedCharacteristics] = useState({});
   const [extraValues, setExtraValues] = useState({});
 
-  // IMÁGENES
   const [images, setImages] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
-
-  const addProductInPack = (product) => {
-    console.log("ID seleccionat:", product.id);
-    setProductsInPack(prevProducts => prevProducts.concat(product));
-    setProducts(prevProducts => prevProducts.filter(item => item.id !== product.id));
-  };
-
-  const removeProductFromPack = (product) => {
-    console.log("ID seleccionat:", product.id);
-    setProducts(prevProducts => prevProducts.concat(product));
-    setProductsInPack(prevProducts => prevProducts.filter(item => item.id !== product.id));
-  };
 
   useEffect(() => {
     fetch("http://localhost:8000/api/categories")
@@ -60,37 +42,35 @@ function ProductsCreate() {
       .then(res => res.json())
       .then(data => setTypes(data));
 
-    fetch("http://localhost:8000/api/packs/productsNotInPack")
+    fetch("http://localhost:8000/api/products")
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         setProducts(data);
       });
   }, []);
 
-  // ✅ HANDLERS
+  useEffect(() => {
+    if (alert.show) {
+      const timer = setTimeout(() => setAlert({ ...alert, show: false }), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert.show]);
+
   const handleCharacteristicChange = (typeId, value) => {
-    setSelectedCharacteristics(prev => ({
-      ...prev,
-      [typeId]: value
-    }));
+    setSelectedCharacteristics(prev => ({ ...prev, [typeId]: value }));
   };
 
   const handleExtraValueChange = (typeId, field, value) => {
     setExtraValues(prev => ({
       ...prev,
-      [typeId]: {
-        ...prev[typeId],
-        [field]: value
-      }
+      [typeId]: { ...prev[typeId], [field]: value }
     }));
   };
 
-  // IMÁGENES
   const handleFiles = (files) => {
     const filesArray = Array.from(files);
-
     setImages(prev => [...prev, ...filesArray]);
-
     const urls = filesArray.map(file => URL.createObjectURL(file));
     setPreviews(prev => [...prev, ...urls]);
   };
@@ -98,15 +78,11 @@ function ProductsCreate() {
   const removeImage = (index) => {
     setImages(prev => prev.filter((_, i) => i !== index));
     setPreviews(prev => prev.filter((_, i) => i !== index));
-
-    if (primaryImageIndex >= images.length - 1) {
-      setPrimaryImageIndex(0);
-    }
+    if (primaryImageIndex >= images.length - 1) setPrimaryImageIndex(0);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const formData = new FormData();
 
     formData.append("code", code);
@@ -123,24 +99,46 @@ function ProductsCreate() {
     formData.append("discount", discount);
     formData.append("highlighted", highlighted ? 1 : 0);
     formData.append("category_id", categoryId);
-    formData.append("product_type", "pack");
-
-    // Índice de la imagen principal
+    formData.append("product_type", "simple");
     formData.append("primary_image_index", primaryImageIndex);
 
     let charIndex = 0;
+
     for (let typeId in selectedCharacteristics) {
+      const type = types.find(t => t.id == typeId);
       const val = selectedCharacteristics[typeId];
-      if (val !== "" && val !== null) {
-        formData.append(`characteristics[${charIndex}][type_id]`, typeId);
-        formData.append(`characteristics[${charIndex}][value]`, val);
+
+      if (type?.type === "Pes" && val !== "" && val !== null) {
+        formData.append(`characteristic[${charIndex}][type_id]`, typeId);
+        formData.append(`characteristic[${charIndex}][value]`, val);
+        formData.append(`characteristic[${charIndex}][is_value]`, 1);
+        charIndex++;
+      } else if (type?.type === "Duplicat de clau" && extraValues[typeId]?.enabled) {
+        const siChar = type.characteristics?.find(c => c.description === "Si");
+        if (siChar) {
+          formData.append(`characteristic[${charIndex}][type_id]`, typeId);
+          formData.append(`characteristic[${charIndex}][value]`, siChar.id);
+          formData.append(`characteristic[${charIndex}][extra_value]`, extraValues[typeId]?.price ?? 0);
+          formData.append(`characteristic[${charIndex}][is_value]`, 0);
+          charIndex++;
+        }
+      } else if (type?.type === "Doble Embrague") {
+        const siChar = type.characteristics?.find(c => c.description === (val ? "Si" : "No"));
+        if (siChar) {
+          formData.append(`characteristic[${charIndex}][type_id]`, typeId);
+          formData.append(`characteristic[${charIndex}][value]`, siChar.id);
+          formData.append(`characteristic[${charIndex}][is_value]`, 0);
+          charIndex++;
+        }
+      } else if (val !== "" && val !== null && val !== false) {
+        formData.append(`characteristic[${charIndex}][type_id]`, typeId);
+        formData.append(`characteristic[${charIndex}][value]`, val);
+        formData.append(`characteristic[${charIndex}][is_value]`, 0);
         charIndex++;
       }
     }
 
-    images.forEach((file) => {
-      formData.append("images[]", file);
-    });
+    images.forEach((file) => formData.append("images[]", file));
 
     fetch("http://localhost:8000/api/packs", {
       method: "POST",
@@ -149,13 +147,13 @@ function ProductsCreate() {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          navigate("/admin/packs");
+          setAlert({ show: true, type: "success", message: "Pack Pujat correctament" });
+          setTimeout(() => navigate("/admin/packs"), 2000);
         } else {
-          console.error("Error:", data.error);
-          alert("Error al crear el pack");
+          setAlert({ show: true, type: "error", message: "Error en pujar un pack" });
         }
       })
-      .catch(err => console.error("Fetch error:", err));
+      .catch(() => setAlert({ show: true, type: "error", message: "Error de conexió amb el servidor" }));
   };
 
   return (
@@ -181,7 +179,7 @@ function ProductsCreate() {
               <li className={activeTab === "productes" ? "active" : ""} onClick={() => setActiveTab("productes")}><KeySquare size={18} /> <span>Productes</span></li>
               <li className={activeTab === "inventario" ? "active" : ""} onClick={() => setActiveTab("inventario")}><Box size={18} /> <span>Inventari</span></li>
               <li className={activeTab === "avanzado" ? "active" : ""} onClick={() => setActiveTab("avanzado")}><Settings size={18} /> <span>Avançat</span></li>
-              <li className={activeTab === "caracteristics" ? "active" : ""} onClick={() => setActiveTab("caracteristics")}><LayoutList size={18} /> <span>Característiques</span></li>
+              {/*<li className={activeTab === "caracteristics" ? "active" : ""} onClick={() => setActiveTab("caracteristics")}><LayoutList size={18} /> <span>Característiques</span></li>*/}
               <li className={activeTab === "imagenes" ? "active" : ""} onClick={() => setActiveTab("imagenes")}><ImageIcon size={18} /> <span>Imatges</span></li>
             </ul>
           </nav>
@@ -218,62 +216,21 @@ function ProductsCreate() {
                     <table>
                       <thead>
                         <tr>
+                          <th></th>
                           <th>Codi</th>
                           <th>Nom</th>
                           <th>Preu</th>
                         </tr>
                       </thead>
                       <tbody id="productsTable">
-                        {products.map(product => (
+                        {products.products.map(product => (
                           <tr onClick={() => addProductInPack(product)}>
+                            <td><input type="checkbox" name={product.id} value={product}/></td>
                             <td>{product.code}</td>
                             <td>{product.name}</td>
                             <td>{product.sale_price}</td>
                           </tr>
                         ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <div className="table-container scrollable">
-                    <h3>Productes en el Pack</h3>
-
-                    <div className="tableFilters tableFiltersInPacks">
-                      <input
-                        type="text"
-                        placeholder="Cerca per nom, codi o descripció..."
-                      /*onChange={searchPacks}*/
-                      />
-
-                      <select>
-
-                      </select>
-                    </div>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Codi</th>
-                          <th>Nom</th>
-                          <th>Preu</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {productsInPack.length > 0 ? (
-                          productsInPack.map(product => (
-                            <tr onClick={() => removeProductFromPack(product)}>
-                              <td>{product.code}</td>
-                              <td>{product.name}</td>
-                              <td>{product.sale_price}</td>
-                              <td><input key={product.id}  type="hidden" name="product_ids[]" value={product.id} /></td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr>
-                            <td colSpan="8" style={{ textAlign: "center", padding: "40px" }}>
-                              No s'han trobat Pakcs
-                            </td>
-                          </tr>
-                        )
-                        }
                       </tbody>
                     </table>
                   </div>
@@ -311,7 +268,7 @@ function ProductsCreate() {
                 </div>
               </section>
             )}
-            {activeTab === "caracteristics" && (
+            {/*activeTab === "caracteristics" && (
               <section className="tab-panel">
                 <div className="panel-header">
                   <h3>Atributs i Característiques</h3>
@@ -393,7 +350,7 @@ function ProductsCreate() {
                   ))}
                 </div>
               </section>
-            )}
+            )*/}
 
             {/* IMÁGENES */}
             {activeTab === "imagenes" && (
