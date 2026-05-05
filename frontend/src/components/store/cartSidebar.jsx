@@ -26,7 +26,8 @@ function CartSidebar({ isOpen, onClose }) {
 
   async function cambiarCantidad(item, delta) {
     const nuevaCantidad = item.quantity + delta;
-    // eliminar
+
+    //eliminar
     if (nuevaCantidad <= 0) {
       try {
         await fetch(`http://localhost:8000/api/cart/${item.id}`, {
@@ -50,9 +51,16 @@ function CartSidebar({ isOpen, onClose }) {
 
       const data = await res.json();
 
+      const updatedItem = data.item;
+
       setItems(prev =>
         prev.map(i =>
-          i.id === item.id ? {...i,...data} : i // actualizamos con la respuesta del backend, que incluye el nuevo subtotal
+          i.id === item.id
+            ? {
+                ...i,
+                ...updatedItem,
+              }
+            : i
         )
       );
     } catch (err) {
@@ -100,11 +108,20 @@ function CartSidebar({ isOpen, onClose }) {
                     {items.map(item => {
                       const imagePath = item.product?.primary_image?.path;
 
-                      const imageUrl = imagePath ? `http://localhost:8000/storage/${imagePath}` : '/placeholder.png';
+                      const imageUrl = imagePath
+                        ? `http://localhost:8000/storage/${imagePath}`
+                        : '/placeholder.png';
+
+                      const sinStock =
+                        item.product?.stock !== undefined &&
+                        item.quantity >= item.product.stock;
+
                       return (
                         <li key={item.id} className="cart-item">
-                          <img src={imageUrl} alt={item.product?.name || 'Producto'}
-                              onError={(e) => {
+                          <img
+                            src={imageUrl}
+                            alt={item.product?.name || 'Producto'}
+                            onError={(e) => {
                               e.currentTarget.src = '/placeholder.png';
                             }}
                           />
@@ -113,9 +130,16 @@ function CartSidebar({ isOpen, onClose }) {
                             <span className="cart-item-name">
                               {item.product?.name || 'Producto'}
                             </span>
+
                             <span className="cart-item-price">
                               {Number(item.subtotal || 0).toFixed(2)}€
                             </span>
+
+                            {sinStock && (
+                              <span className="text-red-500 text-xs">
+                                Sin stock disponible
+                              </span>
+                            )}
                           </div>
 
                           <div className="cart-item-qty">
@@ -129,7 +153,11 @@ function CartSidebar({ isOpen, onClose }) {
 
                             <span>{item.quantity}</span>
 
-                            <button onClick={() => cambiarCantidad(item, +1)}>
+                            <button
+                              onClick={() => cambiarCantidad(item, +1)}
+                              disabled={sinStock}
+                              style={{ opacity: sinStock ? 0.5 : 1 }}
+                            >
                               <Plus size={14} />
                             </button>
                           </div>

@@ -27,19 +27,19 @@ class CartController extends Controller
         //
     }
 
-   public function store(Request $request)
-    {
+   public function store(Request $request){
+        $request->validate([
+            'product_id' => 'required|integer|exists:products,id',
+            'quantity'   => 'required|integer|min:1',
+            'order_id'   => 'nullable|integer|exists:orders,id',
+        ]);
+        $itemResponse = null;
         try {
-            $request->validate([
-                'product_id' => 'required|integer|exists:products,id',
-                'quantity'   => 'required|integer|min:1',
-                'unit_price' => 'required|numeric|min:0',
-                'order_id'   => 'nullable|integer|exists:orders,id', // opcional, viene del frontend
-            ]);
             $userId = auth()->id();
 
+            // obtener o crear pedido
             if ($request->order_id) {
-                $order = Order::find($request->order_id);
+                $order = Order::findOrFail($request->order_id);
             } else {
                 $order = Order::create([
                     'user_id'     => $userId,
@@ -48,41 +48,66 @@ class CartController extends Controller
                 ]);
             }
 
-            $subtotal = $request->unit_price * $request->quantity;
+            DB::transaction(function () use ($request, &$order, &$itemResponse) { // Transaccion que sirve para asegurar que el stock se actualice correctamente y evitar problemas de concurrencia
 
-            $lineaExistente = OrderProduct::where('order_id', $order->id)
-                ->where('product_id', $request->product_id)
-                ->first();
+                //Bloquear producto para evitar errores si user 1 y user 2 intentan comprar el mismo producto al mismo tiempo
+                $product = Product::lockForUpdate()->findOrFail($request->product_id);
 
-            if ($lineaExistente) {
-                $lineaExistente->update([
-                    'quantity' => $lineaExistente->quantity + $request->quantity,
-                    'subtotal' => $lineaExistente->unit_price * ($lineaExistente->quantity + $request->quantity),
+                $lineaExistente = OrderProduct::where('order_id', $order->id)
+                    ->where('product_id', $product->id)
+                    ->first();
+
+                $cantidadTotal = $request->quantity;
+
+                if ($lineaExistente) {
+                    $cantidadTotal += $lineaExistente->quantity;
+                }
+
+                // Validar stock
+                if ($cantidadTotal > $product->stock) {
+                    throw new \Exception('No hay suficiente stock');
+                }
+
+                // Crear o actualizar línea
+                if ($lineaExistente) {
+                    $lineaExistente->update([
+                        'quantity' => $cantidadTotal,
+                        'unit_price' => $product->price,
+                        'subtotal' => $product->price * $cantidadTotal,
+                    ]);
+
+                    $itemResponse = $lineaExistente;
+                } else {
+                    $itemResponse = OrderProduct::create([
+                        'order_id'   => $order->id,
+                        'product_id' => $product->id,
+                        'quantity'   => $request->quantity,
+                        'unit_price' => $product->price,
+                        'subtotal'   => $product->price * $request->quantity,
+                    ]);
+                }
+
+                // Recalcular total del pedido
+                $order->update([
+                    'total_price' => $order->products()->sum('subtotal'),
                 ]);
-            } else {
-                OrderProduct::create([
-                    'order_id'   => $order->id,
-                    'product_id' => $request->product_id,
-                    'quantity'   => $request->quantity,
-                    'unit_price' => $request->unit_price,
-                    'subtotal'   => $subtotal,
-                ]);
-            }
+            });
+
+            // Devolver item completo con producto
+            $item = OrderProduct::with('product.primary_image')
+                ->find($itemResponse->id);
+
+            return response()->json([
+                'message'  => 'Producto añadido al carrito',
+                'order_id' => $order->id,
+                'item'     => $item,
+            ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-                'line'  => $e->getLine(),
-            ], 500);
+            ], 400);
         }
-
-        $order->update([
-            'total_price' => $order->products()->sum('subtotal'),
-        ]);
-
-        return response()->json([
-            'message'  => 'Producte afegit al carret',
-            'order_id' => $order->id,  // <-- el frontend lo guarda en localStorage
-        ], 200);
     }
 
     public function show(string $id)
