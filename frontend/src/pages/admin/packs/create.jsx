@@ -57,15 +57,16 @@ function ProductsCreate() {
     }
   }, [alert.show]);
 
-  const handleCharacteristicChange = (typeId, value) => {
-    setSelectedCharacteristics(prev => ({ ...prev, [typeId]: value }));
-  };
 
-  const handleExtraValueChange = (typeId, field, value) => {
-    setExtraValues(prev => ({
-      ...prev,
-      [typeId]: { ...prev[typeId], [field]: value }
-    }));
+  const handleProductsInPack = (product) => {
+    console.log("ID seleccionat:", product.id);
+
+    if(productsInPack.find(p => p.id === product.id)){
+      setProductsInPack(prevProducts => prevProducts.filter(item => item.id !== product.id));
+    }
+    else{
+      setProductsInPack(prevProducts => prevProducts.concat(product));
+    }
   };
 
   const handleFiles = (files) => {
@@ -99,11 +100,11 @@ function ProductsCreate() {
     formData.append("discount", discount);
     formData.append("highlighted", highlighted ? 1 : 0);
     formData.append("category_id", categoryId);
-    formData.append("product_type", "simple");
+    formData.append("product_type", "pack");
     formData.append("primary_image_index", primaryImageIndex);
 
     let charIndex = 0;
-
+    /*
     for (let typeId in selectedCharacteristics) {
       const type = types.find(t => t.id == typeId);
       const val = selectedCharacteristics[typeId];
@@ -137,7 +138,7 @@ function ProductsCreate() {
         charIndex++;
       }
     }
-
+  */
     images.forEach((file) => formData.append("images[]", file));
 
     fetch("http://localhost:8000/api/packs", {
@@ -224,8 +225,8 @@ function ProductsCreate() {
                       </thead>
                       <tbody id="productsTable">
                         {products.products.map(product => (
-                          <tr onClick={() => addProductInPack(product)}>
-                            <td><input type="checkbox" name={product.id} value={product}/></td>
+                          <tr onClick={() => handleProductsInPack(product)} style={{ cursor: 'pointer' }}>
+                            <td><input  type="checkbox" readOnly checked={productsInPack.some(p => p.id === product.id)} value={product} onClick={(e) => e.stopPropagation()}/></td>
                             <td>{product.code}</td>
                             <td>{product.name}</td>
                             <td>{product.sale_price}</td>

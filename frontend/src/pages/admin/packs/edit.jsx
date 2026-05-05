@@ -1,57 +1,81 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import {ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save, LayoutList, X, Upload, Star, KeySquare} from "lucide-react";
+import { ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save, LayoutList, X, Upload, Star, KeySquare } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function PacksEdit() {
 
   const navigate = useNavigate();
+  const { id } = useParams();
   const [isDragging, setIsDragging] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
+  const [alert, setAlert] = useState({ show: false, type: "", message: "" });
+  const [loading, setLoading] = useState(true);
 
-  // API
+
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
-  const [products, setProducts] = useState([]);
 
+  const [products, setProducts] = useState([]);
   const [productsInPack, setProductsInPack] = useState([]);
 
-
-  // FORM
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [description, setDescription] = useState("");
-
   const [code, setCode] = useState("");
   const [stock, setStock] = useState(0);
-
   const [categoryId, setCategoryId] = useState("");
   const [highlighted, setHighlighted] = useState(0);
 
-  // ✅ CARACTERÍSTICAS
   const [selectedCharacteristics, setSelectedCharacteristics] = useState({});
   const [extraValues, setExtraValues] = useState({});
 
-  // IMÁGENES
   const [images, setImages] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
+  const [existingImages, setExistingImages] = useState([]);
 
-  const addProductInPack = (product) => {
-    console.log("ID seleccionat:", product.id);
-    setProductsInPack(prevProducts => prevProducts.concat(product));
-    setProducts(prevProducts => prevProducts.filter(item => item.id !== product.id));
-  };
-
-  const removeProductFromPack = (product) => {
-    console.log("ID seleccionat:", product.id);
-    setProducts(prevProducts => prevProducts.concat(product));
-    setProductsInPack(prevProducts => prevProducts.filter(item => item.id !== product.id));
-  };
 
   useEffect(() => {
+    fetch(`http://localhost:8000/api/packs/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const product = data.product;
+                    setName(product.name);
+                    setPrice(product.sale_price);
+                    setDiscount(product.discount || 0);
+                    setDescription(product.description || "");
+                    setCode(product.code);
+                    setStock(product.stock);
+                    setCategoryId(product.category_id || "");
+                    setHighlighted(product.highlighted ? 1 : 0);
+                  
+                    if(product.pack){
+                      product.pack.forEach(prod => {
+                        setProductsInPack(prevProducts => prevProducts.concat(prod));
+                      });
+                    }
+                    
+                    // Cargar imágenes existentes
+                    if (product.images) {
+                        setExistingImages(product.images);
+                        const primaryIndex = product.images.findIndex(img => img.is_primary);
+                        if (primaryIndex !== -1) {
+                            setPrimaryImageIndex(primaryIndex);
+                        }
+                    }
+                }
+                setLoading(false);
+                console.log(data);
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                setLoading(false);
+            });
+
     fetch("http://localhost:8000/api/categories")
       .then(res => res.json())
       .then(data => setCategories(data.categories ?? data));
@@ -60,29 +84,23 @@ function PacksEdit() {
       .then(res => res.json())
       .then(data => setTypes(data));
 
-    fetch("http://localhost:8000/api/packs/productsNotInPack")
+    fetch("http://localhost:8000/api/products")
       .then(res => res.json())
       .then(data => {
         setProducts(data);
+        console.log(products)
       });
   }, []);
 
-  // ✅ HANDLERS
-  const handleCharacteristicChange = (typeId, value) => {
-    setSelectedCharacteristics(prev => ({
-      ...prev,
-      [typeId]: value
-    }));
-  };
+  const handleProductsInPack = (product) => {
+    console.log("ID seleccionat:", product.id);
 
-  const handleExtraValueChange = (typeId, field, value) => {
-    setExtraValues(prev => ({
-      ...prev,
-      [typeId]: {
-        ...prev[typeId],
-        [field]: value
-      }
-    }));
+    if (productsInPack.find(p => p.id === product.id)) {
+      setProductsInPack(prevProducts => prevProducts.filter(item => item.id !== product.id));
+    }
+    else {
+      setProductsInPack(prevProducts => prevProducts.concat(product));
+    }
   };
 
   // IMÁGENES
@@ -106,7 +124,6 @@ function PacksEdit() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const formData = new FormData();
 
     formData.append("code", code);
@@ -114,8 +131,8 @@ function PacksEdit() {
     formData.append("description", description || "");
 
     productsInPack.forEach((product) => {
-        // Afegim cada ID individualment usant la nomenclatura de claudàtors []
-        formData.append("product_ids[]", product.id); 
+      // Afegim cada ID individualment usant la nomenclatura de claudàtors []
+      formData.append("product_ids[]", product.id);
     });
 
     formData.append("sale_price", price);
@@ -124,11 +141,11 @@ function PacksEdit() {
     formData.append("highlighted", highlighted ? 1 : 0);
     formData.append("category_id", categoryId);
     formData.append("product_type", "pack");
-
-    // Índice de la imagen principal
     formData.append("primary_image_index", primaryImageIndex);
 
     let charIndex = 0;
+
+    /*
     for (let typeId in selectedCharacteristics) {
       const val = selectedCharacteristics[typeId];
       if (val !== "" && val !== null) {
@@ -137,10 +154,8 @@ function PacksEdit() {
         charIndex++;
       }
     }
-
-    images.forEach((file) => {
-      formData.append("images[]", file);
-    });
+    */
+    images.forEach((file) => formData.append("images[]", file));
 
     fetch("http://localhost:8000/api/packs", {
       method: "POST",
@@ -149,19 +164,19 @@ function PacksEdit() {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          navigate("/admin/packs");
+          setAlert({ show: true, type: "success", message: "Pack Editat Correctament" });
+          setTimeout(() => navigate("/admin/packs"), 2000);
         } else {
-          console.error("Error:", data.error);
-          alert("Error al crear el pack");
+          setAlert({ show: true, type: "error", message: "Error en editar un pack" });
         }
       })
-      .catch(err => console.error("Fetch error:", err));
+      .catch(() => setAlert({ show: true, type: "error", message: "Error de conexió amb el servidor" }));
   };
 
-    return (
-            <div className="dashboard-content">
+  return (
+    <div className="dashboard-content">
       <div className="space-between mb-10">
-        <h1 className="dashboard-title">Crear nou pack</h1>
+        <h1 className="dashboard-title">Editar pack</h1>
         <button type="button" className="action-icon" onClick={() => navigate("/admin/packs")}>
           <ArrowLeft size={18} /> Tornar
         </button>
@@ -181,7 +196,7 @@ function PacksEdit() {
               <li className={activeTab === "productes" ? "active" : ""} onClick={() => setActiveTab("productes")}><KeySquare size={18} /> <span>Productes</span></li>
               <li className={activeTab === "inventario" ? "active" : ""} onClick={() => setActiveTab("inventario")}><Box size={18} /> <span>Inventari</span></li>
               <li className={activeTab === "avanzado" ? "active" : ""} onClick={() => setActiveTab("avanzado")}><Settings size={18} /> <span>Avançat</span></li>
-              <li className={activeTab === "caracteristics" ? "active" : ""} onClick={() => setActiveTab("caracteristics")}><LayoutList size={18} /> <span>Característiques</span></li>
+              {/*<li className={activeTab === "caracteristics" ? "active" : ""} onClick={() => setActiveTab("caracteristics")}><LayoutList size={18} /> <span>Característiques</span></li>*/}
               <li className={activeTab === "imagenes" ? "active" : ""} onClick={() => setActiveTab("imagenes")}><ImageIcon size={18} /> <span>Imatges</span></li>
             </ul>
           </nav>
@@ -224,56 +239,14 @@ function PacksEdit() {
                         </tr>
                       </thead>
                       <tbody id="productsTable">
-                        {products.map(product => (
-                          <tr onClick={() => addProductInPack(product)}>
+                        {products.products.map(product => (
+                          <tr onClick={() => handleProductsInPack(product)} style={{ cursor: 'pointer' }}>
+                            <td><input  type="checkbox" readOnly checked={productsInPack.some(p => p.id === product.id)} value={product} onClick={(e) => e.stopPropagation()}/></td>
                             <td>{product.code}</td>
                             <td>{product.name}</td>
                             <td>{product.sale_price}</td>
                           </tr>
                         ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <div className="table-container scrollable">
-                    <h3>Productes en el Pack</h3>
-
-                    <div className="tableFilters tableFiltersInPacks">
-                      <input
-                        type="text"
-                        placeholder="Cerca per nom, codi o descripció..."
-                      /*onChange={searchPacks}*/
-                      />
-
-                      <select>
-
-                      </select>
-                    </div>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Codi</th>
-                          <th>Nom</th>
-                          <th>Preu</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {productsInPack.length > 0 ? (
-                          productsInPack.map(product => (
-                            <tr onClick={() => removeProductFromPack(product)}>
-                              <td>{product.code}</td>
-                              <td>{product.name}</td>
-                              <td>{product.sale_price}</td>
-                              <td><input key={product.id}  type="hidden" name="product_ids[]" value={product.id} /></td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr>
-                            <td colSpan="8" style={{ textAlign: "center", padding: "40px" }}>
-                              No s'han trobat Pakcs
-                            </td>
-                          </tr>
-                        )
-                        }
                       </tbody>
                     </table>
                   </div>
@@ -311,7 +284,7 @@ function PacksEdit() {
                 </div>
               </section>
             )}
-            {activeTab === "caracteristics" && (
+            {/*activeTab === "caracteristics" && (
               <section className="tab-panel">
                 <div className="panel-header">
                   <h3>Atributs i Característiques</h3>
@@ -393,7 +366,7 @@ function PacksEdit() {
                   ))}
                 </div>
               </section>
-            )}
+            )*/}
 
             {/* IMÁGENES */}
             {activeTab === "imagenes" && (
@@ -460,6 +433,6 @@ function PacksEdit() {
         </div>
       </form>
     </div>
-    );
+  );
 }
 export default PacksEdit;
