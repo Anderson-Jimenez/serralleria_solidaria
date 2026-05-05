@@ -441,14 +441,14 @@ class ProductController extends Controller
 
             // 2. Filtre de caracteristiques de checkboxes
             if(!empty($filters)){
-                foreach($filters as $filter){
-                    $filterId = (int) $filter;
-                    
-                    $query->orWhereHas('characteristics', function($q) use ($filterId) {
-                        $q->where('characteristic_id', $filterId); 
-                    });
-                    
-                }
+                $query->where(function($q) use ($filters) {         // ← agrupa amb AND
+                    foreach ($filters as $filter) {
+                        $filterId = (int) $filter;
+                        $q->orWhereHas('characteristics', function($q2) use ($filterId) {
+                            $q2->where('characteristic_id', $filterId);
+                        });
+                    }
+                });
             }
 
             // 3. Filtre de caracteristiques de select

@@ -197,7 +197,7 @@ function productDisplaySearch({ products, characteristics, title }) {
 
                                 {/* Info */}
                                 <div className="info">
-                                    <span className="cat-label">CATEGORIA</span>
+                                    <span className="cat-label">{product.category.name}</span>
                                     <h4>{product.name}</h4>
                                     <p className="desc">{product.description}</p>
 

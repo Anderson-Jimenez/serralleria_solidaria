@@ -41,6 +41,8 @@ function Products() {
 
     setChangedTitle(title || "Productes");
 
+    console.log(products);
+
   }, [title]);
 
   return (
