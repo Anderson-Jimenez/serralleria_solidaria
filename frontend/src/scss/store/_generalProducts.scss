@@ -194,6 +194,20 @@
           &:active {
             transform: scale(0.95);
           }
+          &.added {
+            background: #16a34a;
+          }
+
+          &.no-stock {
+            background: #9ca3af;
+            cursor: not-allowed;
+            &:hover { background: #9ca3af; transform: none; }
+          }
+
+          &:disabled {
+            cursor: not-allowed;
+            &:hover { transform: none; }
+          }
         }
       }
     }

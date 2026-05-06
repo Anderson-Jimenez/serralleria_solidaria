@@ -8,6 +8,8 @@ use App\Models\ProductCharacteristic;
 use App\Models\CharacteristicType;
 use App\Models\OrderProduct;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
+use App\Models\Product;
 
 class CartController extends Controller
 {
@@ -71,19 +73,18 @@ class CartController extends Controller
                 // Crear o actualizar línea
                 if ($lineaExistente) {
                     $lineaExistente->update([
-                        'quantity' => $cantidadTotal,
-                        'unit_price' => $product->price,
-                        'subtotal' => $product->price * $cantidadTotal,
+                        'quantity'   => $cantidadTotal,
+                        'unit_price' => $lineaExistente->unit_price,
+                        'subtotal'   => $lineaExistente->unit_price * $cantidadTotal,
                     ]);
-
                     $itemResponse = $lineaExistente;
                 } else {
                     $itemResponse = OrderProduct::create([
                         'order_id'   => $order->id,
                         'product_id' => $product->id,
                         'quantity'   => $request->quantity,
-                        'unit_price' => $product->price,
-                        'subtotal'   => $product->price * $request->quantity,
+                        'unit_price' => $product->sale_price,
+                        'subtotal'   => $product->sale_price * $request->quantity,
                     ]);
                 }
 
@@ -94,7 +95,7 @@ class CartController extends Controller
             });
 
             // Devolver item completo con producto
-            $item = OrderProduct::with('product.primary_image')
+            $item = OrderProduct::with('product.primaryImage')
                 ->find($itemResponse->id);
 
             return response()->json([
@@ -144,7 +145,9 @@ class CartController extends Controller
             'total_price' => $item->order->products()->sum('subtotal'),
         ]);
     
-        return response()->json($item->fresh(), 200);
+        return response()->json([
+            'item' => $item->fresh()
+        ], 200);
     }
     
     // DELETE /api/cart/{id}  →  elimina un order_product

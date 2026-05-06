@@ -420,6 +420,21 @@
           cursor: not-allowed;
           &:hover { background: variables.$color-accent; transform: none; }
         }
+        &.no-stock {
+          background: #9ca3af;
+          cursor: not-allowed;
+
+          &:hover {
+            background: #9ca3af;
+            transform: none;
+          }
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          &:hover { transform: none; }
+        }
+
 
       }
     }
