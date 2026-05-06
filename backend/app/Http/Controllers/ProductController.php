@@ -19,7 +19,7 @@ class ProductController extends Controller
         $characteristics = Characteristic::with('type')->get();
         $categories = Category::all();
 
-        $products = Product::where('product_type', 'simple')->with(['category','characteristics','primaryImage'])->get();
+        $products = Product::with(['category','characteristics','primaryImage'])->get();
 
         return response()->json([
             'characteristics' => $characteristics,

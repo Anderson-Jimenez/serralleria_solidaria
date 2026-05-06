@@ -51,6 +51,10 @@ function ProductsCreate() {
   }, []);
 
   useEffect(() => {
+    console.log(productsInPack);
+  }, [productsInPack]);
+
+  useEffect(() => {
     if (alert.show) {
       const timer = setTimeout(() => setAlert({ ...alert, show: false }), 4000);
       return () => clearTimeout(timer);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save, LayoutList, X, Upload, Star, KeySquare } from "lucide-react";
+import { ArrowLeft, Info, Box, Settings, Image as ImageIcon, Save, CheckCircle, X, Upload, Star, KeySquare, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function PacksEdit() {
@@ -12,7 +12,6 @@ function PacksEdit() {
   const [activeTab, setActiveTab] = useState("general");
   const [alert, setAlert] = useState({ show: false, type: "", message: "" });
   const [loading, setLoading] = useState(true);
-
 
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
@@ -37,44 +36,43 @@ function PacksEdit() {
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
   const [existingImages, setExistingImages] = useState([]);
 
-
   useEffect(() => {
     fetch(`http://localhost:8000/api/packs/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    const product = data.product;
-                    setName(product.name);
-                    setPrice(product.sale_price);
-                    setDiscount(product.discount || 0);
-                    setDescription(product.description || "");
-                    setCode(product.code);
-                    setStock(product.stock);
-                    setCategoryId(product.category_id || "");
-                    setHighlighted(product.highlighted ? 1 : 0);
-                  
-                    if(product.pack){
-                      product.pack.forEach(prod => {
-                        setProductsInPack(prevProducts => prevProducts.concat(prod));
-                      });
-                    }
-                    
-                    // Cargar imágenes existentes
-                    if (product.images) {
-                        setExistingImages(product.images);
-                        const primaryIndex = product.images.findIndex(img => img.is_primary);
-                        if (primaryIndex !== -1) {
-                            setPrimaryImageIndex(primaryIndex);
-                        }
-                    }
-                }
-                setLoading(false);
-                console.log(data);
-            })
-            .catch(err => {
-                console.error("Error:", err);
-                setLoading(false);
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const product = data.product;
+          setName(product.name);
+          setPrice(product.sale_price);
+          setDiscount(product.discount || 0);
+          setDescription(product.description || "");
+          setCode(product.code);
+          setStock(product.stock);
+          setCategoryId(product.category_id || "");
+          setHighlighted(product.highlighted ? 1 : 0);
+
+          if (product.pack) {
+            product.pack.forEach(prod => {
+              setProductsInPack(prevProducts => prevProducts.concat(prod.product));
             });
+          }
+
+          // Cargar imágenes existentes
+          if (product.images) {
+            setExistingImages(product.images);
+            const primaryIndex = product.images.findIndex(img => img.is_primary);
+            if (primaryIndex !== -1) {
+              setPrimaryImageIndex(primaryIndex);
+            }
+          }
+        }
+        setLoading(false);
+        console.log(data);
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        setLoading(false);
+      });
 
     fetch("http://localhost:8000/api/categories")
       .then(res => res.json())
@@ -90,7 +88,15 @@ function PacksEdit() {
         setProducts(data);
         console.log(products)
       });
+
   }, []);
+
+  useEffect(() => {
+    if (alert.show) {
+      const timer = setTimeout(() => setAlert({ ...alert, show: false }), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert.show]);
 
   const handleProductsInPack = (product) => {
     console.log("ID seleccionat:", product.id);
@@ -99,7 +105,7 @@ function PacksEdit() {
       setProductsInPack(prevProducts => prevProducts.filter(item => item.id !== product.id));
     }
     else {
-      setProductsInPack(prevProducts => prevProducts.concat(product));
+      setProductsInPack(prev => [...prev, product]);
     }
   };
 
@@ -126,6 +132,7 @@ function PacksEdit() {
     e.preventDefault();
     const formData = new FormData();
 
+    formData.append("_method", "PUT");
     formData.append("code", code);
     formData.append("name", name);
     formData.append("description", description || "");
@@ -157,7 +164,7 @@ function PacksEdit() {
     */
     images.forEach((file) => formData.append("images[]", file));
 
-    fetch("http://localhost:8000/api/packs", {
+    fetch(`http://localhost:8000/api/packs/${id}`, {
       method: "POST",
       body: formData,
     })
@@ -175,6 +182,13 @@ function PacksEdit() {
 
   return (
     <div className="dashboard-content">
+      {alert.show && (
+        <div className={`alert-toast ${alert.type}`}>
+          {alert.type === "success" ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+          <p>{alert.message}</p>
+          <X size={16} className="close-alert" onClick={() => setAlert({ ...alert, show: false })} />
+        </div>
+      )}
       <div className="space-between mb-10">
         <h1 className="dashboard-title">Editar pack</h1>
         <button type="button" className="action-icon" onClick={() => navigate("/admin/packs")}>
@@ -241,7 +255,7 @@ function PacksEdit() {
                       <tbody id="productsTable">
                         {products.products.map(product => (
                           <tr onClick={() => handleProductsInPack(product)} style={{ cursor: 'pointer' }}>
-                            <td><input  type="checkbox" readOnly checked={productsInPack.some(p => p.id === product.id)} value={product} onClick={(e) => e.stopPropagation()}/></td>
+                            <td><input type="checkbox" readOnly checked={productsInPack.some(p => p.id === product.id)} value={product} onClick={(e) => e.stopPropagation()} /></td>
                             <td>{product.code}</td>
                             <td>{product.name}</td>
                             <td>{product.sale_price}</td>
