@@ -1,74 +1,71 @@
 import { useEffect, useState } from "react";
-import { Search, User, ShoppingCart, ChevronDown, KeyRound, LogIn } from 'lucide-react';
+import { Search, ShoppingCart, ChevronDown, KeyRound, LogIn } from 'lucide-react';
 import LogInView from "../logIn";
 import { apiFetch } from '../../hooks/apiUtils';
 import CartSidebar from './cartSidebar';
 import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
+
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [cartOpen, setCartOpen] = useState(false);
+  const [cartOpen, setCartOpen]     = useState(false);
+  const [userOpen, setUserOpen]     = useState(false);
+
+  // Cantidad de items en el carrito — se lee de localStorage
+  const [cartCount, setCartCount] = useState(0);
+
   const [loggedUser, setLoggedUser] = useState(() => {
-    // Inicialitza llegint el localStorage al carregar
     const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : null;  // JSON.parse per convertir a objecte
+    return saved ? JSON.parse(saved) : null;
   });
 
-  const [open, setOpen] = useState(false);
+  // Actualiza el badge del carrito leyendo los items guardados
+  // Se llama al montar y cada vez que el sidebar se cierra
+  function refreshCartCount() {
+    const orderId = localStorage.getItem('order_id');
+    if (!orderId) { setCartCount(0); return; }
+
+    fetch(`http://localhost:8000/api/cart/${orderId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const total = data.reduce((acc, item) => acc + item.quantity, 0);
+          setCartCount(total);
+        }
+      })
+      .catch(() => setCartCount(0));
+  }
 
   const logOut = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await apiFetch('/logout', {
-        method: 'POST',
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        setError(err.message || 'Error al tancar sessió');
-        return;
-      }
-
+      await apiFetch('/logout', { method: 'POST' });
       localStorage.removeItem('token');
       localStorage.removeItem('userType');
       localStorage.removeItem('user');
-
       window.dispatchEvent(new Event('storage'));
-
-      navigate("/");
-
+      navigate('/');
     } catch (err) {
-      setError('Error de connexió amb el servidor');
       console.error(err);
     }
   };
 
-
   useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const response = await fetch('http://localhost:8000/api/categories');
-        if (!response.ok) throw new Error('Error al traer categorías');
-        const data = await response.json();
-        setCategories(data);
-      }
-      catch (error) {
-        console.error("Error:", error);
-      }
-      finally {
-        setLoading(false);
-      }
-    }
-    fetchCategories();
+    // Categorías
+    fetch('http://localhost:8000/api/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error('Error categorías:', err));
 
+    // Badge del carrito al cargar
+    refreshCartCount();
+
+    // Escucha cambios de usuario (login/logout)
     const handleStorage = () => {
       const saved = localStorage.getItem('user');
       setLoggedUser(saved ? JSON.parse(saved) : null);
     };
-
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
   }, []);
@@ -76,11 +73,14 @@ function Navbar() {
   return (
     <div className="navbar-container">
       <nav className="navbar">
-        <div className="navbar-brand">
+
+        {/* ── Logo ── */}
+        <div className="navbar-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <KeyRound size={24} color="#ff6b35" />
           <span className="brand-name">Serralleria Solidaria</span>
         </div>
 
+        {/* ── Links ── */}
         <ul className="nav-links">
           <li><a href="/">Inici</a></li>
 
@@ -89,39 +89,72 @@ function Navbar() {
             <ul className="dropdown-menu">
               {categories.map(category => (
                 <li key={category.id}>
-                  <a onClick={() => navigate(`/products/${category.name}`)}>{category.name}</a>
+                  <a onClick={() => navigate(`/products/${category.name}`)}>
+                    {category.name}
+                  </a>
                 </li>
               ))}
             </ul>
           </li>
+
           <li><a href="/solucions_personalitzades">Solucions Personalitzades</a></li>
         </ul>
 
-        {/* LADO DERECHO: ICONOS */}
+        {/* ── Iconos derecha ── */}
         <div className="navbar-icons">
+
           <button><Search size={20} /></button>
 
-          <div className="cart-container" onClick={() => setCartOpen(true)}>
+          {/* Carrito */}
+          <button
+            className="cart-btn-nav"
+            onClick={() => {
+              setCartOpen(true);
+              refreshCartCount(); // refresca el badge al abrir
+            }}
+          >
             <ShoppingCart size={20} />
-            <span className="badge">3</span>
-          </div>
-
-        {loggedUser ? (
-          <div className="dropdown" onMouseLeave={() => setOpen(false)}>
-            <button onClick={() => setOpen(!open)}>
-                Benvingut, {loggedUser.username} ▾
-            </button>
-            {open && (
-                <ul className="dropdown-menu">
-                    <li><a href="/profile">Perfil</a></li>
-                    <li><button onClick={logOut}>Tancar Sessió</button></li>
-                </ul>
+            {cartCount > 0 && (
+              <span className="badge">{cartCount}</span>
             )}
-          </div>
+          </button>
 
-        ) : (<LogInView />)}
-      </div>
-    </nav>
+          {/* Usuario */}
+          {loggedUser ? (
+            <div
+              className="dropdown user-dropdown"
+              onMouseLeave={() => setUserOpen(false)}
+            >
+              <button
+                className="user-btn"
+                onClick={() => setUserOpen(!userOpen)}
+              >
+                Benvingut, {loggedUser.username} <ChevronDown size={14} />
+              </button>
+
+              {userOpen && (
+                <ul className="dropdown-menu">
+                  <li><a href="/profile">Perfil</a></li>
+                  <li><button onClick={logOut}>Tancar Sessió</button></li>
+                </ul>
+              )}
+            </div>
+          ) : (
+            <LogInView />
+          )}
+
+        </div>
+      </nav>
+
+      {/* Sidebar — al cerrar refresca el badge */}
+      <CartSidebar
+        isOpen={cartOpen}
+        onClose={() => {
+          setCartOpen(false);
+          refreshCartCount();
+        }}
+      />
+    </div>
   );
 }
 
