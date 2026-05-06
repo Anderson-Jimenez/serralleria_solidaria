@@ -92,9 +92,11 @@ function Characteristics() {
 
   return (
     <div className="dashboard-caracteristics">
+      <h1 className="dashboard-title">Gestió de Característiques</h1>
+      <h3 className="dashboard-subtitle">Administra totes les característiques de la Serralleria</h3>
+
       <div className="caracteristics-content">
         <div className="table-container">
-          <h1>Caracteristiques</h1>
 
           <div className="tableFilters">
             <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." onChange={searchCharacteristic}/>

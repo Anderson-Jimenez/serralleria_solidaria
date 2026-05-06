@@ -11,6 +11,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 Use App\Http\Controllers\CartController;
+Use App\Http\Controllers\OrderController;
+
 
 Route::get('/test', function () {
     return response()->json([
@@ -45,6 +47,7 @@ Route::apiResource('cart', CartController::class);
 
 
 
+Route::apiResource('orders', OrderController::class);
 
 
 Route::apiResource('characteristics', CharacteristicController::class);
@@ -62,6 +65,7 @@ Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsN
 
 // Rutes per a users
 Route::apiResource('users', UserController::class);
+Route::get('/users/searchUsers/{text}',[UserController::class,'searchUsers']);
 
 // Rutas para el HomeScreen
 Route::apiResource('homescreens', HomeScreenController::class);

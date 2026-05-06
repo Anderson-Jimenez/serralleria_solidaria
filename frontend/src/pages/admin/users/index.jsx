@@ -8,6 +8,40 @@ function Users() {
 
   let [users, setUsers] = useState([]);
 
+  const buscarUsuari = (e) => {
+    let text = e.target.value;
+
+    if(text===""){
+      fetch("http://localhost:8000/api/users", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => setUsers(data))
+      .catch(error => console.error('Error en la petició:', error));
+    }
+    else{
+      fetch(`http://localhost:8000/api/users/searchUsers/${text}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+      .then(response => response.json()) 
+      .then(data => {
+        if (data.success) {
+          setUsers(data.users)
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));
+    }
+  }
 
   useEffect(() => {
     fetch("http://localhost:8000/api/users")
@@ -18,11 +52,14 @@ function Users() {
 
   return (
     <div className="dashboard-caracteristics">
+      <h1 className="dashboard-title">Gestió d'usuaris</h1>
+      <h3 className="dashboard-subtitle">Administra tots els usuaris</h3>
+
       <div className="caracteristics-content">
         <div className="table-container">
-          <h1>Usuaris</h1>
+
           <div className="tableFilters">
-            <input type="text" name="" id="" placeholder="Buscar Usuaris..."/>
+            <input type="text" name="" id="" placeholder="Buscar Usuaris..." onChange={buscarUsuari}/>
 
             <select name="" id="">
 

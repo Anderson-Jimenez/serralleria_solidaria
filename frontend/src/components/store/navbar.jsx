@@ -106,24 +106,22 @@ function Navbar() {
             <span className="badge">3</span>
           </div>
 
-          {loggedUser ? (
-            <div className="dropdown" onMouseLeave={() => setOpen(false)}>
-              <button onClick={() => setOpen(!open)}>
-                  Benvingut, {loggedUser.username} ▾
-              </button>
-              {open && (
-                  <ul className="dropdown-menu">
-                      <li><a href="/perfil">Perfil</a></li>
-                      <li><button onClick={logOut}>Tancar Sessió</button></li>
-                  </ul>
-              )}
-            </div>
-          ) : (<LogInView />)}
-        </div>
-      </nav>
-      
-      <CartSidebar isOpen={cartOpen} onClose={() => setCartOpen(false)} />
-    </div>
+        {loggedUser ? (
+          <div className="dropdown" onMouseLeave={() => setOpen(false)}>
+            <button onClick={() => setOpen(!open)}>
+                Benvingut, {loggedUser.username} ▾
+            </button>
+            {open && (
+                <ul className="dropdown-menu">
+                    <li><a href="/profile">Perfil</a></li>
+                    <li><button onClick={logOut}>Tancar Sessió</button></li>
+                </ul>
+            )}
+          </div>
+
+        ) : (<LogInView />)}
+      </div>
+    </nav>
   );
 }
 

@@ -122,7 +122,7 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            $product = Product::with(['category', 'characteristics', 'images', 'primaryImage'])->findOrFail($id);
+            $product = Product::with(['category', 'characteristics.characteristic.type', 'images', 'primaryImage'])->findOrFail($id);
             
             return response()->json([
                 'success' => true,
@@ -378,7 +378,7 @@ class ProductController extends Controller
                     $filterId = (int) $filter;
                     
                     $query->orWhereHas('characteristics', function($q) use ($filterId) {
-                        $q->where('characteristics.id', $filterId); 
+                        $q->where('characteristic_id', $filterId); 
                     });
                     
                 }
@@ -389,7 +389,7 @@ class ProductController extends Controller
                 foreach($validated['selectFilters'] as $value => $id){
                     if (!empty($id)) {
                         $query->whereHas('characteristics', function($q) use ($id) {
-                            $q->where('characteristics.id', $id);
+                            $q->where('characteristic_id', $id);
                         });
                         
                     }
@@ -441,14 +441,14 @@ class ProductController extends Controller
 
             // 2. Filtre de caracteristiques de checkboxes
             if(!empty($filters)){
-                foreach($filters as $filter){
-                    $filterId = (int) $filter;
-                    
-                    $query->orWhereHas('characteristics', function($q) use ($filterId) {
-                        $q->where('characteristics.id', $filterId); 
-                    });
-                    
-                }
+                $query->where(function($q) use ($filters) {         // ← agrupa amb AND
+                    foreach ($filters as $filter) {
+                        $filterId = (int) $filter;
+                        $q->orWhereHas('characteristics', function($q2) use ($filterId) {
+                            $q2->where('characteristic_id', $filterId);
+                        });
+                    }
+                });
             }
 
             // 3. Filtre de caracteristiques de select
@@ -456,7 +456,7 @@ class ProductController extends Controller
                 foreach($validated['selectFilters'] as $value => $id){
                     if (!empty($id)) {
                         $query->whereHas('characteristics', function($q) use ($id) {
-                            $q->where('characteristics.id', $id);
+                            $q->where('characteristic_id', $id);
                         });
                         
                     }
@@ -483,6 +483,7 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
+
     public function changeStatusProduct($id)
     {
         try {

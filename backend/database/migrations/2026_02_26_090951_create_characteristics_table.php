@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('description')->nullable();
             $table->boolean('status')->default(true);
-            $table->foreignId('characteristic_types_id')->constrained()->onDelete('cascade');
+            $table->foreignId('characteristic_type_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

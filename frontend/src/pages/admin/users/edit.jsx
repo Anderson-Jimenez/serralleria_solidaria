@@ -24,7 +24,6 @@ function UsersCreate() {
         setEmail(data.email);
         setPhone(data.phone);
         setUserType(data.userType);
-        //setPassword(data.password);
       });
   }, [id]);
 
@@ -32,19 +31,19 @@ function UsersCreate() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const body = { username, email, phone, userType };
+
+    if (password.trim() !== "") {
+        body.password = password;
+    }
+
     fetch(`http://localhost:8000/api/users/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      body: JSON.stringify({
-        username,
-        email,
-        phone,
-        userType,
-        //password,
-      })
+      body: JSON.stringify(body)
     })
       .then(async res => {
         if (!res.ok) {
@@ -110,12 +109,11 @@ function UsersCreate() {
                     <option value="admin">Administrador</option>
                   </select>
                 </div>
-                {/*
+                
                 <div className="form-group">
                   <label htmlFor="code">Contrasenya: </label>
-                  <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                  <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 </div>
-                */}
               </section>
             )}
 

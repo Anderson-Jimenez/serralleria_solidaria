@@ -6,7 +6,9 @@ import Dashboard from "./pages/admin/dashboard";
 //Store
 import Home from "./pages/store/home";
 import Products from "./pages/store/products";
-import ProductDetail from "./pages/store/productDetails"
+import ProductDetail from "./pages/store/productDetails";
+import Profile from "./pages/store/profile";
+
 //Admin
 //Categories
 import CategoriesIndex from "./pages/admin/categories/index";
@@ -33,6 +35,10 @@ import UsersIndex from "./pages/admin/users/index";
 import UsersCreate from "./pages/admin/users/create";
 import UsersEdit from "./pages/admin/users/edit";
 
+import OrdersIndex from "./pages/admin/orders/index";
+import OrdersPDF from "./pages/admin/orders/orderPDF";
+
+
 import CustomSolutionForm from "./pages/store/customSolutionForm";
 import CustomSolutionPetitions from "./pages/admin/customSolutions/index";
 import CustomSolutionDetails from "./pages/admin/customSolutions/show";
@@ -48,6 +54,7 @@ function App() {
         <Route path="products/:title" element={<Products />} />
         <Route path="producte/:id" element={<ProductDetail />} />
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
         
       </Route>
@@ -86,6 +93,9 @@ function App() {
           <Route path="create" element={<PacksCreate />} />
           <Route path="edit/:id" element={<PacksEdit />} />
         </Route>
+        <Route path="orders">
+          <Route index element={<OrdersIndex />} />
+        </Route>
         <Route path="users">
           <Route index element={<UsersIndex />} />
           <Route path="create" element={<UsersCreate />} />
@@ -94,6 +104,7 @@ function App() {
         <Route path="solucionsPersonalitzades" element={<CustomSolutionPetitions />} />
       </Route>
 
+      <Route path="/orders/pdf/:id" element={<OrdersPDF />} />
 
     </Routes>
   );

@@ -12,9 +12,8 @@ class Product extends Model
     public function category(){
         return $this->belongsTo(Category::class);
     }
-    public function characteristics()
-    {
-        return $this->belongsToMany(Characteristic::class, 'product_characteristics', 'product_id', 'characteristic_id');
+    public function characteristics(){
+        return $this->hasMany(ProductCharacteristic::class, 'product_id');
     }
 
     public function pack(){

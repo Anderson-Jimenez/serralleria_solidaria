@@ -14,7 +14,7 @@ class ProductCharacteristic extends Model
     public function product(){
         return $this->belongsTo(Product::class);
     }
-    public function characteristics(){
+    public function characteristic(){
         return $this->belongsTo(Characteristic::class);
     }
 }
