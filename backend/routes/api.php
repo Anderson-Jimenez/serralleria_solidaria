@@ -43,6 +43,9 @@ Route::get('/products/getProductCategory/{category}', [ProductController::class,
 Route::get('/products/getProductCategoryLatest/{category}', [ProductController::class, 'getProductCategoryLatest']);
 Route::get('/productes/countProducts', [ProductController::class, 'countProducts']);
 
+Route::apiResource('cart', CartController::class);
+
+
 
 Route::apiResource('orders', OrderController::class);
 
