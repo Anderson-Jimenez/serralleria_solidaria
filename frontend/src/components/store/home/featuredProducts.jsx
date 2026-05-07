@@ -18,17 +18,25 @@ function FeaturedProducts({ products, title }) {
   const nextSlide = () => setCurrentIndex(prev => Math.min(prev + 1, maxIndex));
   const prevSlide = () => setCurrentIndex(prev => Math.max(prev - 1, 0));
 
-  const getDiscountedPrice = (price, discount) =>
-    (price - (price / 100) * discount).toFixed(2);
+  const isDiscountActive = (product) => {
+    if (!product.discount_percentage) return false;
+    const now = new Date();
+    const afterStart = !product.discount_starts_at || new Date(product.discount_starts_at) <= now;
+    const beforeEnd  = !product.discount_ends_at   || new Date(product.discount_ends_at)   >= now;
+    return afterStart && beforeEnd;
+  };
+
+  const getDiscountedPrice = (price, product) => {
+    if (!isDiscountActive(product)) return parseFloat(price).toFixed(2);
+    return (price - (price / 100) * product.discount_percentage).toFixed(2);
+  };
 
   async function handleAddToCart(e, product) {
     e.stopPropagation();
 
     if (sinStock.has(product.id)) return;
 
-    const unitPrice = parseFloat(
-      getDiscountedPrice(product.sale_price, product.discount ?? 0)
-    );
+    const unitPrice = parseFloat(getDiscountedPrice(product.price, product));
 
     try {
       const response = await fetch('http://localhost:8000/api/cart', {
@@ -102,9 +110,9 @@ function FeaturedProducts({ products, title }) {
         >
           <span className="badge-hero">EL MÉS VENUT</span>
 
-          {heroProduct.discount > 0 && (
+          {isDiscountActive(heroProduct) && (
             <span className="badge-discount badge-discount--hero">
-              -{heroProduct.discount}% DTO
+              -{heroProduct.discount_percentage}% DTO
             </span>
           )}
 
@@ -121,10 +129,10 @@ function FeaturedProducts({ products, title }) {
 
             <div className="hero-price-row">
               <span className="current-price">
-                {getDiscountedPrice(heroProduct.sale_price, heroProduct.discount)}€
+                {getDiscountedPrice(heroProduct.price, heroProduct)}€
               </span>
-              {heroProduct.discount > 0 && (
-                <span className="old-price">{heroProduct.sale_price} €</span>
+              {isDiscountActive(heroProduct) && (
+                <span className="old-price">{heroProduct.price} €</span>
               )}
             </div>
           </div>
@@ -151,8 +159,8 @@ function FeaturedProducts({ products, title }) {
                   key={product.id}
                   onClick={() => navigate(`/producte/${product.id}`)}
                 >
-                  {product.discount > 0 && (
-                    <span className="badge discount">-{product.discount}% DTO</span>
+                  {isDiscountActive(product) && (
+                    <span className="badge discount">-{product.discount_percentage}% DTO</span>
                   )}
 
                   <div className="small-image">
@@ -170,12 +178,10 @@ function FeaturedProducts({ products, title }) {
                     <div className="small-bottom">
                       <div className="small-price-group">
                         <span className="small-price">
-                          {product.discount > 0
-                            ? `${getDiscountedPrice(product.sale_price, product.discount)}€`
-                            : `${product.sale_price}€`}
+                          {getDiscountedPrice(product.price, product)}€
                         </span>
-                        {product.discount > 0 && (
-                          <span className="small-old-price">{product.sale_price}€</span>
+                        {isDiscountActive(product) && (
+                          <span className="small-old-price">{product.price}€</span>
                         )}
                       </div>
 

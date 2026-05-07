@@ -16,10 +16,14 @@ function ProductsCreate() {
 
     const [name, setName] = useState("");
     const [price, setPrice] = useState(0);
-    const [discount, setDiscount] = useState(0);
+    const [discountPercentage, setDiscountPercentage] = useState(0);
+    const [discountStartsAt, setDiscountStartsAt] = useState("");
+    const [discountEndsAt, setDiscountEndsAt] = useState("");
     const [description, setDescription] = useState("");
     const [code, setCode] = useState("");
     const [stock, setStock] = useState(0);
+    const [intSize, setIntSize] = useState("");
+    const [extSize, setExtSize] = useState("");
     const [categoryId, setCategoryId] = useState("");
     const [highlighted, setHighlighted] = useState(0);
 
@@ -78,9 +82,13 @@ function ProductsCreate() {
         formData.append("code", code);
         formData.append("name", name);
         formData.append("description", description || "");
-        formData.append("sale_price", price);
+        formData.append("price", price);
         formData.append("stock", stock);
-        formData.append("discount", discount);
+        formData.append("discount_percentage", discountPercentage);
+        formData.append("discount_starts_at", discountStartsAt);
+        formData.append("discount_ends_at", discountEndsAt);
+        formData.append("int_size", intSize);
+        formData.append("ext_size", extSize);
         formData.append("highlighted", highlighted ? 1 : 0);
         formData.append("category_id", categoryId);
         formData.append("product_type", "simple");
@@ -181,7 +189,9 @@ function ProductsCreate() {
                             <section className="tab-panel">
                                 <div className="form-group"><label>Nom</label><input value={name} onChange={e => setName(e.target.value)} /></div>
                                 <div className="form-group"><label>Preu (€)</label><input type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
-                                <div className="form-group"><label>Descompte (%)</label><input type="number" value={discount} onChange={e => setDiscount(e.target.value)} /></div>
+                                <div className="form-group"><label>Descompte (%)</label><input type="number" min="0" max="100" value={discountPercentage} onChange={e => setDiscountPercentage(e.target.value)} /></div>
+                                <div className="form-group"><label>Inici descompte</label><input type="datetime-local" value={discountStartsAt} onChange={e => setDiscountStartsAt(e.target.value)} /></div>
+                                <div className="form-group"><label>Fi descompte</label><input type="datetime-local" value={discountEndsAt} onChange={e => setDiscountEndsAt(e.target.value)} /></div>
                                 <div className="form-group"><label>Descripció</label><textarea value={description} onChange={e => setDescription(e.target.value)} /></div>
                             </section>
                         )}
@@ -190,6 +200,8 @@ function ProductsCreate() {
                             <section className="tab-panel">
                                 <div className="form-group"><label>Codi</label><input value={code} onChange={e => setCode(e.target.value)} /></div>
                                 <div className="form-group"><label>Stock</label><input type="number" value={stock} onChange={e => setStock(e.target.value)} /></div>
+                                <div className="form-group"><label>Mida interior</label><input value={intSize} onChange={e => setIntSize(e.target.value)} /></div>
+                                <div className="form-group"><label>Mida exterior</label><input value={extSize} onChange={e => setExtSize(e.target.value)} /></div>
                             </section>
                         )}
 

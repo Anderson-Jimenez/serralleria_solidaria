@@ -11,17 +11,25 @@ function GeneralProducts({ products, title, columns = 4 }) {
 
   const gridColumns = columns === 3 ? 3 : 4;
 
-  const getDiscountedPrice = (price, discount) =>
-    (price - (price / 100) * discount).toFixed(2);
+  const isDiscountActive = (product) => {
+    if (!product.discount_percentage) return false;
+    const now = new Date();
+    const afterStart = !product.discount_starts_at || new Date(product.discount_starts_at) <= now;
+    const beforeEnd  = !product.discount_ends_at   || new Date(product.discount_ends_at)   >= now;
+    return afterStart && beforeEnd;
+  };
+
+  const getDiscountedPrice = (price, product) => {
+    if (!isDiscountActive(product)) return parseFloat(price).toFixed(2);
+    return (price - (price / 100) * product.discount_percentage).toFixed(2);
+  };
 
   async function handleAddToCart(e, product) {
     e.stopPropagation();
 
     if (sinStock.has(product.id)) return;
 
-    const unitPrice = parseFloat(
-      getDiscountedPrice(product.sale_price, product.discount ?? 0)
-    );
+    const unitPrice = parseFloat(getDiscountedPrice(product.price, product));
 
     try {
       const response = await fetch('http://localhost:8000/api/cart', {
@@ -76,8 +84,8 @@ function GeneralProducts({ products, title, columns = 4 }) {
                 key={product.id}
                 onClick={() => navigate(`/producte/${product.id}`)}
               >
-                {product.discount > 0 && (
-                  <span className="badge discount">-{product.discount}% DTO</span>
+                {isDiscountActive(product) && (
+                  <span className="badge discount">-{product.discount_percentage}% DTO</span>
                 )}
 
                 <div className="imageContainer">
@@ -98,10 +106,10 @@ function GeneralProducts({ products, title, columns = 4 }) {
                   <div className="bottom">
                     <div className="priceGroup">
                       <span className="current-price">
-                        {getDiscountedPrice(product.sale_price, product.discount)}€
+                        {getDiscountedPrice(product.price, product)}€
                       </span>
-                      {product.discount > 0 && (
-                        <span className="old-price">{product.sale_price} €</span>
+                      {isDiscountActive(product) && (
+                        <span className="old-price">{product.price} €</span>
                       )}
                     </div>
 

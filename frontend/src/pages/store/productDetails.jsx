@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, ArrowLeft, Truck, Shield } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Truck, Shield, Zap } from 'lucide-react';
 
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [product, setProduct]         = useState(null);
-  const [loading, setLoading]         = useState(true);
+  const [product, setProduct]             = useState(null);
+  const [loading, setLoading]             = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [quantity, setQuantity]       = useState(1);
+  const [quantity, setQuantity]           = useState(1);
 
-  // Estados del carrito — igual que en los otros componentes
   const [añadido, setAñadido]   = useState(false);
   const [sinStock, setSinStock] = useState(false);
 
@@ -39,12 +38,24 @@ function ProductDetails() {
     fetchProduct();
   }, [id]);
 
+  const isDiscountActive = (product) => {
+    if (!product?.discount_percentage) return false;
+    const now = new Date();
+    const afterStart = !product.discount_starts_at || new Date(product.discount_starts_at) <= now;
+    const beforeEnd  = !product.discount_ends_at   || new Date(product.discount_ends_at)   >= now;
+    return afterStart && beforeEnd;
+  };
+
+  const getFinalPrice = (product) => {
+    if (!product) return '0.00';
+    if (!isDiscountActive(product)) return parseFloat(product.price).toFixed(2);
+    return (product.price - (product.price / 100) * product.discount_percentage).toFixed(2);
+  };
+
   async function handleAddToCart() {
     if (sinStock) return;
 
-    const unitPrice = parseFloat(
-      (product.sale_price - (product.sale_price / 100) * (product.discount ?? 0)).toFixed(2)
-    );
+    const unitPrice = parseFloat(getFinalPrice(product));
 
     try {
       const response = await fetch('http://localhost:8000/api/cart', {
@@ -52,7 +63,7 @@ function ProductDetails() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           product_id: product.id,
-          quantity,                                        // manda la cantidad seleccionada
+          quantity,
           unit_price: unitPrice,
           order_id:   localStorage.getItem('order_id') ?? null,
         }),
@@ -68,14 +79,17 @@ function ProductDetails() {
       }
 
       localStorage.setItem('order_id', data.order_id);
-
-      // Feedback verde durante 1.5s
       setAñadido(true);
       setTimeout(() => setAñadido(false), 1500);
 
     } catch (error) {
       console.error('Error carrito:', error);
     }
+  }
+
+  async function handleBuyNow() {
+    await handleAddToCart();
+    navigate('/cart');
   }
 
   if (loading) {
@@ -96,7 +110,9 @@ function ProductDetails() {
     );
   }
 
-  const stockAgotado = sinStock || product.stock === 0;
+  const stockAgotado    = sinStock || product.stock === 0;
+  const discountActive  = isDiscountActive(product);
+  const finalPrice      = getFinalPrice(product);
 
   return (
     <div className="product-detail">
@@ -106,7 +122,7 @@ function ProductDetails() {
       </button>
 
       <div className="product-container">
-        {/* ── Galería ── */}
+        {/* Galería */}
         <div className="product-gallery">
           <div className="main-image">
             {selectedImage
@@ -133,24 +149,20 @@ function ProductDetails() {
           )}
         </div>
 
-        {/* ── Info ── */}
+        {/* Info */}
         <div className="product-info">
-          {product.discount > 0 && (
-            <span className="discount-badge">-{product.discount}%</span>
-          )}
-
           <h1>{product.name}</h1>
 
           <div className="price-section">
             <div className="prices">
-              <span className="current-price">{product.sale_price}€</span>
-              {product.discount > 0 && (
-                <span className="old-price">{product.base_price}€</span>
+              <span className="current-price">{finalPrice}€</span>
+              {discountActive && (
+                <span className="old-price">{parseFloat(product.price).toFixed(2)}€</span>
               )}
             </div>
-            {product.discount > 0 && (
+            {discountActive && (
               <span className="savings">
-                Ahorres {((product.base_price - product.sale_price) / product.base_price * 100).toFixed(0)}%
+                Estalvies {product.discount_percentage}%
               </span>
             )}
           </div>
@@ -181,7 +193,6 @@ function ProductDetails() {
             )}
           </div>
 
-          {/* Selector de cantidad — desactivado si no hay stock */}
           <div className="quantity-selector">
             <label>Cantidad:</label>
             <div className="quantity-controls">
@@ -201,14 +212,26 @@ function ProductDetails() {
             </div>
           </div>
 
-          <button
-            className={`add-to-cart ${añadido ? 'added' : ''} ${stockAgotado ? 'no-stock' : ''}`}
-            onClick={handleAddToCart}
-            disabled={stockAgotado}
-          >
-            <ShoppingCart size={20} />
-            {stockAgotado ? 'Sense stock' : añadido ? 'Afegit!' : 'Afegir al carret'}
-          </button>
+          {/* Botones agrupados */}
+          <div className="action-buttons">
+            <button
+              className={`add-to-cart ${añadido ? 'added' : ''} ${stockAgotado ? 'no-stock' : ''}`}
+              onClick={handleAddToCart}
+              disabled={stockAgotado}
+            >
+              <ShoppingCart size={20} />
+              {stockAgotado ? 'Sense stock' : añadido ? 'Afegit!' : 'Afegir al carret'}
+            </button>
+
+            <button
+              className={`buy-now ${stockAgotado ? 'no-stock' : ''}`}
+              onClick={handleBuyNow}
+              disabled={stockAgotado}
+            >
+              <Zap size={16} />
+              Comprar ara
+            </button>
+          </div>
 
           <div className="shipping-info">
             <div className="info-item">

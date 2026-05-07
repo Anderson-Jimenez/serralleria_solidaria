@@ -202,8 +202,8 @@ function ProductsIndex() {
                     </td>
 
                     <td>
-                      <span className={product.status === 1 ? "status-active" : "status-inactive"}>
-                        {product.status === 1 ? "Actiu" : "Inactiu"}
+                      <span className={product.status ? "status-active" : "status-inactive"}>
+                          {product.status ? "Actiu" : "Inactiu"}
                       </span>
                     </td>
 
@@ -213,7 +213,7 @@ function ProductsIndex() {
                           <Pencil size={18} />
                         </Link>
                         <button className="action-icon power" onClick={() => changeStatusProduct(product.id)}>
-                          <Power size={18} className="mr-8" /> {product.status === 1 ? "Desactivar" : "Activar"}
+                            <Power size={18} className="mr-8" /> {product.status ? "Desactivar" : "Activar"}
                         </button>
                         <button
                           className="action-icon delete"
