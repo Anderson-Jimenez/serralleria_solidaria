@@ -365,10 +365,18 @@ class ProductController extends Controller
                 'searchText'     => 'nullable|string|max:255',
                 'filters'   => 'nullable|present|array',
                 'selectFilters'   => 'nullable|present|array',
+                'minPrice'  => 'nullable|integer',
+                'maxPrice'  => 'nullable|integer',
+                'minWeight' => 'nullable|integer',
+                'maxWeight' => 'nullable|integer',
             ]);
 
             $text=$validated['searchText'];
             $filters = $validated['filters'];
+            $minPrice = $validated['minPrice'];
+            $maxPrice = $validated['maxPrice'];
+            $minWeight = $validated['minWeight'];
+            $maxWeight = $validated['maxWeight'];
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
@@ -383,6 +391,33 @@ class ProductController extends Controller
                     
                 }
             }
+
+            // 1.5. Filtre per preu i pes
+
+            if(!empty($minPrice) || !empty($maxPrice)){
+
+                if (!empty($minPrice)) {
+                    $query->where('sale_price', '>=', $minPrice);
+                }
+
+                if (!empty($maxPrice)) {
+                    $query->where('sale_price', '<=', $maxPrice);
+                }
+
+            }
+            /*
+            if(!empty($minWeight) || !empty($maxWeight)){
+
+                if (!empty($minWeight)) {
+                    $query->where('sale_price', '>=', $minWeight);
+                }
+
+                if (!empty($maxWeight)) {
+                    $query->where('sale_price', '<=', $maxWeight);
+                }
+                
+            }
+            */
 
             // 2. Filtre de caracteristiques de select
             if(!empty($validated['selectFilters'])){

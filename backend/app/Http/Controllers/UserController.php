@@ -155,4 +155,23 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    public function countUsers(){
+        try {
+            $users= User::count();
+
+            return response()->json([
+                'success' => true,
+                'users' => $users,
+                'message' => 'Passat num de usuaris'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error en contar els usuaris',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

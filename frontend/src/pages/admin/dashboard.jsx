@@ -30,6 +30,16 @@ function Dashboard() {
       .then(response => response.json())
       .then(data => setNumProducts(data.products))
       .catch(error => console.error(error));
+
+    fetch("http://localhost:8000/api/users/countUsers")
+      .then(response => response.json())
+      .then(data => setNumUsers(data.users))
+      .catch(error => console.error(error));
+
+    fetch("http://localhost:8000/api/peticions/countPetitions")
+      .then(response => response.json())
+      .then(data => setNumRequests(data.petitions))
+      .catch(error => console.error(error));
   }, []);
 
   return (
@@ -49,7 +59,7 @@ function Dashboard() {
               <BookAlert size={26} />
               <p>Núm.De Solicituds</p>
             </div>
-            <p className="numberOf">{numProducts}</p>
+            <p className="numberOf">{numRequests}</p>
 
           </div>
           <div className="basic-grid-content">
@@ -67,7 +77,7 @@ function Dashboard() {
               <User size={26} />
               <p>Núm.De Usuaris</p>
             </div>
-            <p className="numberOf">{numProducts}</p>
+            <p className="numberOf">{numUsers}</p>
 
           </div>
       </div>

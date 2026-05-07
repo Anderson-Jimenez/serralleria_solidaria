@@ -4,7 +4,7 @@ import Title from "../../components/store/categories/pageTitle";
 import ProductSearchCategories from "../../components/store/categories/productDisplaySearchCategory";
 import ProductSearch from "../../components/store/categories/productDisplaySearch";
 import FeaturedProducts from "../../components/store/home/featuredProducts";
-import GeneralProducts from "../../components/store/home/generalProducts";
+import CustomSolutionSeparator from "../../components/store/customSolutionsSeparator";
 
 
 
@@ -51,7 +51,7 @@ function Products() {
 
       <FeaturedProducts products={products} title={changedTitle} />
 
-      {/* <GeneralProducts products={latestProducts} title={"Ultims " + changedTitle} /> */}
+      <CustomSolutionSeparator /> 
 
       { title ? <ProductSearchCategories products={products} characteristics={characteristicType} title={changedTitle} /> : <ProductSearch products={products} characteristics={characteristicType} title={changedTitle} />}
 

@@ -140,4 +140,23 @@ class ContactController extends Controller
     {
         //
     }
+
+    public function countPetitions(){
+        try {
+            $petitions= ContactForm::count();
+
+            return response()->json([
+                'success' => true,
+                'petitions' => $petitions,
+                'message' => 'Passat num de peticions'
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error en contar els peticions',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
