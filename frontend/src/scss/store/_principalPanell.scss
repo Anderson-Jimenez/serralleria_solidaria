@@ -1,7 +1,7 @@
 @use '../variables';
 
 $color-bg-base: #3d3a37; 
-
+/*
 .principalPanell {
 background: 
     linear-gradient(90deg, rgba($color-bg-base, 0.9) 30%, rgba($color-bg-base, 0.2) 100%), 
@@ -124,4 +124,98 @@ background:
       }
     }
   }
+}
+*/
+/* artur */
+
+.principalPanell{
+  background-color: #2E2A28;
+  border-left: 4px solid variables.$color-accent;
+
+  p{
+    margin: 0;
+  }
+
+  .container{
+    padding-top: 10%;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-bottom: 7%;
+
+    span{
+      color: variables.$color-accent;
+      text-transform: uppercase;
+    }
+
+    h1{
+      color: white;
+      text-transform: uppercase;
+      font-weight: 500;
+      font-size: 3rem;
+    }
+
+    p{
+      color: #B5ADAA;
+    }
+
+    .principalContentActions{
+      padding-top: 30px;
+      display: flex;
+      gap: 10px;
+
+      .seeProducts{
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        border-radius: 0px;
+        border: 2px solid variables.$color-accent;
+        width: 20%;
+        background-color: variables.$color-accent;
+        padding: 15px 0px;
+      }
+
+      .contactUs{
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        border-radius: 0px;
+        border: 2px solid white;
+        width: 20%;
+        background: none;
+        padding: 15px 0px;
+      }
+    }
+
+  }
+
+  .subPrinciplaPanell{
+    display: flex;
+    background-color: #4C4743;
+    align-items: center;
+    padding-left: 10%;
+    padding-right: 10%;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+
+    .subPrinciplaPanellCategories{
+      display: flex;
+
+      p{
+        color: #D4CCC8;
+        padding: 10px 20px;
+        font-weight: 600;
+      }
+    }
+
+    .deliveryInfo{
+      color: variables.$color-accent;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+  }
+  
 }

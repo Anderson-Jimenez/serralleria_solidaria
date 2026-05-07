@@ -6,6 +6,7 @@ import Dashboard from "./pages/admin/dashboard";
 //Store
 import Home from "./pages/store/home";
 import Products from "./pages/store/products";
+import Packs from "./pages/store/packs";
 import ProductDetail from "./pages/store/productDetails";
 import Profile from "./pages/store/profile";
 
@@ -51,6 +52,7 @@ function App() {
       <Route path="/" element={<StoreLayout />}>
         <Route index element={<Home />} />
         <Route path="products" element={<Products />} />
+        <Route path="packs" element={<Packs />} />
         <Route path="products/:title" element={<Products />} />
         <Route path="producte/:id" element={<ProductDetail />} />
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />

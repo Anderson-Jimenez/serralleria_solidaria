@@ -8,7 +8,8 @@ function principalPanell() {
     <section className="principalPanell">
       <div className="container">
         <div className="principalPanellContent">
-          <h1>Seguretat i Confiança per a la teva Llar</h1>
+          <span>Serralleria Solidaria</span>
+          <h1>Seguretat i Confiança <br /> per a la teva Llar</h1>
           <p>
             Especialistes en serralleria amb més de 25 anys d'experiència. Productes de màxima qualitat i servei professional.
           </p>
@@ -17,6 +18,15 @@ function principalPanell() {
             <button className="contactUs" onClick={() => navigate('/solucions_personalitzades')}>Contacta'ns</button>
           </div>
         </div>
+      </div>
+      <div className='subPrinciplaPanell'>
+        <div className='subPrinciplaPanellCategories'>
+          <p>Cat 1</p>
+          <p>Cat 2</p>
+          <p>Cat 3</p>
+          <p>Cat 4</p>
+        </div>
+        <p className='deliveryInfo'> - Informació d'entregas</p>
       </div>
     </section>
   );
