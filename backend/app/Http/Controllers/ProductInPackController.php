@@ -18,7 +18,7 @@ class ProductInPackController extends Controller
      */
     public function index()
     {
-        return Product::where('product_type', 'pack')->with('category')->get();
+        return Product::where('product_type', 'pack')->with(['category','characteristics','primaryImage','pack.product'])->get();
     }
 
     /**
