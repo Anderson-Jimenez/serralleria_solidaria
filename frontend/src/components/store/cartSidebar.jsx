@@ -1,68 +1,86 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../../contexts/CartContext'; // ← Importa el contexto
 
 function CartSidebar({ isOpen, onClose }) {
   const [items, setItems] = useState([]);
+  const navigate = useNavigate();
+  const { refreshCart } = useCart(); // ← Obtiene la función para refrescar el contador
 
-  useEffect(() => {
-    if (!isOpen) return;
-
+  // Carga los productos del carrito
+  const fetchCart = async () => {
     const orderId = localStorage.getItem('order_id');
-
     if (!orderId) {
       setItems([]);
       return;
     }
+    try {
+      const res = await fetch(`http://localhost:8000/api/cart/${orderId}`);
+      const data = await res.json();
+      setItems(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error cargando carrito:', error);
+      setItems([]);
+    }
+  };
 
-    fetch(`http://localhost:8000/api/cart/${orderId}`)
-      .then(res => res.json())
-      .then(data => setItems(Array.isArray(data) ? data : []))
-      .catch(err => {
-        console.error('Error cargando carrito:', err);
-        setItems([]);
-      });
+  // Al abrir el sidebar, carga los datos
+  useEffect(() => {
+    if (!isOpen) return;
+    fetchCart();
   }, [isOpen]);
 
+  // Escucha el evento 'cart-updated' para refrescar si otro componente modifica el carrito
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      if (isOpen) fetchCart();
+    };
+    window.addEventListener('cart-updated', handleCartUpdate);
+    return () => window.removeEventListener('cart-updated', handleCartUpdate);
+  }, [isOpen]);
+
+  // Cambiar cantidad (+1 / -1) o eliminar
   async function cambiarCantidad(item, delta) {
     const nuevaCantidad = item.quantity + delta;
 
-    //eliminar
+    // Si la nueva cantidad es 0 o negativa, eliminar el producto
     if (nuevaCantidad <= 0) {
       try {
         await fetch(`http://localhost:8000/api/cart/${item.id}`, {
           method: 'DELETE',
         });
-
+        // Actualizar estado local
         setItems(prev => prev.filter(i => i.id !== item.id));
+        // Notificar al contexto para que actualice el contador del Navbar
+        refreshCart();
+        window.dispatchEvent(new Event('cart-updated'));
       } catch (err) {
         console.error('Error eliminando item:', err);
       }
       return;
     }
 
-    // actualizar
+    // Actualizar cantidad
     try {
       const res = await fetch(`http://localhost:8000/api/cart/${item.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ quantity: nuevaCantidad }),
       });
-
       const data = await res.json();
-
       const updatedItem = data.item;
 
+      // Actualizar estado local
       setItems(prev =>
         prev.map(i =>
-          i.id === item.id
-            ? {
-                ...i,
-                ...updatedItem,
-              }
-            : i
+          i.id === item.id ? { ...i, ...updatedItem } : i
         )
       );
+      // Notificar al contexto
+      refreshCart();
+      window.dispatchEvent(new Event('cart-updated'));
     } catch (err) {
       console.error('Error actualizando cantidad:', err);
     }
@@ -107,11 +125,9 @@ function CartSidebar({ isOpen, onClose }) {
                   <ul className="cart-items">
                     {items.map(item => {
                       const imagePath = item.product?.primary_image?.path;
-
                       const imageUrl = imagePath
                         ? `http://localhost:8000/storage/${imagePath}`
                         : '/placeholder.png';
-
                       const sinStock =
                         item.product?.stock !== undefined &&
                         item.quantity >= item.product.stock;
@@ -130,11 +146,9 @@ function CartSidebar({ isOpen, onClose }) {
                             <span className="cart-item-name">
                               {item.product?.name || 'Producto'}
                             </span>
-
                             <span className="cart-item-price">
                               {Number(item.subtotal || 0).toFixed(2)}€
                             </span>
-
                             {sinStock && (
                               <span className="text-red-500 text-xs">
                                 Sin stock disponible
@@ -150,9 +164,7 @@ function CartSidebar({ isOpen, onClose }) {
                                 <Minus size={14} />
                               )}
                             </button>
-
                             <span>{item.quantity}</span>
-
                             <button
                               onClick={() => cambiarCantidad(item, +1)}
                               disabled={sinStock}
@@ -171,7 +183,13 @@ function CartSidebar({ isOpen, onClose }) {
                     <span>{total.toFixed(2)}€</span>
                   </div>
 
-                  <button className="cart-checkout-btn">
+                  <button
+                    className="cart-checkout-btn"
+                    onClick={() => {
+                      onClose?.();
+                      navigate('/cart');
+                    }}
+                  >
                     Fer la comanda
                   </button>
                 </>

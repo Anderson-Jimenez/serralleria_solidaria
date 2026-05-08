@@ -44,11 +44,7 @@ Route::get('/products/getProductCategoryLatest/{category}', [ProductController::
 Route::get('/productes/countProducts', [ProductController::class, 'countProducts']);
 
 Route::apiResource('cart', CartController::class);
-
-
-
-Route::apiResource('orders', OrderController::class);
-
+Route::put('/orders/{id}/total', [CartController::class, 'updateTotal']);
 
 Route::apiResource('characteristics', CharacteristicController::class);
 Route::get('/characteristics/changeState/{id}', [CharacteristicController::class, 'changeStatusCharacteristic']);

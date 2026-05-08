@@ -38,7 +38,7 @@ import UsersEdit from "./pages/admin/users/edit";
 
 import OrdersIndex from "./pages/admin/orders/index";
 import OrdersPDF from "./pages/admin/orders/orderPDF";
-
+import CartPage  from "./pages/store/cartPage";
 
 import CustomSolutionForm from "./pages/store/customSolutionForm";
 import CustomSolutionPetitions from "./pages/admin/customSolutions/index";
@@ -55,6 +55,7 @@ function App() {
         <Route path="packs" element={<Packs />} />
         <Route path="products/:title" element={<Products />} />
         <Route path="producte/:id" element={<ProductDetail />} />
+        <Route path="cart" element={<CartPage />} />
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />
         <Route path="profile" element={<Profile />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ShoppingCart, ArrowLeft, Truck, Shield, Zap } from 'lucide-react';
+import { useCart } from '../../contexts/CartContext';
 
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { refreshCart, updateOrderId } = useCart(); // ← Funciones del contexto
 
   const [product, setProduct]             = useState(null);
   const [loading, setLoading]             = useState(true);
@@ -53,38 +55,43 @@ function ProductDetails() {
   };
 
   async function handleAddToCart() {
-      if (sinStock) return;
+    if (sinStock) return;
 
-      const unitPrice = parseFloat(getFinalPrice(product));
+    try {
+      const response = await fetch('http://localhost:8000/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_id: product.id,
+          quantity,
+          order_id: localStorage.getItem('order_id') ?? null,
+        }),
+      });
 
-      try {
-          const response = await fetch('http://localhost:8000/api/cart', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                  product_id: product.id,
-                  quantity,
-                  unit_price: unitPrice,
-                  order_id: localStorage.getItem('order_id') ?? null,
-              }),
-          });
+      const data = await response.json();
 
-          const data = await response.json();
-
-          if (!response.ok) {
-              if (data.error?.toLowerCase().includes('stock')) {
-                  setSinStock(true);
-              }
-              return;
-          }
-
-          localStorage.setItem('order_id', data.order_id);
-          setAñadido(true);
-          setTimeout(() => setAñadido(false), 1500);
-
-      } catch (error) {
-          console.error('Error carrito:', error);
+      if (!response.ok) {
+        if (data.error?.toLowerCase().includes('stock')) {
+          setSinStock(true);
+        }
+        return;
       }
+
+      if (data.order_id) {
+        updateOrderId(data.order_id);
+      } else {
+        refreshCart();
+      }
+
+      // 🔥 Disparar evento por si otros componentes lo escuchan
+      window.dispatchEvent(new Event('cart-updated'));
+
+      // Feedback visual
+      setAñadido(true);
+      setTimeout(() => setAñadido(false), 1500);
+    } catch (error) {
+      console.error('Error carrito:', error);
+    }
   }
 
   async function handleBuyNow() {

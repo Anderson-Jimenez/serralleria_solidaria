@@ -34,14 +34,12 @@ class CartController extends Controller
         $request->validate([
             'product_id' => 'required|integer|exists:products,id',
             'quantity'   => 'required|integer|min:1',
-            'unit_price' => 'required|numeric|min:0',
             'order_id'   => 'nullable|integer|exists:orders,id',
         ]);
 
         $itemResponse = null;
 
         try {
-            \Log::info('Cart store hit', $request->all());
             $userId = auth()->id();
 
             if ($request->order_id) {
@@ -57,6 +55,16 @@ class CartController extends Controller
             DB::transaction(function () use ($request, &$order, &$itemResponse) {
 
                 $product = Product::lockForUpdate()->findOrFail($request->product_id);
+
+                $price = $product->price;
+
+                if (
+                    $product->discount_percentage &&
+                    (! $product->discount_starts_at || $product->discount_starts_at <= now()) &&
+                    (! $product->discount_ends_at || $product->discount_ends_at >= now())
+                ) {
+                    $price = $product->price - ($product->price * $product->discount_percentage / 100);
+                }
 
                 $lineaExistente = OrderProduct::where('order_id', $order->id)
                     ->where('product_id', $product->id)
@@ -74,17 +82,19 @@ class CartController extends Controller
 
                 if ($lineaExistente) {
                     $lineaExistente->update([
-                        'quantity' => $cantidadTotal,
-                        'subtotal' => $lineaExistente->unit_price * $cantidadTotal,
+                        'quantity'   => $cantidadTotal,
+                        'unit_price' => $price,
+                        'subtotal'   => $price * $cantidadTotal,
                     ]);
+
                     $itemResponse = $lineaExistente;
                 } else {
                     $itemResponse = OrderProduct::create([
                         'order_id'   => $order->id,
                         'product_id' => $product->id,
                         'quantity'   => $request->quantity,
-                        'unit_price' => $request->unit_price,
-                        'subtotal'   => $request->unit_price * $request->quantity,
+                        'unit_price' => $price,
+                        'subtotal'   => $price * $request->quantity,
                     ]);
                 }
 
@@ -103,19 +113,36 @@ class CartController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
-            \Log::error('Cart error: ' . $e->getMessage() . ' | ' . $e->getFile() . ':' . $e->getLine());
+            \Log::error('Cart error: ' . $e->getMessage());
+
             return response()->json([
                 'error' => $e->getMessage(),
             ], 400);
         }
     }
 
-    public function show(string $id)
-    {
-        $items = OrderProduct::with('product.primaryImage')
-            ->where('order_id', $id)
-            ->get();
-    
+    public function show(string $id){
+        $items = OrderProduct::with('product.primaryImage')->where('order_id', $id)->get()
+            ->map(function ($item) {
+
+                $product = $item->product;
+
+                $price = $product->price;
+
+                if (
+                    $product->discount_percentage &&
+                    (! $product->discount_starts_at || $product->discount_starts_at <= now()) &&
+                    (! $product->discount_ends_at || $product->discount_ends_at >= now())
+                ) {
+                    $price = $product->price - ($product->price * $product->discount_percentage / 100);
+                }
+
+                $item->unit_price = $price;
+                $item->subtotal = $price * $item->quantity;
+
+                return $item;
+            });
+
         return response()->json($items, 200);
     }
  
@@ -131,38 +158,60 @@ class CartController extends Controller
         $request->validate([
             'quantity' => 'required|integer|min:1',
         ]);
-    
-        $item = OrderProduct::findOrFail($id);
-    
+
+        $item = OrderProduct::with('product')->findOrFail($id);
+
+        $product = $item->product;
+
+        $price = $product->price;
+
+        if (
+            $product->discount_percentage &&
+            (! $product->discount_starts_at || $product->discount_starts_at <= now()) &&
+            (! $product->discount_ends_at || $product->discount_ends_at >= now())
+        ) {
+            $price = $product->price - ($product->price * $product->discount_percentage / 100);
+        }
+
+        // VALIDAR STOCK
+        if ($request->quantity > $product->stock) {
+            return response()->json([
+                'error' => 'No hay suficiente stock'
+            ], 400);
+        }
+
         $item->update([
-            'quantity' => $request->quantity,
-            'subtotal' => $item->unit_price * $request->quantity,
+            'quantity'   => $request->quantity,
+            'unit_price' => $price,
+            'subtotal'   => $price * $request->quantity,
         ]);
-    
-        // Actualizamos el total de la order
+
         $item->order->update([
             'total_price' => $item->order->products()->sum('subtotal'),
         ]);
-    
+
+        $updatedItem = OrderProduct::with('product.primaryImage')
+            ->find($item->id);
+
         return response()->json([
-            'item' => $item->fresh()
+            'item' => $updatedItem
         ], 200);
     }
-    
-    // DELETE /api/cart/{id}  →  elimina un order_product
-    public function destroy(string $id)
+    public function updateTotal(Request $request, string $id)
     {
-        $item = OrderProduct::findOrFail($id);
-        $order = $item->order;
-    
-        $item->delete();
-    
-        // Recalculamos el total
-        $order->update([
-            'total_price' => $order->products()->sum('subtotal'),
+        $request->validate([
+            'total_price' => 'required|numeric|min:0',
         ]);
-    
-        return response()->json(['message' => 'Producte eliminat'], 200);
-    }
 
+        $order = Order::findOrFail($id);
+
+        $order->update([
+            'total_price' => $request->total_price,
+        ]);
+
+        return response()->json([
+            'message' => 'Total actualitzat',
+            'order' => $order,
+        ]);
+    }
 }

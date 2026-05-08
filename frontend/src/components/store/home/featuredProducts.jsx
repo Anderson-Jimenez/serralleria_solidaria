@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../../../contexts/CartContext';
 
 function FeaturedProducts({ products, title }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
   const [añadidos, setAñadidos] = useState(new Set());
   const [sinStock, setSinStock] = useState(new Set());
+  const { refreshCart, updateOrderId } = useCart(); // ← Obtiene funciones del contexto
 
   if (!products || !products.length) return null;
 
@@ -36,8 +38,6 @@ function FeaturedProducts({ products, title }) {
 
     if (sinStock.has(product.id)) return;
 
-    const unitPrice = parseFloat(getDiscountedPrice(product.price, product));
-
     try {
       const response = await fetch('http://localhost:8000/api/cart', {
         method: 'POST',
@@ -45,7 +45,6 @@ function FeaturedProducts({ products, title }) {
         body: JSON.stringify({
           product_id: product.id,
           quantity:   1,
-          unit_price: unitPrice,
           order_id:   localStorage.getItem('order_id') ?? null,
         }),
       });
@@ -59,8 +58,15 @@ function FeaturedProducts({ products, title }) {
         return;
       }
 
-      localStorage.setItem('order_id', data.order_id);
+      if (data.order_id) {
+        updateOrderId(data.order_id);
+      } else {
+        refreshCart();
+      }
 
+      window.dispatchEvent(new Event('cart-updated'));
+
+      // Feedback visual: mostrar "añadido"
       setAñadidos(prev => new Set(prev).add(product.id));
       setTimeout(() => {
         setAñadidos(prev => {

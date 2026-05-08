@@ -8,7 +8,6 @@ $color-bg-base: #3d3a37;
     opacity: 0;
     transform: translateY(1.25rem);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -16,69 +15,9 @@ $color-bg-base: #3d3a37;
 }
 
 @keyframes badgePulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.04);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-.badge-discount {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 5;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-
-  background: linear-gradient(135deg, #ff5a5a 0%, #e60023 100%);
-
-  color: #fff;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-
-  box-shadow:
-    0 0.5rem 1.25rem rgba(230, 0, 35, 0.18),
-    0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
-
-  animation: badgePulse 2.4s infinite;
-}
-
-.badge-new {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 5;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-
-  background: linear-gradient(135deg, variables.$color-accent 0%, #ff3a00 100%);
-
-  color: #fff;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-
-  box-shadow:
-    0 0.5rem 1.25rem rgba(255, 96, 46, 0.2),
-    0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
 }
 
 .productImg {
@@ -102,13 +41,11 @@ $color-bg-base: #3d3a37;
   white-space: nowrap;
 
   background: linear-gradient(rgba($color-bg-base, 0.8), rgba($color-bg-base, 0.8)), url('/images/principalPanel.jpg');
-
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
 
-  h1,
-  h2 {
+  h1, h2 {
     margin: 0;
     font-weight: 700;
     text-transform: uppercase;
@@ -140,7 +77,6 @@ $color-bg-base: #3d3a37;
   flex-direction: column;
   animation: fadeInUp 0.8s ease-out;
 
-  // ---- Section header (same as FeaturedProducts) ----
   .section-header {
     flex-shrink: 0;
     display: flex;
@@ -173,7 +109,7 @@ $color-bg-base: #3d3a37;
   }
 
   // =============================================
-  // LAYOUT: filters + products
+  // LAYOUT
   // =============================================
 
   #categoryProductDisplayAll {
@@ -198,7 +134,7 @@ $color-bg-base: #3d3a37;
     position: sticky;
     top: 2rem;
 
-    >h2 {
+    > h2 {
       font-size: 0.7rem;
       font-weight: 800;
       letter-spacing: 0.15em;
@@ -238,8 +174,7 @@ $color-bg-base: #3d3a37;
             margin: 0;
           }
 
-          &:hover,
-          &:focus {
+          &:hover, &:focus {
             border-color: variables.$color-accent;
             outline: none;
             box-shadow: 0 0 0 0.1875rem rgba(255, 96, 46, 0.1);
@@ -271,16 +206,13 @@ $color-bg-base: #3d3a37;
           margin: 0 0 0.75rem;
         }
 
-        // Checkbox pills — same accent as FeaturedProducts
         .checkboxFilter {
           display: flex;
           flex-wrap: wrap;
           gap: 0.4rem;
 
           div {
-            .checkmark {
-              display: none;
-            }
+            .checkmark { display: none; }
 
             .checkmarkLabel {
               display: inline-block;
@@ -302,7 +234,7 @@ $color-bg-base: #3d3a37;
               }
             }
 
-            input:checked+.checkmarkLabel {
+            input:checked + .checkmarkLabel {
               border-color: variables.$color-accent;
               background: variables.$color-accent;
               color: #fff;
@@ -311,7 +243,6 @@ $color-bg-base: #3d3a37;
           }
         }
 
-        // Select dropdown
         select {
           width: 100%;
           margin-top: 0.25rem;
@@ -329,8 +260,7 @@ $color-bg-base: #3d3a37;
           cursor: pointer;
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
-          &:hover,
-          &:focus {
+          &:hover, &:focus {
             border-color: variables.$color-accent;
             outline: none;
             box-shadow: 0 0 0 0.1875rem rgba(255, 96, 46, 0.1);
@@ -348,7 +278,6 @@ $color-bg-base: #3d3a37;
     flex: 1;
     min-width: 0;
 
-    // Search input styled like the panel
     input[type='text'] {
       @include mixins.search-bar-tables;
       width: 100%;
@@ -367,7 +296,6 @@ $color-bg-base: #3d3a37;
       }
     }
 
-    // ---- Product grid using small-card style ----
     .searchDisplayResult {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -376,12 +304,12 @@ $color-bg-base: #3d3a37;
   }
 
   // =============================================
-  // SMALL CARD  (mirrors FeaturedProducts small-card)
+  // CARD
   // =============================================
 
   .card {
     background: #fff;
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     cursor: pointer;
@@ -397,11 +325,25 @@ $color-bg-base: #3d3a37;
       .imageContainer img {
         transform: scale(1.06);
       }
+    }
 
-      .cartBtn {
-        background: #ff4512;
-        transform: scale(1.08);
-      }
+    .badge-discount {
+      position: absolute;
+      top: 0.6rem;
+      left: 0.6rem;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 0.25rem 0.6rem;
+      background: linear-gradient(135deg, #ff5a5a 0%, #e60023 100%);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      box-shadow: 0 0.25rem 0.75rem rgba(230, 0, 35, 0.18);
+      animation: badgePulse 2.4s infinite;
     }
 
     .imageContainer {
@@ -452,7 +394,6 @@ $color-bg-base: #3d3a37;
         line-height: 1.2;
         margin: 0 0 0.25rem;
         color: #111;
-
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -464,7 +405,6 @@ $color-bg-base: #3d3a37;
         color: #777;
         margin-bottom: auto;
         line-height: 1.4;
-
         display: -webkit-box;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
@@ -506,11 +446,9 @@ $color-bg-base: #3d3a37;
           border-radius: 0.6rem;
           cursor: pointer;
           flex-shrink: 0;
-
           display: flex;
           align-items: center;
           justify-content: center;
-
           transition: all 0.3s ease;
           box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
 
@@ -521,6 +459,20 @@ $color-bg-base: #3d3a37;
 
           &:active {
             transform: scale(0.95);
+          }
+
+          &.added {
+            background: #28a745;
+            &:hover { background: #218838; }
+          }
+
+          &.no-stock,
+          &:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
           }
         }
       }
