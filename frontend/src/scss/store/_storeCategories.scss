@@ -8,6 +8,7 @@ $color-bg-base: #3d3a37;
     opacity: 0;
     transform: translateY(1.25rem);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -15,9 +16,17 @@ $color-bg-base: #3d3a37;
 }
 
 @keyframes badgePulse {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.04); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .badge-discount {
@@ -189,7 +198,7 @@ $color-bg-base: #3d3a37;
     position: sticky;
     top: 2rem;
 
-    > h2 {
+    >h2 {
       font-size: 0.7rem;
       font-weight: 800;
       letter-spacing: 0.15em;
@@ -203,6 +212,46 @@ $color-bg-base: #3d3a37;
     .allFilters {
       display: flex;
       flex-direction: column;
+
+      .rangeFilter {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        input[type='number'] {
+          width: 100%;
+          flex: 1;
+          padding: 0.55rem 0.75rem;
+          border: 0.0625rem solid #e0e0e0;
+          border-radius: 0.5rem;
+          background: #fafafa;
+          color: #555;
+          font-size: 0.78rem;
+          font-weight: 500;
+          appearance: none;
+          -moz-appearance: textfield;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+          &::-webkit-outer-spin-button,
+          &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+
+          &:hover,
+          &:focus {
+            border-color: variables.$color-accent;
+            outline: none;
+            box-shadow: 0 0 0 0.1875rem rgba(255, 96, 46, 0.1);
+          }
+        }
+
+        .rangeSeparator {
+          color: #bbb;
+          font-size: 0.85rem;
+          flex-shrink: 0;
+        }
+      }
 
       .uniqueCharacteristic {
         padding: 1rem 0;
@@ -253,7 +302,7 @@ $color-bg-base: #3d3a37;
               }
             }
 
-            input:checked + .checkmarkLabel {
+            input:checked+.checkmarkLabel {
               border-color: variables.$color-accent;
               background: variables.$color-accent;
               color: #fff;
