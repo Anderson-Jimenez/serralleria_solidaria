@@ -96,7 +96,9 @@ function Navbar() {
               ))}
             </ul>
           </li>
-
+          <li className="dropdown">
+            <a href="/packs">Packs <ChevronDown size={14} /></a>
+          </li>
           <li><a href="/solucions_personalitzades">Solucions Personalitzades</a></li>
         </ul>
 

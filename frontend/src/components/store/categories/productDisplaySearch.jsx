@@ -12,6 +12,11 @@ function productDisplaySearch({ products, characteristics, title }) {
     const [savedText, setSavedText] = useState("");
     const navigate = useNavigate();
 
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
+
+    const [minWeight, setMinWeight] = useState("");
+    const [maxWeight, setMaxWeight] = useState("");
 
     useEffect(() => {
         setProductsFiltrats(products);
@@ -45,7 +50,7 @@ function productDisplaySearch({ products, characteristics, title }) {
         }
 
         setSavedFilters(updatedFilters);
-        searchProductsInStore(savedText, updatedFilters, dinamicFilters);
+        searchProductsInStore(savedText, savedFilters, updatedFilters, minPrice, maxPrice, minWeight, maxWeight);
     };
 
     const handleSelectChange = (e) => {
@@ -58,10 +63,10 @@ function productDisplaySearch({ products, characteristics, title }) {
         }
 
         setDinamicFilters(updatedFilters);
-        searchProductsInStore(savedText, savedFilters, updatedFilters);
+        searchProductsInStore(savedText, savedFilters, updatedFilters, minPrice, maxPrice, minWeight, maxWeight);
     };
 
-    const searchProductsInStore = (text = savedText, filters = savedFilters, selectFilters = dinamicFilters) => {
+    const searchProductsInStore = (text = savedText, filters = savedFilters, selectFilters = dinamicFilters, minimumPrice=minPrice, maximumPrice=maxPrice, minimumWeight=minWeight, maximumWeight=maxWeight) => {
         fetch(`http://localhost:8000/api/products/searchAllProductsInStore`, {
             method: 'POST',
             headers: {
@@ -72,6 +77,10 @@ function productDisplaySearch({ products, characteristics, title }) {
                 searchText: text,
                 filters: filters,
                 selectFilters: selectFilters,
+                minPrice: minimumPrice,
+                maxPrice: maximumPrice,
+                minWeight: minimumWeight,
+                maxWeight: maximumWeight,
             })
         })
             .then(async response => {
@@ -114,7 +123,37 @@ function productDisplaySearch({ products, characteristics, title }) {
 
                         <div className="uniqueCharacteristic" key="sale_price">
                             <h3>Preu</h3>
-                            <p>No vull fer mes o menys ara</p>
+                            <div className="rangeFilter">
+                                <input 
+                                    type="number" 
+                                    placeholder="Mínim" 
+                                    min="0" 
+                                    value={minPrice} 
+                                    onChange={(e) => { 
+                                        setMinPrice(e.target.value); 
+                                        searchProductsInStore(savedText, savedFilters, dinamicFilters, e.target.value, maxPrice, minWeight, maxWeight);
+                                    }}
+                                />€
+                                <span className="rangeSeparator">—</span>
+                                <input 
+                                    type="number" 
+                                    placeholder="Màxim" 
+                                    min="0" 
+                                    value={maxPrice} 
+                                    onChange={(e) => { 
+                                        setMaxPrice(e.target.value); 
+                                        searchProductsInStore(savedText, savedFilters, dinamicFilters, minPrice, e.target.value, minWeight, maxWeight);
+                                    }}
+                                />€
+                            </div>
+                        </div>
+                        <div className="uniqueCharacteristic" key="weight">
+                            <h3>Pes</h3>
+                            <div className="rangeFilter">
+                                <input type="number" placeholder="Mínim" min="0" value={minWeight} onChange={(e) => { setMinWeight(e.target.value); }}/>Kg
+                                <span className="rangeSeparator">—</span>
+                                <input type="number" placeholder="Màxim" min="0" value={maxWeight} onChange={(e) => { setMaxWeight(e.target.value); }}/>Kg
+                            </div>
                         </div>
 
                         {characteristics.map((characteristic) => (
@@ -166,7 +205,7 @@ function productDisplaySearch({ products, characteristics, title }) {
                         type="text"
                         placeholder='Buscar...'
                         onChange={(e) => { setSavedText(e.target.value); }}
-                        onKeyUp={(e) => { searchProductsInStore(e.target.value, savedFilters, dinamicFilters); }}
+                        onKeyUp={(e) => { searchProductsInStore(e.target.value, savedFilters, dinamicFilters, minPrice, maxPrice, minWeight, maxWeight); }}
                     />
 
                     <div className='searchDisplayResult'>

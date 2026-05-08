@@ -66,6 +66,7 @@ Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsN
 // Rutes per a users
 Route::apiResource('users', UserController::class);
 Route::get('/users/searchUsers/{text}',[UserController::class,'searchUsers']);
+Route::get('/users/countUsers', [UserController::class, 'countUsers']);
 
 // Rutas para el HomeScreen
 Route::apiResource('homescreens', HomeScreenController::class);
@@ -76,6 +77,8 @@ Route::get('/solucionsPersonalitzades', [ContactController::class, 'getCustomSol
 
 Route::get('/peticions/{id}', [ContactController::class, 'showEspecificPetition']);
 Route::put('/peticions/{id}', [ContactController::class, 'updatePetitionStatus']);
+Route::get('/peticions/countPetitions', [ContactController::class, 'countPetitions']);
+
 
 
 //Log In

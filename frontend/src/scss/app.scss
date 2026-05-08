@@ -15,10 +15,13 @@
 @use './store/storeCategories';
 @use './store/highlightedProducts';
 @use './store/customSolutionForm';
+@use './store/customSolutionSeparator';
 @use './store/productDetails';
 @use './store/generalProducts';
 @use './store/profile';
+@use './store/categoryTitle';
 @use './store/cartSidebar';
+@use './store/productCarousel';
 @use './admin/_loginAdmin';
 @use './admin/_dashboard';
 @use './generals';
