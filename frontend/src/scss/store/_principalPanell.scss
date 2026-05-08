@@ -11,7 +11,7 @@ $color-bg-base: #3d3a37;
   &::before {
     content: '';
     position: absolute;
-    background: linear-gradient(135deg, #3f3c3a, #23201eeb);
+    background: linear-gradient(90deg, #3f3c3a 40%, #23201ea4 100%);
     inset: 0;
     z-index: 0;
   }
@@ -27,10 +27,10 @@ $color-bg-base: #3d3a37;
   }
 
   .container {
-    padding-top: 10%;
-    padding-left: 20%;
-    padding-right: 20%;
-    padding-bottom: 7%;
+    padding-top: 27vh;
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-bottom: 27vh;
     border-left: 4px solid variables.$color-accent;
 
 
@@ -109,7 +109,7 @@ $color-bg-base: #3d3a37;
 
   .subPrinciplaPanell {
     display: flex;
-    background-color: #4C4743;
+    background-color: #5b5653;
     align-items: center;
     padding-left: 10%;
     padding-right: 10%;
@@ -131,7 +131,7 @@ $color-bg-base: #3d3a37;
     .deliveryInfo {
       color: variables.$color-accent;
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 300;
     }
   }
 

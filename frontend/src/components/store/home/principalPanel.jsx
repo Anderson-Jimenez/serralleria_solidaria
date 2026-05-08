@@ -28,13 +28,7 @@ function principalPanell() {
       
 
       <div className='subPrinciplaPanell'>
-        <div className='subPrinciplaPanellCategories'>
-          <p>Cat 1</p>
-          <p>Cat 2</p>
-          <p>Cat 3</p>
-          <p>Cat 4</p>
-        </div>
-        <p className='deliveryInfo'> - Informació d'entregas</p>
+        
       </div>
     </section>
   );
