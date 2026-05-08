@@ -45,6 +45,8 @@ Route::get('/productes/countProducts', [ProductController::class, 'countProducts
 
 Route::apiResource('cart', CartController::class);
 Route::put('/orders/{id}/total', [CartController::class, 'updateTotal']);
+Route::apiResource('orders', OrderController::class);
+Route::post('/orders/checkout', [OrderController::class, 'checkout']);
 
 Route::apiResource('characteristics', CharacteristicController::class);
 Route::get('/characteristics/changeState/{id}', [CharacteristicController::class, 'changeStatusCharacteristic']);
@@ -57,6 +59,7 @@ Route::get('/characteristicTypes/searchTypeCharacteristic/{text}',[Characteristi
 
 
 Route::apiResource('packs', ProductInPackController::class);
+Route::apiResource('orders', OrderController::class);
 Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsNotInPack']);
 
 // Rutes per a users

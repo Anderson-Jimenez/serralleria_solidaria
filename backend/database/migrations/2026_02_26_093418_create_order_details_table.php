@@ -10,32 +10,18 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('order_id')
                 ->unique()
                 ->constrained()
                 ->onDelete('cascade');
 
-            $table->date('requested_delivery_date')
-                ->nullable();
-
-            $table->boolean('installation')
-                ->default(false);
-
-            $table->text('shipping_address')
-                ->nullable();
-
-            $table->text('installation_address')
-                ->nullable();
-
-            $table->text('billing_address')
-                ->nullable();
-
-            $table->foreignId('installation_price_id')
-                ->nullable()
-                ->constrained()
-                ->nullOnDelete();
-
+            $table->date('requested_delivery_date')->nullable();
+            $table->boolean('installation')->default(false);
+            $table->text('shipping_address');
+            $table->text('billing_address');
+            $table->text('installation_address')->nullable();
+            $table->decimal('installation_price', 10, 2)->nullable(); // ← aquí guardamos el coste calculado
+            $table->text('observations')->nullable();
             $table->timestamps();
 
             $table->index('order_id');

@@ -1,0 +1,260 @@
+@use '../variables';
+
+.checkout-page {
+  min-height: 100vh;
+  background: #f6f6f6;
+  padding: clamp(5rem, 10vw, 8rem) clamp(1rem, 5%, 6%) clamp(3rem, 5vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+
+  h1 {
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+    color: #111;
+  }
+
+  // GRID auto-ajustable: en pantallas pequeñas se apila, en grandes muestra 2 columnas
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 22rem);
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: start;
+
+    @supports (width: min(100%, 0px)) {
+      // fallback para navegadores antiguos
+      grid-template-columns: 1fr auto;
+    }
+  }
+
+  // El resumen será sticky solo si hay espacio, sin media query
+  .order-summary {
+    position: sticky;
+    top: clamp(5rem, 8vh, 7rem);
+    align-self: start;
+  }
+
+  // En pantallas donde el ancho disponible sea menor que 800px, el grid se convierte en 1 columna
+  // pero sin media query usando @container? No es compatible al 100%. Usamos un truco con minmax y auto.
+  // Añadimos un wrapper opcional o simplemente dejamos que el grid se rompa con un breakpoint natural.
+  // Para evitar media query, podemos hacer que en lugar de sticky se comporte normal.
+  // Mejor mantenemos una media query muy pequeña para cambiar a 1 columna cuando no quepa.
+  // Pero si insistes en evitarlas, podemos usar:
+  .checkout-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1rem, 3vw, 2rem);
+    & > * {
+      flex: 1 1 300px;
+    }
+    .order-summary {
+      flex: 1 1 280px;
+      position: sticky;
+      top: clamp(5rem, 8vh, 7rem);
+      align-self: flex-start;
+    }
+  }
+
+  // FORMULARIO
+  .checkout-form {
+    background: #fff;
+    border-radius: clamp(1rem, 4vw, 1.5rem);
+    padding: clamp(1.2rem, 4vw, 2rem);
+    box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.05);
+    border: 0.0625rem solid rgba(0, 0, 0, 0.04);
+
+    .form-group {
+      margin-bottom: clamp(1rem, 4vw, 1.5rem);
+
+      label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+        color: #2c2c2c;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: clamp(0.7rem, 2vw, 0.85rem) clamp(0.8rem, 2vw, 1rem);
+        border-radius: 0.8rem;
+        border: 0.0625rem solid #e2e2e2;
+        background: #fefefe;
+        font-size: clamp(0.8rem, 2vw, 0.9rem);
+        transition: 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: variables.$color-accent;
+          box-shadow: 0 0 0 3px rgba(variables.$color-accent, 0.1);
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 5rem;
+      }
+
+      &.checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        label {
+          margin-bottom: 0;
+          font-weight: 500;
+          cursor: pointer;
+        }
+
+        input {
+          width: 1.2rem;
+          height: 1.2rem;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .installation-cost {
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.6rem 1rem;
+      background: #eef6ee;
+      border-radius: 0.8rem;
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+      font-weight: 600;
+      color: #2b6e2b;
+      display: inline-block;
+    }
+
+    .installation-warning {
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.6rem 1rem;
+      background: #fff3e0;
+      border-radius: 0.8rem;
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+      font-weight: 600;
+      color: #d97a00;
+      border-left: 3px solid #d97a00;
+    }
+
+    button[type='submit'] {
+      width: 100%;
+      background: variables.$color-accent;
+      color: white;
+      font-weight: 800;
+      padding: clamp(0.8rem, 2vw, 1rem);
+      border: none;
+      border-radius: 0.9rem;
+      font-size: clamp(0.9rem, 3vw, 1rem);
+      cursor: pointer;
+      transition: 0.25s ease;
+      margin-top: 0.5rem;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-0.1rem);
+        background: #ff4b1a;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  // RESUMEN
+  .order-summary {
+    background: #fff;
+    border-radius: clamp(1rem, 4vw, 1.5rem);
+    padding: clamp(1.2rem, 4vw, 1.8rem);
+    box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.05);
+    border: 0.0625rem solid rgba(0, 0, 0, 0.04);
+
+    h2 {
+      font-size: clamp(1.3rem, 5vw, 1.75rem);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0 0 1.5rem;
+      padding: 0;
+      border-bottom: 0.0625rem solid #ececec;
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+        padding: 0.6rem 0;
+        color: #3a3a3a;
+
+        &:not(:last-child) {
+          border-bottom: 0.0625rem dashed #f0f0f0;
+        }
+      }
+    }
+
+    p {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.75rem 0;
+      font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+      color: #2c2c2c;
+
+      strong {
+        font-weight: 800;
+        color: #111;
+      }
+    }
+
+    hr {
+      margin: 1rem 0;
+      border: none;
+      height: 0.0625rem;
+      background: #ececec;
+    }
+
+    .total-row {
+      margin-top: 1rem;
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      font-weight: 900;
+      color: #111;
+      border-top: 0.125rem solid #eaeaea;
+      padding-top: 1rem;
+    }
+  }
+
+  // LOADING
+  .checkout-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    color: #777;
+  }
+}
+
+// Un pequeño ajuste para que el grid se comporte bien incluso en pantallas muy pequeñas
+// (sin media query, usando flex-wrap)
+@layer layout {
+  .checkout-page .checkout-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1rem, 3vw, 2rem);
+    & > form {
+      flex: 2 1 280px;
+    }
+    & > .order-summary {
+      flex: 1 1 260px;
+    }
+  }
+}
