@@ -53,38 +53,38 @@ function ProductDetails() {
   };
 
   async function handleAddToCart() {
-    if (sinStock) return;
+      if (sinStock) return;
 
-    const unitPrice = parseFloat(getFinalPrice(product));
+      const unitPrice = parseFloat(getFinalPrice(product));
 
-    try {
-      const response = await fetch('http://localhost:8000/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          product_id: product.id,
-          quantity,
-          unit_price: unitPrice,
-          order_id:   localStorage.getItem('order_id') ?? null,
-        }),
-      });
+      try {
+          const response = await fetch('http://localhost:8000/api/cart', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  product_id: product.id,
+                  quantity,
+                  unit_price: unitPrice,
+                  order_id: localStorage.getItem('order_id') ?? null,
+              }),
+          });
 
-      const data = await response.json();
+          const data = await response.json();
 
-      if (!response.ok) {
-        if (data.error?.toLowerCase().includes('stock')) {
-          setSinStock(true);
-        }
-        return;
+          if (!response.ok) {
+              if (data.error?.toLowerCase().includes('stock')) {
+                  setSinStock(true);
+              }
+              return;
+          }
+
+          localStorage.setItem('order_id', data.order_id);
+          setAñadido(true);
+          setTimeout(() => setAñadido(false), 1500);
+
+      } catch (error) {
+          console.error('Error carrito:', error);
       }
-
-      localStorage.setItem('order_id', data.order_id);
-      setAñadido(true);
-      setTimeout(() => setAñadido(false), 1500);
-
-    } catch (error) {
-      console.error('Error carrito:', error);
-    }
   }
 
   async function handleBuyNow() {
