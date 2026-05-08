@@ -1,196 +1,113 @@
 @use '../variables';
 
-$color-bg-base: #3d3a37; 
-/*
+$color-bg-base: #3d3a37;
+
 .principalPanell {
-background: 
-    linear-gradient(90deg, rgba($color-bg-base, 0.9) 30%, rgba($color-bg-base, 0.2) 100%), 
-    url('/images/antique-keys.jpg');
+  position: relative;
+  background-image: url("../../../public/images/principalPanel.jpg");
   background-size: cover;
   background-position: center;
-  
-  // Añade un borde inferior sutil con forma para conectar con la topografía
-  border-bottom: 1px solid rgba(0,0,0,0.05);
 
-  h1 {
-    font-weight: 900;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3); // Le da ese "destaque" que buscas
+  &::before {
+    content: '';
+    position: absolute;
+    background: linear-gradient(135deg, #3f3c3a, #23201eeb);
+    inset: 0;
+    z-index: 0;
   }
 
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  text-align: left;
-
-  .container {
-    max-width: 80%;
-    width: 100%;
-    padding: 0 2rem;
-    display: flex;
-
-    .principalPanellContent {
-      max-width: 50%;
-
-      h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        line-height: 1.2;
-      }
-
-      p {
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-        line-height: 1.6;
-        opacity: 0.9;
-      }
-
-      .principalContentActions {
-        display: flex;
-        gap: 1.5rem;
-
-        button {
-          border: none;
-          border-radius: 5px;
-          font-size: 1rem;
-          cursor: pointer;
-          position: relative;
-          overflow: hidden;
-          z-index: 1;
-          transition: all 0.3s ease;
-        }
-
-        .seeProducts {
-          padding: 0.75rem 1.5rem;
-          background-color: variables.$color-accent;
-          color: white;
-
-          &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            
-            transform: scaleX(0);
-            transform-origin: right; 
-            transition: transform 0.5s cubic-bezier(0.5, 1, 0.89, 1);
-            z-index: -1;
-          }
-
-          &:hover {
-            color: variables.$color-accent;
-            
-            &::before {
-              transform: scaleX(1);
-              transform-origin: left;
-            }
-          }
-        }
-
-        .contactUs {
-          padding: 0.75rem 1.5rem;
-          background-color: white;
-          color: variables.$color-accent;
-
-          &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: variables.$color-accent;
-            
-            // Estado inicial: encogido a la izquierda
-            transform: scaleX(0);
-            transform-origin: right; 
-            transition: transform 0.5s cubic-bezier(0.5, 1, 0.89, 1);
-            z-index: -1;
-          }
-
-          &:hover {
-            color: white;
-            
-            &::before {
-              transform: scaleX(1);
-              transform-origin: left;
-            }
-          }
-        }
-      }
-    }
+  .container,
+  .subPrinciplaPanell {
+    position: relative;
+    z-index: 1;
   }
-}
-*/
-/* artur */
 
-.principalPanell{
-  background-color: #2E2A28;
-  border-left: 4px solid variables.$color-accent;
-
-  p{
+  p {
     margin: 0;
   }
 
-  .container{
+  .container {
     padding-top: 10%;
     padding-left: 20%;
     padding-right: 20%;
     padding-bottom: 7%;
+    border-left: 4px solid variables.$color-accent;
 
-    span{
+
+    span {
       color: variables.$color-accent;
       text-transform: uppercase;
+      font-weight: 300;
     }
 
-    h1{
+    h1 {
       color: white;
       text-transform: uppercase;
-      font-weight: 500;
+      font-weight: 200;
       font-size: 3rem;
     }
 
-    p{
+    p {
       color: #B5ADAA;
     }
 
-    .principalContentActions{
-      padding-top: 30px;
+    .principalPanellContent {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      gap: 10%;
 
-      .seeProducts{
-        color: white;
-        font-weight: 600;
-        font-size: 1rem;
-        text-transform: uppercase;
-        border-radius: 0px;
-        border: 2px solid variables.$color-accent;
-        width: 20%;
-        background-color: variables.$color-accent;
-        padding: 15px 0px;
+      .leftPrincipalPanell {
+        width: 60%;
+
+        .principalContentActions {
+          padding-top: 30px;
+          display: flex;
+          gap: 10px;
+
+          .seeProducts {
+            color: white;
+            font-weight: 400;
+            font-size: 1rem;
+            text-transform: uppercase;
+            border-radius: 0px;
+            border: 1px solid variables.$color-accent;
+            width: 40%;
+            background-color: variables.$color-accent;
+            padding: 15px 0px;
+            cursor: pointer;
+          }
+
+          .contactUs {
+            color: white;
+            font-weight: 400;
+            font-size: 1rem;
+            text-transform: uppercase;
+            border-radius: 0px;
+            border: 1px solid white;
+            width: 40%;
+            background: none;
+            padding: 15px 0px;
+            cursor: pointer;
+          }
+        }
       }
 
-      .contactUs{
-        color: white;
-        font-weight: 600;
-        font-size: 1rem;
-        text-transform: uppercase;
-        border-radius: 0px;
-        border: 2px solid white;
-        width: 20%;
-        background: none;
-        padding: 15px 0px;
+      .rightPrincipalPanell {
+        width: 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 900px; // necessari per a l'efecte rotateY de les cartes
       }
+
+
     }
+
+
 
   }
 
-  .subPrinciplaPanell{
+  .subPrinciplaPanell {
     display: flex;
     background-color: #4C4743;
     align-items: center;
@@ -201,21 +118,21 @@ background:
     padding-bottom: 10px;
 
 
-    .subPrinciplaPanellCategories{
+    .subPrinciplaPanellCategories {
       display: flex;
 
-      p{
+      p {
         color: #D4CCC8;
         padding: 10px 20px;
         font-weight: 600;
       }
     }
 
-    .deliveryInfo{
+    .deliveryInfo {
       color: variables.$color-accent;
       text-transform: uppercase;
       font-weight: 600;
     }
   }
-  
+
 }

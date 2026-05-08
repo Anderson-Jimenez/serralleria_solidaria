@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PrincipalPanell from "../../components/store/home/principalPanel";
 import FeaturedProducts from "../../components/store/home/featuredProducts";
-import GeneralProducts from "../../components/store/home/generalProducts";
+import WhoWeAre from "../../components/store/quiSom";
 import CustomSolutionSeparator from "../../components/store/customSolutionsSeparator";
 
 function Home() {
@@ -27,7 +27,7 @@ function Home() {
       {/* Pasamos directamente la lista de destacados */}
       <FeaturedProducts products={data.featured_products} title={"Productes"}/>
       <CustomSolutionSeparator /> 
-      <GeneralProducts products={data.products} title="Tots els Productes" />
+      <WhoWeAre />
     </div>
   );
 }
