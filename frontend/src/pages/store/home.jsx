@@ -24,10 +24,10 @@ function Home() {
   return (
     <div className="home-page">
       <PrincipalPanell />
-      {/* Pasamos directamente la lista de destacados */}
       <FeaturedProducts products={data.featured_products} title={"Productes"}/>
       <CustomSolutionSeparator /> 
       <WhoWeAre />
+      
     </div>
   );
 }

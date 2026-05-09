@@ -1,133 +1,48 @@
-// ─── Variables ────────────────────────────────────────────────────────────────
-$color-primary : #FF5A1F;
-$color-dark    : #1a1a1a;
-$color-light   : #f5f0eb;
+@use '../variables';
 
-// ─── Secció ───────────────────────────────────────────────────────────────────
-.ct {
-  position: relative;
-  width: 100%;
-  padding: 10% 0px 7% 0px;
-  overflow: hidden;
-  background-color: $color-dark;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.productsTitle {
+  padding-top: 14vh;
+  padding-left: 15%;
+  padding-right: 15%;
+  padding-bottom: 12vh;
+  background: linear-gradient(90deg, #3f3c3a, #23201e);
+  border-left: 4px solid variables.$color-accent;
+  text-align: center;
 
-  // Textura de soroll
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 200px 200px;
-    opacity: 0.35;
-    pointer-events: none;
-    z-index: 3;
+  h1{
+    margin: 0;
   }
+
+  .centerTitle{
+    color: white;
+    text-transform: uppercase;
+    font-weight: 200;
+    font-size: 5rem;
+  }
+
+  .secondTitle{
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    font-weight: 200;
+    font-size: 3rem;
+  }
+
+  .thirdTitle{
+    color: rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    font-weight: 200;
+    font-size: 1rem;
+  }
+  
 }
 
-// ─── SVG de fons ─────────────────────────────────────────────────────────────
-.ct__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-
-  animation: bg-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-// ─── Contingut central ───────────────────────────────────────────────────────
-.ct__inner {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  z-index: 2;
-}
-
-// Títol fantasma
-.ct__ghost {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-
-  font-weight: 900;
-  font-size: clamp(5rem, 15vw, 13rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: transparent;
-
-  -webkit-text-stroke: 1.5px rgba($color-primary, 0.30);
-  background: linear-gradient(
-    to bottom,
-    rgba($color-primary, 0.22) 0%,
-    rgba($color-primary, 0.05) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-
-  white-space: nowrap;
-  user-select: none;
-  pointer-events: none;
-
-  animation: ghost-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-// Fila: línia · títol · línia
-.ct__fore {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  animation: fore-in 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.ct__line {
-  display: block;
-  width: clamp(1.5rem, 5vw, 4.5rem);
-  height: 2.5px;
-  background: linear-gradient(to right, transparent, $color-primary);
-  flex-shrink: 0;
-
-  &--rev { transform: scaleX(-1); }
-}
-
-.ct__main {
-  margin: 0;
-  font-weight: 800;
-  font-size: clamp(1.6rem, 4vw, 3.2rem);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: $color-light;
-  white-space: nowrap;
-
-  &::first-letter { color: $color-primary; }
-}
-
-// ─── Animacions ───────────────────────────────────────────────────────────────
-@keyframes bg-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes ghost-in {
-  from { opacity: 0; transform: scale(1.06) translateY(6px); }
-  to   { opacity: 1; transform: scale(1)    translateY(0);   }
-}
-
-@keyframes fore-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-
-// ─── Responsive ───────────────────────────────────────────────────────────────
-@media (max-width: 480px) {
-  .ct { height: 140px; }
-  .ct__line { width: 1.25rem; }
-}
+.subPrinciplaPanell {
+    display: flex;
+    background-color: #5b5653;
+    align-items: center;
+    padding-left: 10%;
+    padding-right: 10%;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
