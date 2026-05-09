@@ -27,9 +27,7 @@ function principalPanell() {
       </div>
       
 
-      <div className='subPrinciplaPanell'>
-        
-      </div>
+      <div className='subPrinciplaPanell'></div>
     </section>
   );
 }
