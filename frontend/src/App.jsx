@@ -38,7 +38,7 @@ import UsersEdit from "./pages/admin/users/edit";
 
 import OrdersIndex from "./pages/admin/orders/index";
 import OrdersPDF from "./pages/admin/orders/orderPDF";
-import CartPage  from "./pages/store/cartPage";
+import CartPage from "./pages/store/cartPage";
 import CheckoutPage from "./pages/store/checkoutPage";
 
 import CustomSolutionForm from "./pages/store/customSolutionForm";
@@ -61,15 +61,14 @@ function App() {
         <Route path="profile" element={<Profile />} />
         <Route path="checkout" element={<CheckoutPage />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
-        
       </Route>
 
 
       {/* PANEL ADMIN - protegit */}
       <Route path="/admin" element={
-          <AdminRoute>
-              <AdminLayout />
-          </AdminRoute>
+        <AdminRoute>
+          <AdminLayout />
+        </AdminRoute>
       } >
         <Route index element={<Dashboard />} />
         <Route path="/admin/peticions/:id" element={<CustomSolutionDetails />} />

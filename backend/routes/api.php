@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 Use App\Http\Controllers\CartController;
 Use App\Http\Controllers\OrderController;
+Use App\Http\Controllers\PaymentController;
 
 
 Route::get('/test', function () {
@@ -79,7 +80,7 @@ Route::put('/peticions/{id}', [ContactController::class, 'updatePetitionStatus']
 Route::get('/peticions/countPetitions', [ContactController::class, 'countPetitions']);
 
 
-
+Route::post('/payment/intent', [ PaymentController::class, 'createIntent' ]);
 //Log In
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -90,6 +91,8 @@ Route::post('/signin', [AuthController::class, 'signin']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+
+    
 
     // Rutas solo para admin
     Route::middleware('can:admin')->group(function () {
