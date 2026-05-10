@@ -29,8 +29,16 @@ class CartController extends Controller
         //
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+        // Procesar token manualmente si viene en el header
+        $userId = null;
+        if ($request->bearerToken()) {
+            $token = \Laravel\Sanctum\PersonalAccessToken::findToken($request->bearerToken());
+            if ($token) {
+                $userId = $token->tokenable_id;
+            }
+        }
+
         $request->validate([
             'product_id' => 'required|integer|exists:products,id',
             'quantity'   => 'required|integer|min:1',
@@ -40,8 +48,6 @@ class CartController extends Controller
         $itemResponse = null;
 
         try {
-            $userId = auth()->id();
-
             if ($request->order_id) {
                 $order = Order::findOrFail($request->order_id);
             } else {
@@ -53,9 +59,7 @@ class CartController extends Controller
             }
 
             DB::transaction(function () use ($request, &$order, &$itemResponse) {
-
                 $product = Product::lockForUpdate()->findOrFail($request->product_id);
-
                 $price = $product->price;
 
                 if (
@@ -86,7 +90,6 @@ class CartController extends Controller
                         'unit_price' => $price,
                         'subtotal'   => $price * $cantidadTotal,
                     ]);
-
                     $itemResponse = $lineaExistente;
                 } else {
                     $itemResponse = OrderProduct::create([
@@ -114,7 +117,6 @@ class CartController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Cart error: ' . $e->getMessage());
-
             return response()->json([
                 'error' => $e->getMessage(),
             ], 400);
