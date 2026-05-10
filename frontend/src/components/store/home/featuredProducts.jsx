@@ -32,53 +32,56 @@ function FeaturedProducts({ products, title }) {
     if (!isDiscountActive(product)) return parseFloat(price).toFixed(2);
     return (price - (price / 100) * product.discount_percentage).toFixed(2);
   };
-
   async function handleAddToCart(e, product) {
-    e.stopPropagation();
+      e.stopPropagation();
 
-    if (sinStock.has(product.id)) return;
+      if (sinStock.has(product.id)) return;
 
-    try {
-      const response = await fetch('http://localhost:8000/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          product_id: product.id,
-          quantity:   1,
-          order_id:   localStorage.getItem('order_id') ?? null,
-        }),
-      });
+      const token = localStorage.getItem('token');
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (data.error?.toLowerCase().includes('stock')) {
-          setSinStock(prev => new Set(prev).add(product.id));
-        }
-        return;
-      }
-
-      if (data.order_id) {
-        updateOrderId(data.order_id);
-      } else {
-        refreshCart();
-      }
-
-      window.dispatchEvent(new Event('cart-updated'));
-
-      // Feedback visual: mostrar "añadido"
-      setAñadidos(prev => new Set(prev).add(product.id));
-      setTimeout(() => {
-        setAñadidos(prev => {
-          const copia = new Set(prev);
-          copia.delete(product.id);
-          return copia;
+      try {
+        const response = await fetch('http://localhost:8000/api/cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          },
+          body: JSON.stringify({
+            product_id: product.id,
+            quantity:   1,
+            order_id:   localStorage.getItem('order_id') ?? null,
+          }),
         });
-      }, 1500);
 
-    } catch (error) {
-      console.error('Error carrito:', error);
-    }
+        const data = await response.json();
+
+        if (!response.ok) {
+          if (data.error?.toLowerCase().includes('stock')) {
+            setSinStock(prev => new Set(prev).add(product.id));
+          }
+          return;
+        }
+
+        if (data.order_id) {
+          updateOrderId(data.order_id);
+        } else {
+          refreshCart();
+        }
+
+        window.dispatchEvent(new Event('cart-updated'));
+
+        setAñadidos(prev => new Set(prev).add(product.id));
+        setTimeout(() => {
+          setAñadidos(prev => {
+            const copia = new Set(prev);
+            copia.delete(product.id);
+            return copia;
+          });
+        }, 1500);
+
+      } catch (error) {
+        console.error('Error carrito:', error);
+      }
   }
 
   function CartButton({ product, className }) {

@@ -45,8 +45,8 @@ Route::get('/productes/countProducts', [ProductController::class, 'countProducts
 
 Route::apiResource('cart', CartController::class);
 Route::put('/orders/{id}/total', [CartController::class, 'updateTotal']);
-Route::apiResource('orders', OrderController::class);
-Route::post('/orders/checkout', [OrderController::class, 'checkout']);
+
+
 
 Route::apiResource('characteristics', CharacteristicController::class);
 Route::get('/characteristics/changeState/{id}', [CharacteristicController::class, 'changeStatusCharacteristic']);
@@ -59,7 +59,6 @@ Route::get('/characteristicTypes/searchTypeCharacteristic/{text}',[Characteristi
 
 
 Route::apiResource('packs', ProductInPackController::class);
-Route::apiResource('orders', OrderController::class);
 Route::get('/packs/productsNotInPack',[ProductInPackController::class,'productsNotInPack']);
 
 // Rutes per a users
@@ -90,7 +89,9 @@ Route::post('/signin', [AuthController::class, 'signin']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
-
+    Route::post('/orders/checkout', [OrderController::class, 'checkout']);
+    Route::apiResource('orders', OrderController::class);
+    
     // Rutas solo para admin
     Route::middleware('can:admin')->group(function () {
         // Route::get('/admin/...', [...]);

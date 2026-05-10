@@ -45,7 +45,7 @@ import CustomSolutionForm from "./pages/store/customSolutionForm";
 import CustomSolutionPetitions from "./pages/admin/customSolutions/index";
 import CustomSolutionDetails from "./pages/admin/customSolutions/show";
 import AdminRoute from './components/AdminRoute';
-
+import AuthRoute from './components/AuthRoute';
 function App() {
   return (
     <Routes>
@@ -59,12 +59,15 @@ function App() {
         <Route path="cart" element={<CartPage />} />
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="checkout" element={<CheckoutPage />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
         
       </Route>
 
-
+      <Route path="checkout" element={
+          <AuthRoute>
+              <CheckoutPage />
+          </AuthRoute>
+      } />
       {/* PANEL ADMIN - protegit */}
       <Route path="/admin" element={
           <AdminRoute>
