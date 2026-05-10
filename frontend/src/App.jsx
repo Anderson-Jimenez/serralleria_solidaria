@@ -60,14 +60,14 @@ function App() {
         <Route path="solucions_personalitzades" element={<CustomSolutionForm />} />
         <Route path="profile" element={<Profile />} />
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
-        
-      </Route>
-
-      <Route path="checkout" element={
+        <Route path="checkout" element={
           <AuthRoute>
               <CheckoutPage />
           </AuthRoute>
-      } />
+        } />
+      </Route>
+
+
       {/* PANEL ADMIN - protegit */}
       <Route path="/admin" element={
           <AdminRoute>
