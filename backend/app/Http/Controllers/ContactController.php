@@ -32,12 +32,12 @@ class ContactController extends Controller
     {
         $validated = $request->validate([
             'user_email'   => 'required|email|max:255',
-            'user_phone'   => 'nullable|string|max:20',
+            'user_phone'   => 'required|string|max:20',
             'user_issue'   => 'required|string|max:255',
             'message'      => 'required|string',
-            'images.*'     => 'nullable|image|max:2048',
+            'images.*'     => 'nullable|file|max:10240',
         ]);
-        $userId = auth()->id();
+        $userId = auth()->id() ?? null;
         $contact = ContactForm::create([
             'user_id'     => $userId,
             'user_email'  => $validated['user_email'],
@@ -158,5 +158,18 @@ class ContactController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+    public function downloadFile(string $id)
+    {
+        //Busca la imagen por su id
+        $image = ContactImg::findOrFail($id);
+
+        // Comprueba que el archivo existe en el disco
+        if (!Storage::disk('public')->exists($image->path)) {
+            return response()->json(['success' => false, 'message' => 'Fitxer no trobat'], 404);
+        }
+
+        // Storage::download() hace el stream y fuerza la descarga (Content-Disposition: attachment)
+        return Storage::disk('public')->download($image->path);
     }
 }

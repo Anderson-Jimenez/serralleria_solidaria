@@ -73,6 +73,8 @@ Route::apiResource('homescreens', HomeScreenController::class);
 Route::apiResource('contact', ContactController::class);
 Route::get('/solucionsPersonalitzades', [ContactController::class, 'getCustomSolutions']);
 
+Route::get('/peticions/download/{id}', [ContactController::class, 'downloadFile']);
+
 Route::get('/peticions/{id}', [ContactController::class, 'showEspecificPetition']);
 Route::put('/peticions/{id}', [ContactController::class, 'updatePetitionStatus']);
 Route::get('/peticions/countPetitions', [ContactController::class, 'countPetitions']);

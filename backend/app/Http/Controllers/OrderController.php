@@ -99,10 +99,10 @@ class OrderController extends Controller
             'observations'            => 'nullable|string',
         ]);
 
-        // Calcular subtotal de productos (todos asumimos instalables)
+        // calcular subtotal de productos (todos asumimos instalables)
         $subtotalProductos = $order->products->sum('subtotal');
 
-        // Calcular precio de instalación si se solicita
+        // calcular precio de instalación si se solicita
         $installationPrice = null;
         if ($validated['installation']) {
             $installationPrice = $this->calculateInstallationPrice($subtotalProductos);
