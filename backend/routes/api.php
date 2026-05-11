@@ -80,6 +80,8 @@ Route::get('/peticions/countPetitions', [ContactController::class, 'countPetitio
 
 
 Route::post('/payment/intent', [ PaymentController::class, 'createIntent' ]);
+Route::post('/payment/updateIntent', [ PaymentController::class, 'updateIntent' ]);
+
 //Log In
 
 Route::post('/login', [AuthController::class, 'login']);
