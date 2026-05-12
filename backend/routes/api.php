@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 Use App\Http\Controllers\CartController;
 Use App\Http\Controllers\OrderController;
+Use App\Http\Controllers\PaymentController;
 
 
 Route::get('/test', function () {
@@ -80,6 +81,8 @@ Route::put('/peticions/{id}', [ContactController::class, 'updatePetitionStatus']
 Route::get('/peticions/countPetitions', [ContactController::class, 'countPetitions']);
 
 
+Route::post('/payment/intent', [ PaymentController::class, 'createIntent' ]);
+Route::post('/payment/updateIntent', [ PaymentController::class, 'updateIntent' ]);
 
 //Log In
 
