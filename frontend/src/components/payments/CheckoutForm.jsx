@@ -48,107 +48,76 @@ function CheckoutForm({ subtotal, cartItems }) {
         setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
     };
     /*
+     const handleSubmit = async (e) => {
+         e.preventDefault();
+         if (!stripe || !elements) return;
+ 
+         // Validació instal·lació
+         if (formData.installation && installationMessage !== '') {
+             alert('Per a comandes de més de 1.000€, contacta amb nosaltres.');
+             return;
+         }
+ 
+         setLoading(true);
+ 
+         try {
+             // 1. Obtenir l'adreça de l'AddressElement
+             const addressElement = elements.getElement('address');
+             const { value: addressValue } = await addressElement.getValue();
+             const { name, address } = addressValue;
+             const formattedAddress = `${name}, ${address.line1}${address.line2 ? ' ' + address.line2 : ''}, ${address.city}, ${address.postal_code}, ${address.country}`;
+ 
+             const token = localStorage.getItem('token');
+             const orderId = localStorage.getItem('order_id');
+ 
+             // 2. Enviar dades al backend per crear/actualitzar l'ordre
+             const res = await fetch('http://localhost:8000/api/orders/checkout', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     Authorization: `Bearer ${token}`,
+                 },
+                 body: JSON.stringify({
+                     ...formData,
+                     order_id: orderId,
+                     installation_price: installationCost,
+                     shipping_address: formattedAddress,
+                     billing_address: formattedAddress,
+                     //cartItems,
+                 }),
+             });
+ 
+             if (!res.ok) {
+                 const errorData = await res.json();
+                 throw new Error(errorData.error || 'Error al processar la comanda');
+             }
+ 
+             // 3. Confirmar el pagament amb Stripe (redirigeix sol si va bé)
+             const { error } = await stripe.confirmPayment({
+                 elements,
+                 confirmParams: {
+                     return_url: `${window.location.origin}`,
+                 },
+             });
+ 
+             // Només arriba aquí si hi ha error (si va bé, Stripe redirigeix)
+             if (error) {
+                 alert(error.message);
+             }
+ 
+         } catch (err) {
+             console.error(err);
+             alert(err.message);
+         } finally {
+             setLoading(false);
+         }
+     };
+     */
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formData.installation && installationMessage !== '') {
-            alert('Per a comandes de més de 1.000€ en productes, si us plau contacta amb nosaltres per a un pressupost personalitzat.');
-            return;
-        }
-        if (!stripe || !elements) return;
-        setLoading(true);
-
-        const token = localStorage.getItem('token');
-        const orderId = localStorage.getItem('order_id');
-
-        const addressElement = elements.getElement('address');
-        const { value: addressValue } = await addressElement.getValue();
-        const { name, address } = addressValue;
-        const formattedAddress = `${name}, ${address.line1}${address.line2 ? ' ' + address.line2 : ''}, ${address.city}, ${address.postal_code}, ${address.country}`;
-
-        const payload = {
-            ...formData,
-            order_id: orderId,
-            installation_price: installationCost,
-            shipping_address: formattedAddress,
-            billing_address: formattedAddress,
-        };
 
         try {
-            const res = await fetch('http://localhost:8000/api/orders/checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(payload),
-            });
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || 'Error al procesar pedido');
-            }
-            const { error } = await stripe.confirmPayment({
-                elements,
-                confirmParams: { return_url: `${window.location.origin}/orders` },
-            });
-            if (error) {
-                alert(error.message);
-                return;
-            }
-            localStorage.removeItem('order_id');
-            refreshCart();
-        } catch (err) {
-            console.error(err);
-            alert(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-    */
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!stripe || !elements) return;
-
-        // Validació instal·lació
-        if (formData.installation && installationMessage !== '') {
-            alert('Per a comandes de més de 1.000€, contacta amb nosaltres.');
-            return;
-        }
-
-        setLoading(true);
-
-        try {
-            // 1. Obtenir l'adreça de l'AddressElement
-            const addressElement = elements.getElement('address');
-            const { value: addressValue } = await addressElement.getValue();
-            const { name, address } = addressValue;
-            const formattedAddress = `${name}, ${address.line1}${address.line2 ? ' ' + address.line2 : ''}, ${address.city}, ${address.postal_code}, ${address.country}`;
-
-            const token = localStorage.getItem('token');
-            const orderId = localStorage.getItem('order_id');
-
-            // 2. Enviar dades al backend per crear/actualitzar l'ordre
-            const res = await fetch('http://localhost:8000/api/orders/checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    order_id: orderId,
-                    installation_price: installationCost,
-                    shipping_address: formattedAddress,
-                    billing_address: formattedAddress,
-                    cartItems,
-                }),
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || 'Error al processar la comanda');
-            }
-
-            // 3. Confirmar el pagament amb Stripe (redirigeix sol si va bé)
             const { error } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
