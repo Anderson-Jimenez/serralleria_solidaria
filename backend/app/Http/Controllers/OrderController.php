@@ -17,7 +17,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Order::with('user')->get();
+        return Order::with('user','products','detail')->get();
     }
 
     /**
@@ -41,7 +41,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        return Order::with('user')->findOrFail($id);
+        return Order::with('user','products','detail')->findOrFail($id);
 
         /*
         if ($order->user_id !== auth()->id() && auth()->user->userType !=='admin') {
@@ -55,7 +55,7 @@ class OrderController extends Controller
      */
     public function edit(string $id)
     {
-        return Order::with('user')->findOrFail($id)->get();
+        return Order::with('user','products','detail')->findOrFail($id)->get();
     }
 
     /**
@@ -92,10 +92,10 @@ class OrderController extends Controller
 
         $validated = $request->validate([
             'shipping_address'        => 'required|string',
-            'billing_address'         => 'required|string',
             'requested_delivery_date' => 'nullable|date',
             'installation'            => 'boolean',
-            'installation_address'    => 'nullable|string|required_if:installation,true',
+            'shipping'                => 'boolean',
+            'shipping_price'          => 'nullable|numeric',
             'observations'            => 'nullable|string',
         ]);
 
@@ -119,11 +119,10 @@ class OrderController extends Controller
             ['order_id' => $order->id],
             [
                 'shipping_address'        => $validated['shipping_address'],
-                'billing_address'         => $validated['billing_address'],
                 'requested_delivery_date' => $validated['requested_delivery_date'] ?? null,
                 'installation'            => $validated['installation'] ?? false,
-                'installation_address'    => $validated['installation_address'] ?? null,
-                'installation_price'      => $installationPrice, // ← guardamos el coste
+                'shipping'                => $validated['shipping'] ?? false,
+                'installation_price'      => $installationPrice,
             ]
         );
 
@@ -131,6 +130,9 @@ class OrderController extends Controller
         $totalFinal = $subtotalProductos;
         if ($installationPrice) {
             $totalFinal += $installationPrice;
+        }
+        if ($validated['shipping']) {
+            $totalFinal += $validated['shipping_price'] ?? 0;
         }
         // Si tienes gastos de envío fijos o variables, añádelos aquí, ej:
         // $totalFinal += 9; // coste de envío

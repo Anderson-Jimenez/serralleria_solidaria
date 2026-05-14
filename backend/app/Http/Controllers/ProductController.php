@@ -361,11 +361,11 @@ class ProductController extends Controller
             if(!empty($minPrice) || !empty($maxPrice)){
 
                 if (!empty($minPrice)) {
-                    $query->where('sale_price', '>=', $minPrice);
+                    $query->where('price', '>=', $minPrice);
                 }
 
                 if (!empty($maxPrice)) {
-                    $query->where('sale_price', '<=', $maxPrice);
+                    $query->where('price', '<=', $maxPrice);
                 }
 
             }
@@ -431,6 +431,10 @@ class ProductController extends Controller
             $category=$validated['category'];
             $text=$validated['searchText'];
             $filters = $validated['filters'];
+            $minPrice = $validated['minPrice'];
+            $maxPrice = $validated['maxPrice'];
+            $minWeight = $validated['minWeight'];
+            $maxWeight = $validated['maxWeight'];
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
@@ -443,38 +447,11 @@ class ProductController extends Controller
             if(!empty($minPrice) || !empty($maxPrice)){
 
                 if (!empty($minPrice)) {
-                    $query->where('sale_price', '>=', $minPrice);
+                    $query->where('price', '>=', $minPrice);
                 }
 
                 if (!empty($maxPrice)) {
-                    $query->where('sale_price', '<=', $maxPrice);
-                }
-
-            }
-            /*
-            if(!empty($minWeight) || !empty($maxWeight)){
-
-                if (!empty($minWeight)) {
-                    $query->where('sale_price', '>=', $minWeight);
-                }
-
-                if (!empty($maxWeight)) {
-                    $query->where('sale_price', '<=', $maxWeight);
-                }
-                
-            }
-            */
-
-            // 1.5. Filtre per preu i pes
-
-            if(!empty($minPrice) || !empty($maxPrice)){
-
-                if (!empty($minPrice)) {
-                    $query->where('sale_price', '>=', $minPrice);
-                }
-
-                if (!empty($maxPrice)) {
-                    $query->where('sale_price', '<=', $maxPrice);
+                    $query->where('price', '<=', $maxPrice);
                 }
 
             }

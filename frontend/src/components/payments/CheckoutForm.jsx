@@ -4,7 +4,7 @@ import { useCart } from '../../contexts/CartContext';
 
 const STEPS = ['Direcció', 'Observacions i instal·lació', 'Pagament'];
 
-function CheckoutForm({ subtotal, cartItems }) {
+function CheckoutForm({ subtotal, cartItems, clientSecret }) {
     const stripe = useStripe();
     const elements = useElements();
     const { refreshCart } = useCart();
@@ -14,9 +14,16 @@ function CheckoutForm({ subtotal, cartItems }) {
         installation: false,
         installation_address: '',
         observations: '',
+        shipping: false,
     });
     const [installationCost, setInstallationCost] = useState(0);
     const [installationMessage, setInstallationMessage] = useState('');
+
+    const [shippingCost, setShippingCost] = useState(0);
+    const [shippingMessage, setShippingMessage] = useState('');
+
+    const total = subtotal + (formData.installation ? installationCost : 0) + (formData.shipping ? shippingCost : 0);
+
 
     const calculateInstallationPrice = (s) => {
         if (s <= 250) return 90;
@@ -39,73 +46,26 @@ function CheckoutForm({ subtotal, cartItems }) {
             setInstallationCost(0);
             setInstallationMessage('Pressupost a consultar (més de 1.000€ en productes)');
         }
-    }, [formData.installation, subtotal]);
+    }, [formData.installation]);
 
-    const total = subtotal + (formData.installation ? installationCost : 0);
+    useEffect(() => {
+        if (!formData.shipping) {
+            setShippingCost(0);
+            return;
+        }
+        else {
+            setShippingCost(9);
+        }
+    }, [formData.shipping]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
     };
-    /*
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formData.installation && installationMessage !== '') {
-            alert('Per a comandes de més de 1.000€ en productes, si us plau contacta amb nosaltres per a un pressupost personalitzat.');
-            return;
-        }
-        if (!stripe || !elements) return;
-        setLoading(true);
 
-        const token = localStorage.getItem('token');
-        const orderId = localStorage.getItem('order_id');
-
-        const addressElement = elements.getElement('address');
-        const { value: addressValue } = await addressElement.getValue();
-        const { name, address } = addressValue;
-        const formattedAddress = `${name}, ${address.line1}${address.line2 ? ' ' + address.line2 : ''}, ${address.city}, ${address.postal_code}, ${address.country}`;
-
-        const payload = {
-            ...formData,
-            order_id: orderId,
-            installation_price: installationCost,
-            shipping_address: formattedAddress,
-            billing_address: formattedAddress,
-        };
-
-        try {
-            const res = await fetch('http://localhost:8000/api/orders/checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(payload),
-            });
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || 'Error al procesar pedido');
-            }
-            const { error } = await stripe.confirmPayment({
-                elements,
-                confirmParams: { return_url: `${window.location.origin}/orders` },
-            });
-            if (error) {
-                alert(error.message);
-                return;
-            }
-            localStorage.removeItem('order_id');
-            refreshCart();
-        } catch (err) {
-            console.error(err);
-            alert(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-    */
-    const handleSubmit = async (e) => {
-        e.preventDefault();
         if (!stripe || !elements) return;
 
         // Validació instal·lació
@@ -126,7 +86,21 @@ function CheckoutForm({ subtotal, cartItems }) {
             const token = localStorage.getItem('token');
             const orderId = localStorage.getItem('order_id');
 
-            // 2. Enviar dades al backend per crear/actualitzar l'ordre
+            // 2. Actualitzar el PaymentIntent amb el total real (subtotal + instal·lació + enviament)
+            const paymentIntentId = clientSecret.split('_secret_')[0];
+            const updateRes = await fetch('http://localhost:8000/api/payment/updateIntent', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    paymentIntentId,
+                    total,      // ja inclou subtotal + installationCost + shippingCost
+                    order_id: orderId,
+                }),
+            });
+
+            const updateData = await updateRes.json();
+
+            // 3. Enviar dades al backend per crear/actualitzar l'ordre
             const res = await fetch('http://localhost:8000/api/orders/checkout', {
                 method: 'POST',
                 headers: {
@@ -137,8 +111,8 @@ function CheckoutForm({ subtotal, cartItems }) {
                     ...formData,
                     order_id: orderId,
                     installation_price: installationCost,
+                    shipping_price: shippingCost,
                     shipping_address: formattedAddress,
-                    billing_address: formattedAddress,
                     cartItems,
                 }),
             });
@@ -148,7 +122,7 @@ function CheckoutForm({ subtotal, cartItems }) {
                 throw new Error(errorData.error || 'Error al processar la comanda');
             }
 
-            // 3. Confirmar el pagament amb Stripe (redirigeix sol si va bé)
+            // 4. Confirmar el pagament amb Stripe (redirigeix sol si va bé)
             const { error } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
@@ -218,7 +192,18 @@ function CheckoutForm({ subtotal, cartItems }) {
                                 </div>
                             </div>
 
-
+                            <div className="form-group align-center">
+                                <label>Necessita enviament?</label>
+                                <div className="toggle-row">
+                                    <input
+                                        type="checkbox"
+                                        id="shipping"
+                                        name="shipping"
+                                        checked={formData.shipping}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
 
                             <div className="form-group">
                                 <label>Observacions</label>
@@ -276,7 +261,9 @@ function CheckoutForm({ subtotal, cartItems }) {
                     {formData.installation && installationCost > 0 && (
                         <p><span>Instal·lació:</span><span>{installationCost}€</span></p>
                     )}
-                    <hr />
+                    {formData.shipping && shippingCost > 0 && (
+                        <p><span>Enviament:</span><span>{shippingCost}€</span></p>
+                    )}
                     <p className="total-row">
                         <strong>Total:</strong>
                         <strong>{total.toFixed(2)}€</strong>

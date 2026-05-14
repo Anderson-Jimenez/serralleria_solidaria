@@ -17,9 +17,8 @@ return new class extends Migration
 
             $table->date('requested_delivery_date')->nullable();
             $table->boolean('installation')->default(false);
+            $table->boolean('shipping')->default(false);
             $table->text('shipping_address');
-            $table->text('billing_address');
-            $table->text('installation_address')->nullable();
             $table->decimal('installation_price', 10, 2)->nullable(); // ← aquí guardamos el coste calculado
             $table->text('observations')->nullable();
             $table->timestamps();

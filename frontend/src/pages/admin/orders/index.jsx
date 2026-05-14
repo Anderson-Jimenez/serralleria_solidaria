@@ -6,9 +6,7 @@ function OrderIndex() {
 
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]); 
-
-  console.log(orders);
-
+  
   const searchOrders = (e) => {
     let text = e.target.value;
 
@@ -47,7 +45,10 @@ function OrderIndex() {
   useEffect(() => {
     fetch(`http://localhost:8000/api/orders`)
       .then(response => response.json())
-      .then(data => setOrders(data))
+      .then(data => {
+        setOrders(data);
+        console.log(data);
+      })
       .catch(error => console.error(error));
 
   }, []);
