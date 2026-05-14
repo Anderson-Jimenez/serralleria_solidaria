@@ -1,301 +1,342 @@
-@use "../variables";
+// @use "../variables";
+
+$color-orange: #ff6633;
+$color-dark: #262f44;
+$color-text-muted: #8b92a5;
+$border-light: #e5e7eb;
 
 .backgroundForm {
-    background-image: url('/images/productBg.jpg');
-    filter: saturate(1.2) brightness(0.90);
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    padding: 8% 0;
+  background-image: url('/images/productBg.jpg');
+  background-color: #f3f4f6;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  // Padding dinámico: mínimo 1rem, ideal 5vh/2vw, máximo 5%
+  padding: clamp(8rem, 5vh, 5%) clamp(1rem, 2vw, 2%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .formContainerPrincipal {
-  width: clamp(320px, 90%, 65%);
-  margin: 0 auto;
-  border-radius: 15px;
-  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  // Ancho dinámico
+  width: clamp(50%, 95%, 70%);
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fff;
 
-  &:hover {
-    box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.15);
-  }
-
-  .formHeader {
-    background: linear-gradient(135deg, variables.$color-title 0%, variables.$color-accent 100%);
-    padding: 2rem 2rem;
+  // Panell Fosc (Esquerra)
+  .infoPanel {
+    box-sizing: border-box;
+    flex: 1 1 20vw;
+    background: linear-gradient(180deg, $color-dark 0%, darken($color-dark, 5%) 100%);
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2.5rem);
+    color: white;
     display: flex;
-    align-items: center;
-    gap: 20px;
+    flex-direction: column;
 
-    .iconWrapper {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
+    .logoHeader {
       display: flex;
       align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-    }
-
-    .iconoHeader {
-      color: white;
-      stroke-width: 1.5;
-    }
-
-    .tituloPrincipal {
-      color: white;
-      margin: 0;
-      font-size: 1.5rem;
+      gap: 10px;
       font-weight: 700;
-      letter-spacing: -0.3px;
+      font-size: 1.2rem;
+      margin-bottom: clamp(1.5rem, 4vw, 3rem);
+      
+      .logoIcon {
+        color: $color-orange;
+      }
     }
 
-    .subtituloForm {
-      color: rgba(255, 255, 255, 0.85);
-      margin: 0.3rem 0 0;
-      font-size: 0.9rem;
+    .textosHeader {
+      margin-bottom: clamp(1.5rem, 4vw, 3rem);
+
+      .tituloPrincipal {
+        font-size: clamp(2rem, 5vw, 2.5rem);
+        font-weight: 700;
+        line-height: 1.2;
+        margin: 0 0 1rem 0;
+
+        .highlight {
+          color: $color-orange;
+        }
+      }
+
+      .descripcionContexto {
+        color: $color-text-muted;
+        font-size: 1.10rem;
+        line-height: 1.6;
+        margin: 0;
+      }
     }
-  }
 
-  .formularioSolucion {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-
-    .columnaDatos {
-      padding: 2rem 2rem 2rem 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-      background-color: white;
-    }
-
-    .columnaMedia {
-      padding: 2rem;
-      background-color: #faf9fc;
+    .featuresList {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      border-left: 1px solid rgba(0, 0, 0, 0.05);
-    }
+      margin-top: auto;
 
-    .campoInput {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: variables.$color-title;
-      }
-
-      input, textarea {
-        padding: 12px 14px;
-        border: 1px solid variables.$border-color;
-        border-radius: 12px;
-        font-size: 0.9rem;
-        transition: all 0.2s ease;
-        background-color: #fff;
-        font-family: inherit;
-
-        &:focus {
-          outline: none;
-          border-color: variables.$color-accent;
-          box-shadow: 0 0 0 3px rgba(variables.$color-accent, 0.1);
-        }
-
-        &::placeholder {
-          color: #b9b9c3;
-        }
-      }
-
-      textarea {
-        min-height: 130px;
-        resize: vertical;
-        line-height: 1.5;
-      }
-    }
-
-    .grupoInputsDoble {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .zonaUpload {
-      border: 2px dashed #e2e2ea;
-      background-color: #ffffff;
-      border-radius: 20px;
-      padding: 1.5rem 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        border-color: variables.$color-accent;
-        background-color: #fffaf7;
-      }
-
-      &.zonaUploadActiva {
-        border-color: variables.$color-accent;
-        background-color: #fff3ed;
-        transform: scale(0.99);
-      }
-
-      .labelUpload {
+      .featureItem {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 8px;
-        cursor: pointer;
+        gap: 15px;
 
-        .iconoUpload {
-          color: variables.$color-accent;
-          transition: transform 0.2s;
-        }
-
-        span {
-          font-size: 0.9rem;
-          font-weight: 500;
-          color: #2d2d3a;
-        }
-
-        small {
-          font-size: 0.7rem;
-          color: #8e8e9e;
-          margin-top: 4px;
-        }
-      }
-
-      &:hover .iconoUpload {
-        transform: translateY(-3px);
-      }
-    }
-
-    .contenedorPreviews {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-      gap: 12px;
-      background: #f1f0f5;
-      padding: 1rem;
-      border-radius: 20px;
-      margin-top: 0.25rem;
-
-      .miniaturaImagen {
-        position: relative;
-        height: 70px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        transition: transform 0.15s ease;
-
-        &:hover {
-          transform: scale(1.02);
-        }
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .btnEliminarImg {
-          position: absolute;
-          top: 4px;
-          right: 4px;
-          background: rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(2px);
-          color: white;
-          border: none;
-          border-radius: 30px;
-          width: 22px;
-          height: 22px;
+        .iconWrapper {
+          background: rgba(255, 255, 255, 0.05);
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          cursor: pointer;
-          transition: background 0.2s;
+          color: $color-orange;
+        }
 
-          &:hover {
-            background: variables.$color-accent;
+        .featureText {
+          h4 {
+            margin: 0 0 3px 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+          }
+          p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: $color-text-muted;
           }
         }
       }
     }
+  }
 
-    .btnEnviarForm {
-      background: linear-gradient(95deg, variables.$color-title 0%, variables.$color-accent 100%);
-      color: white;
-      padding: 14px 20px;
-      border: none;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      margin-top: 0.5rem;
-      box-shadow: 0 4px 12px rgba(variables.$color-accent, 0.2);
+  // Panell Blanc (Dreta)
+  .formPanel {
+    box-sizing: border-box;
+    flex: 1.5 1 450px;
+    // Padding fluido
+    padding: clamp(1.5rem, 4vw, 3rem);
+    background-color: #ffffff;
 
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(variables.$color-accent, 0.3);
-        filter: brightness(1.02);
+    .formPanelHeader {
+      margin-bottom: 2rem;
+
+      h2 {
+        font-size: clamp(1.2rem, 3vw, 1.5rem);
+        color: $color-dark;
+        margin: 0 0 0.5rem 0;
+        font-weight: 700;
       }
 
-      &:active {
-        transform: translateY(1px);
+      p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+    }
+
+    .formularioSolucion {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+
+      .grupoInputsDoble {
+        display: grid;
+        // Magia Grid: Crea columnas automáticamente. Si una columna baja de 220px, la pasa a la siguiente fila.
+        // min(100%, 220px) asegura que en móviles minúsculos (<220px) no haya desbordamiento.
+        grid-template-columns: repeat(auto-fit, minmax(min(100%,40%), 1fr));
+        gap: 1.2rem;
+      }
+
+      .campoInput {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #374151;
+        }
+
+        input, textarea {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 12px 14px;
+          border: 1px solid $border-light;
+          border-radius: 6px;
+          font-size: 0.9rem;
+          font-family: inherit;
+          color: #1f2937;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+          &::placeholder {
+            color: #9ca3af;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: $color-orange;
+            box-shadow: 0 0 0 3px rgba($color-orange, 0.1);
+          }
+
+          &:disabled {
+            background-color: #f9fafb;
+            color: #6b7280;
+            cursor: not-allowed;
+          }
+        }
+
+        textarea {
+          min-height: 100px;
+          resize: vertical;
+        }
+      }
+
+      .zonaUpload {
+        box-sizing: border-box;
+        border: 1.5px dashed #d1d5db;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: #fafafa;
+
+        &:hover, &.zonaUploadActiva {
+          border-color: $color-orange;
+          background-color: #fff9f6;
+        }
+
+        .labelUpload {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+
+          .iconoUpload {
+            color: #9ca3af;
+            margin-bottom: 5px;
+          }
+
+          span {
+            font-size: 0.9rem;
+            color: #4b5563;
+            
+            .orangeText {
+              color: $color-orange;
+              font-weight: 600;
+            }
+          }
+
+          small {
+            font-size: 0.75rem;
+            color: #9ca3af;
+          }
+        }
+      }
+
+      .contenedorPreviews {
+        // Grid auto-fit para las miniaturas
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 12px;
+        margin-top: 0.5rem;
+
+        .miniaturaImagen {
+          position: relative;
+          aspect-ratio: 1 / 1;
+          border-radius: 6px;
+          overflow: hidden;
+          border: 1px solid $border-light;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .btnEliminarImg {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+
+            &:hover {
+              background: #ef4444;
+            }
+          }
+        }
+      }
+
+      .btnEnviarForm {
+        box-sizing: border-box;
+        width: 100%;
+        background-color: $color-orange;
+        color: white;
+        padding: 14px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        margin-top: 1rem;
+
+        &:hover:not(:disabled) {
+          background-color: darken($color-orange, 5%);
+        }
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
       }
     }
   }
 }
 
-@media (max-width: 750px) {
-  .formContainerPrincipal .formularioSolucion {
-    grid-template-columns: 1fr;
-  }
-
-  .formContainerPrincipal .formHeader {
-    padding: 1.5rem;
-    flex-direction: column;
-    text-align: center;
-  }
-  .formContainerPrincipal .formHeader .iconWrapper {
-    width: 50px;
-    height: 50px;
-  }
-}
+// Missatges i animacions
 .message {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding: 0.75rem;
-  border-radius: 12px;
+  border-radius: 6px;
   font-size: 0.85rem;
   text-align: center;
   animation: fadeIn 0.3s ease;
 
   &.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
   }
 
   &.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
   }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
+  from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -306,68 +347,4 @@
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-.action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    .add-to-cart,
-    .buy-now {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 14px 20px;
-        border: none;
-        border-radius: 40px;
-        font-weight: 700;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.25s ease;
-    }
-
-    .add-to-cart {
-        background: linear-gradient(95deg, variables.$color-title 0%, variables.$color-accent 100%);
-        color: white;
-
-        &:hover:not(:disabled) {
-            transform: translateY(-2px);
-            filter: brightness(1.05);
-        }
-
-        &.added {
-            background: #28a745;
-        }
-
-        &.no-stock,
-        &:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            filter: none;
-            opacity: 0.7;
-        }
-    }
-
-    .buy-now {
-        background: transparent;
-        border: 2px solid variables.$color-accent;
-        color: variables.$color-accent;
-
-        &:hover:not(:disabled) {
-            background: variables.$color-accent;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        &.no-stock,
-        &:disabled {
-            border-color: #ccc;
-            color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-    }
 }

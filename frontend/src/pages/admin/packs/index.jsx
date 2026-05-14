@@ -10,7 +10,10 @@ function Packs() {
     useEffect(() => {
         fetch("http://localhost:8000/api/packs")
             .then(response => response.json())
-            .then(data => setPacks(data))
+            .then(data => {
+                console.log(data);
+                setPacks(data);
+            })
             .catch(error => console.error(error));
     }, []);
 
@@ -66,9 +69,9 @@ function Packs() {
 
                                     <tr key={pack.id}>
                                         <td className="img">
-                                            {pack.primary_image ? (
+                                            {pack.primaryImage ? (
                                                 <img
-                                                    src={`http://localhost:8000/storage/${pack.primary_image.path}`}
+                                                    src={`http://localhost:8000/storage/${pack.primaryImage.path}`}
                                                     alt={pack.name}
                                                 />
                                             ) : (
@@ -79,7 +82,7 @@ function Packs() {
 
                                         <td>{pack.name}</td>
 
-                                        <td>{pack.sale_price}€</td>
+                                        <td>{pack.price}€</td>
 
                                         <td>
                                             <span className={pack.stock < 5 ? "text-danger" : ""}>
@@ -92,8 +95,8 @@ function Packs() {
                                         </td>
 
                                         <td>
-                                            <span className={pack.status === 1 ? "status-active" : "status-inactive"}>
-                                                {pack.status === 1 ? "Actiu" : "Inactiu"}
+                                            <span className={pack.status ? "status-active" : "status-inactive"}>
+                                                {pack.status ? "Actiu" : "Inactiu"}
                                             </span>
                                         </td>
 
@@ -103,7 +106,7 @@ function Packs() {
                                                     <Pencil size={18} />
                                                 </Link>
                                                 <button className="action-icon power">
-                                                    <Power size={18} className="mr-8" /> {pack.status === 1 ? "Desactivar" : "Activar"}
+                                                    <Power size={18} className="mr-8" /> {pack.status ? "Desactivar" : "Activar"}
                                                 </button>
                                             </div>
                                         </td>

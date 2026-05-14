@@ -38,7 +38,7 @@
   flex-direction: column;
   gap: 24px;
   background-color: $color-bg-container;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 
@@ -54,262 +54,268 @@
 
     .headerInfo {
       flex: 1;
-
       .petitionTitle {
         font-size: 28px;
         font-weight: 600;
         margin: 0 0 8px 0;
         color: white;
       }
-
       .creationDate {
         font-size: 14px;
         margin: 0;
         opacity: 0.9;
       }
     }
-    .statusContainer .statusSelect {
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 8px;
-      background: white;
-      color: $color-title;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
+  }
 
-      &:hover {
-        background: #e4e3e3;
+  /* SECCIÓN ESTADOS */
+  .statusSection {
+    padding: 2rem 2rem;
+    background: $bg-light;
+    border-bottom: 1px solid $border-color;
+
+    .statusSectionHeader {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .statusButtonsContainer {
+      display: flex;
+      gap: 10px;
+    }
+
+    .statusButton {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-weight: 500;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
       }
+
+      &.active {
+        box-shadow: 0 0 0 2px currentColor, 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      &.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+    .statusConfirmMessage {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #e6f7e6;
+      color: #2e7d32;
+      padding: 8px 14px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 12px;
+      animation: fadeInOut 3s forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(-5px); }
+      10% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-5px); visibility: hidden; }
     }
   }
 
+  /* DATOS PETICIÓN */
   .detailsPetition {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    padding: 0 32px 24px 32px;
+    padding: 24px 32px;
 
-    .petitionData,
-    .petitionDataFull {
+    .petitionData, .petitionDataFull {
       background: $bg-light;
       border: 1px solid $border-color;
       border-radius: 10px;
       padding: 16px 20px;
-      transition: all 0.2s;
-
-      &:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      }
 
       .dataTitle {
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         color: $color-title;
-        margin: 0 0 12px 0;
-        padding-bottom: 8px;
-        border-bottom: 2px solid $border-color;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid $border-color;
       }
 
       .dataContent {
         font-size: 15px;
         color: $text-color;
         margin: 0;
-        line-height: 1.5;
       }
     }
-
-    .petitionDataFull {
-      grid-column: span 2;
-    }
+    .petitionDataFull { grid-column: span 2; }
   }
 
+  /* ─────────────────────────────────────────
+     DOCUMENTOS ADJUNTOS
+  ───────────────────────────────────────── */
   .petitionDocs {
     padding: 0 32px 32px 32px;
     border-top: 1px solid $border-color;
 
     .docsTitle {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
       color: $color-title;
-      margin: 0 0 20px 0;
-      padding-top: 24px;
+      margin: 24px 0 16px 0;
     }
 
     .petitionDocsContainer {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 16px;
 
-      .imageWrapper {
-        border: 1px solid $border-color;
-        border-radius: 10px;
-        overflow: hidden;
-        transition: all 0.2s;
+      .noImages {
+        color: #94a3b8;
+        font-size: 14px;
+        grid-column: 1 / -1;
+      }
+
+      /* ── Tarjeta de archivo ── */
+      .documentCard {
+        position: relative;
         background: $bg-light;
+        border: 1px solid $border-color;
+        border-radius: 12px;
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: all 0.2s ease;
 
         &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
           border-color: $color-accent;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+          .downloadBtnSmall {
+            background: $color-accent;
+            transform: scale(1.1);
+          }
         }
 
-        .attachedImage {
-          width: 100%;
-          height: 180px;
-          object-fit: cover;
-          cursor: pointer;
-          transition: transform 0.2s;
+        /* Franja de color superior según tipo de archivo */
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 3px;
+          border-radius: 12px 12px 0 0;
+        }
+        &.fileType-pdf::before         { background: #ef4444; }
+        &.fileType-spreadsheet::before { background: #22c55e; }
+        &.fileType-word::before        { background: #3b82f6; }
+        &.fileType-image::before       { background: #a855f7; }
+        &.fileType-other::before       { background: #94a3b8; }
 
-          &:hover {
-            transform: scale(1.05);
+        .previewContainer {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+
+          .imgPreview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          /* ── Colores de icono por tipo ── */
+          .docIcon {
+            margin-bottom: 6px;
+
+            &.iconPdf         { color: #ef4444; }
+            &.iconSpreadsheet { color: #22c55e; }
+            &.iconWord        { color: #3b82f6; }
+            &.iconImage       { color: #a855f7; }
+            &.iconOther       { color: #94a3b8; }
+          }
+
+          .docName {
+            font-size: 10px;
+            color: #64748b;
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .docExt {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+            margin-top: 2px;
+          }
+        }
+
+        /* ── Botón de descarga ── */
+        .downloadBtnSmall {
+          position: absolute;
+          bottom: 8px;
+          right: 8px;
+          background: rgba(15, 23, 42, 0.8);
+          color: white;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          backdrop-filter: blur(4px);
+          z-index: 10;
+
+          &:hover:not(:disabled) {
+            background: $color-accent;
+          }
+
+          &:disabled {
+            cursor: wait;
+            opacity: 0.8;
+          }
+
+          /* Spinner mientras descarga */
+          .spinIcon {
+            animation: spin 0.8s linear infinite;
           }
         }
       }
     }
-
-    .noImages {
-      text-align: center;
-      padding: 40px;
-      color: $color-text-header;
-      background: $bg-light;
-      border-radius: 10px;
-      font-size: 14px;
-    }
   }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .customSolutionDetails {
-    padding: 12px;
-  }
-
-  .petitionDetails {
-    .detailsHeader {
-      padding: 20px;
-      flex-direction: column;
-      align-items: flex-start;
-
-      .statusContainer {
-        width: 100%;
-        justify-content: space-between;
-      }
-    }
-
-    .detailsPetition {
-      grid-template-columns: 1fr;
-      padding: 0 20px 20px 20px;
-
-      .petitionDataFull {
-        grid-column: span 1;
-      }
-    }
-
-    .petitionDocs {
-      padding: 0 20px 20px 20px;
-
-      .petitionDocsContainer {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
-    }
-  }
-}
-.statusSection {
-  padding: 20px 32px;
-  background: $bg-light;
-  border-bottom: 1px solid $border-color;
-
-  .statusSectionHeader {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    color: $color-text-header;
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .statusButtonsContainer {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .statusButton {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    /* Override para que los badges existentes se comporten como botones */
-    min-width: auto;
-    justify-content: center;
-    
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      filter: brightness(0.97);
-    }
-
-    &:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    &.disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .activeIndicator {
-      margin-left: 4px;
-    }
-    
-    /* Estilo activo resaltado */
-    &.active {
-      box-shadow: 0 0 0 2px currentColor, 0 4px 12px rgba(0, 0, 0, 0.1);
-      transform: scale(1.02);
-    }
-  }
-
-  .confirmMessage {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 16px;
-    padding: 10px 16px;
-    background: #d1fae5;
-    color: #065f46;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    animation: slideDown 0.3s ease;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive para los botones */
-@media (max-width: 768px) {
-  .statusSection {
-    padding: 16px 20px;
-
-    .statusButtonsContainer {
-      gap: 8px;
-    }
-  }
+/* Animación del spinner de descarga */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
