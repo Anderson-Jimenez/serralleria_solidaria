@@ -17,7 +17,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Order::with('user','products','detail')->get();
+        return Order::with('user', 'products', 'detail')->get();
     }
 
     /**
@@ -41,7 +41,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        return Order::with('user','products','detail')->findOrFail($id);
+        return Order::with('user', 'products', 'detail')->findOrFail($id);
 
         /*
         if ($order->user_id !== auth()->id() && auth()->user->userType !=='admin') {
@@ -55,7 +55,7 @@ class OrderController extends Controller
      */
     public function edit(string $id)
     {
-        return Order::with('user','products','detail')->findOrFail($id)->get();
+        return Order::with('user', 'products', 'detail')->findOrFail($id)->get();
     }
 
     /**
@@ -73,7 +73,8 @@ class OrderController extends Controller
     {
         //
     }
-    public function checkout(Request $request){
+    public function checkout(Request $request)
+    {
         $user = Auth::user();
         if (!$user) {
             return response()->json(['error' => 'No autenticado'], 401);
@@ -83,7 +84,7 @@ class OrderController extends Controller
         $order = Order::where('user_id', $user->id)
             ->where('id', $orderId)
             ->where('status', 'cart')
-            ->with('products.product') // para acceder a los productos y sus precios
+            ->with('products') // para acceder a los productos y sus precios
             ->first();
 
         if (!$order) {
@@ -91,61 +92,40 @@ class OrderController extends Controller
         }
 
         $validated = $request->validate([
-            'shipping_address'        => 'required|string',
+            'shipping_address' => 'required|string',
             'requested_delivery_date' => 'nullable|date',
-            'installation'            => 'boolean',
-            'shipping'                => 'boolean',
-            'shipping_price'          => 'nullable|numeric',
-            'observations'            => 'nullable|string',
+            'installation' => 'boolean',
+            'installation_price' => 'nullable|numeric',
+            'shipping' => 'boolean',
+            'shipping_price' => 'nullable|numeric',
+            'observations' => 'nullable|string',
+            'total' => 'required|numeric',
         ]);
-
-        // Calcular subtotal de productos (todos asumimos instalables)
-        $subtotalProductos = $order->products->sum('subtotal');
-
-        // Calcular precio de instalación si se solicita
-        $installationPrice = null;
-        if ($validated['installation']) {
-            $installationPrice = $this->calculateInstallationPrice($subtotalProductos);
-            // Si es null significa >1000€ → error
-            if ($installationPrice === null) {
-                return response()->json([
-                    'error' => 'Per a pressupostos superiors a 1.000€, si us plau contacta amb nosaltres.',
-                ], 400);
-            }
-        }
 
         // Crear o actualizar OrderDetail (guardando el precio de instalación)
         $detail = OrderDetail::updateOrCreate(
             ['order_id' => $order->id],
             [
-                'shipping_address'        => $validated['shipping_address'],
+                'shipping_address' => $validated['shipping_address'],
                 'requested_delivery_date' => $validated['requested_delivery_date'] ?? null,
-                'installation'            => $validated['installation'] ?? false,
-                'shipping'                => $validated['shipping'] ?? false,
-                'installation_price'      => $installationPrice,
+                'installation' => $validated['installation'] ?? false,
+                'shipping' => $validated['shipping'] ?? false,
+                'installation_price' => $validated['installation_price'] ?? false,
+                'observations' => $validated['observations']
             ]
         );
-
-        // Calcular total final: productos + instalación + (gastos de envío si los hay)
-        $totalFinal = $subtotalProductos;
-        if ($installationPrice) {
-            $totalFinal += $installationPrice;
-        }
-        if ($validated['shipping']) {
-            $totalFinal += $validated['shipping_price'] ?? 0;
-        }
-        // Si tienes gastos de envío fijos o variables, añádelos aquí, ej:
-        // $totalFinal += 9; // coste de envío
 
         // Actualizar pedido
         $order->status = 'pending';
         $order->observations = $validated['observations'] ?? null;
-        $order->total_price = $totalFinal;
+        $detail->observations = $validated['observations'] ?? null;
+        $order->total_price = $validated['total'];
         $order->save();
+        $detail->save();
 
         return response()->json([
             'message' => 'Pedido realizado correctamente',
-            'order'   => $order->load('detail', 'products.product'),
+            'order' => $order->load('detail', 'products'),
         ], 200);
     }
 
@@ -156,9 +136,12 @@ class OrderController extends Controller
      */
     private function calculateInstallationPrice($subtotal)
     {
-        if ($subtotal <= 250) return 90;
-        if ($subtotal <= 500) return 120;
-        if ($subtotal <= 1000) return 180;
+        if ($subtotal <= 250)
+            return 90;
+        if ($subtotal <= 500)
+            return 120;
+        if ($subtotal <= 1000)
+            return 180;
         return null; // más de 1000€
     }
 

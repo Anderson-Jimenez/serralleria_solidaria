@@ -75,25 +75,23 @@ const OrderDocument = ({ order }) => {
           <View style={[styles.tableRow, styles.tableHeader]}>
             <Text style={styles.col1}>Producte</Text>
             <Text style={styles.col2}>Quantitat</Text>
-            <Text style={styles.col3}>Preu</Text>
+            <Text style={styles.col3}>Preu per unitat</Text>
+            <Text style={styles.col3}>Preu total</Text>
           </View>
 
-          {/* Files 
-          {order.linies.map((linia, i) => (
-            <View key={i} style={styles.tableRow}>
-              <Text style={styles.col1}>{linia.producte}</Text>
-              <Text style={styles.col2}>{linia.quantitat}</Text>
-              <Text style={styles.col3}>{linia.preu.toFixed(2)} €</Text>
+          {order.products.map((producte) => (
+            <View key={producte.id} style={styles.tableRow}>
+              <Text style={styles.col1}>{producte.name}</Text>
+              <Text style={styles.col2}>{producte.pivot.quantity}</Text>
+              <Text style={styles.col3}>{producte.pivot.unit_price} €</Text>
+              <Text style={styles.col3}>{producte.pivot.subtotal} €</Text>
             </View>
           ))}
-            */}
         </View>
 
-        {/* Total 
         <View style={styles.total}>
-          <Text>Total: {order.total.toFixed(2)} €</Text>
+          <Text>Total: {order.total_price} €</Text>
         </View>
-          */}
       </Page>
     </Document>
     );

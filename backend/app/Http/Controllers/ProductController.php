@@ -333,16 +333,14 @@ class ProductController extends Controller
                 'selectFilters'   => 'nullable|present|array',
                 'minPrice'  => 'nullable|integer',
                 'maxPrice'  => 'nullable|integer',
-                'minWeight' => 'nullable|integer',
-                'maxWeight' => 'nullable|integer',
+
             ]);
 
             $text    = $validated['searchText'];
             $filters = $validated['filters'];
             $minPrice = $validated['minPrice'];
             $maxPrice = $validated['maxPrice'];
-            $minWeight = $validated['minWeight'];
-            $maxWeight = $validated['maxWeight'];
+
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
@@ -369,19 +367,6 @@ class ProductController extends Controller
                 }
 
             }
-            /*
-            if(!empty($minWeight) || !empty($maxWeight)){
-
-                if (!empty($minWeight)) {
-                    $query->where('sale_price', '>=', $minWeight);
-                }
-
-                if (!empty($maxWeight)) {
-                    $query->where('sale_price', '<=', $maxWeight);
-                }
-                
-            }
-            */
 
             // 2. Filtre de caracteristiques de select
             if(!empty($validated['selectFilters'])){
@@ -424,8 +409,6 @@ class ProductController extends Controller
                 'category'     => 'required|string|max:100',
                 'minPrice'  => 'nullable|integer',
                 'maxPrice'  => 'nullable|integer',
-                'minWeight' => 'nullable|integer',
-                'maxWeight' => 'nullable|integer',
             ]);
         
             $category=$validated['category'];
@@ -433,8 +416,6 @@ class ProductController extends Controller
             $filters = $validated['filters'];
             $minPrice = $validated['minPrice'];
             $maxPrice = $validated['maxPrice'];
-            $minWeight = $validated['minWeight'];
-            $maxWeight = $validated['maxWeight'];
 
             $query = Product::with(['category', 'characteristics', 'primaryImage']);
 
@@ -455,19 +436,6 @@ class ProductController extends Controller
                 }
 
             }
-            /*
-            if(!empty($minWeight) || !empty($maxWeight)){
-
-                if (!empty($minWeight)) {
-                    $query->where('sale_price', '>=', $minWeight);
-                }
-
-                if (!empty($maxWeight)) {
-                    $query->where('sale_price', '<=', $maxWeight);
-                }
-                
-            }
-            */
 
             if (!empty($filters)) {
                 $query->where(function ($q) use ($filters) {

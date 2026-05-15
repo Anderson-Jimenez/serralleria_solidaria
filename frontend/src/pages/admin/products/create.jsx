@@ -22,6 +22,9 @@ function ProductsCreate() {
     const [description, setDescription] = useState("");
     const [code, setCode] = useState("");
     const [stock, setStock] = useState(0);
+
+    const [weight, setStock] = useState(0);
+
     const [intSize, setIntSize] = useState("");
     const [extSize, setExtSize] = useState("");
     const [categoryId, setCategoryId] = useState("");

@@ -173,17 +173,6 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                             </div>
                         </div>
 
-                        {/*
-                        <div className="uniqueCharacteristic" key="weight">
-                            <h3>Pes</h3>
-                            <div className="rangeFilter">
-                                <input type="number" placeholder="Mínim" min="0" value={minWeight} onChange={(e) => setMinWeight(e.target.value)} />Kg
-                                <span className="rangeSeparator">—</span>
-                                <input type="number" placeholder="Màxim" min="0" value={maxWeight} onChange={(e) => setMaxWeight(e.target.value)} />Kg
-                            </div>
-                        </div>
-                        */}
-
                         {characteristics.map((characteristic) => (
                             <div className="uniqueCharacteristic" key={characteristic.id}>
                                 <h3>{characteristic.type}</h3>

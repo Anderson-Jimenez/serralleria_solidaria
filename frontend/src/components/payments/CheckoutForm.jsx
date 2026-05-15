@@ -2,7 +2,7 @@ import { PaymentElement, AddressElement, useStripe, useElements } from '@stripe/
 import { useState, useEffect } from 'react';
 import { useCart } from '../../contexts/CartContext';
 
-const STEPS = ['Direcció', 'Observacions i instal·lació', 'Pagament'];
+const STEPS = ['Direcció', 'Observacions i extres', 'Pagament'];
 
 function CheckoutForm({ subtotal, cartItems, clientSecret }) {
     const stripe = useStripe();
@@ -12,7 +12,6 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         installation: false,
-        installation_address: '',
         observations: '',
         shipping: false,
     });
@@ -20,7 +19,7 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
     const [installationMessage, setInstallationMessage] = useState('');
 
     const [shippingCost, setShippingCost] = useState(0);
-    const [shippingMessage, setShippingMessage] = useState('');
+    const [shippingAddress, setShippingAddress] = useState('');
 
     const total = subtotal + (formData.installation ? installationCost : 0) + (formData.shipping ? shippingCost : 0);
 
@@ -66,6 +65,8 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        console.log('Body complet:', JSON.stringify(formData));
+
         if (!stripe || !elements) return;
 
         // Validació instal·lació
@@ -77,12 +78,6 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
         setLoading(true);
 
         try {
-            // 1. Obtenir l'adreça de l'AddressElement
-            const addressElement = elements.getElement('address');
-            const { value: addressValue } = await addressElement.getValue();
-            const { name, address } = addressValue;
-            const formattedAddress = `${name}, ${address.line1}${address.line2 ? ' ' + address.line2 : ''}, ${address.city}, ${address.postal_code}, ${address.country}`;
-
             const token = localStorage.getItem('token');
             const orderId = localStorage.getItem('order_id');
 
@@ -95,6 +90,7 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
                     paymentIntentId,
                     total,      // ja inclou subtotal + installationCost + shippingCost
                     order_id: orderId,
+                    shipping_address: shippingAddress,
                 }),
             });
 
@@ -112,7 +108,8 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
                     order_id: orderId,
                     installation_price: installationCost,
                     shipping_price: shippingCost,
-                    shipping_address: formattedAddress,
+                    shipping_address: shippingAddress,
+                    total: total,
                     cartItems,
                 }),
             });
@@ -141,6 +138,7 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
         } finally {
             setLoading(false);
         }
+
     };
 
     return (
@@ -170,7 +168,20 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
                                 <button className="paymentFormButtonBack" type="button">
                                     Tornar al carret
                                 </button>
-                                <button className="paymentFormButton" type="button" onClick={() => setCurrentStep(1)}>
+                                <button className="paymentFormButton" type="button" onClick={async () => {
+                                    const addressElement = elements.getElement('address');
+                                    const { value: addressValue, complete } = await addressElement.getValue();
+
+                                    if (!complete) {
+                                        alert('Si us plau, omple tota l\'adreça');
+                                        return;
+                                    }
+
+                                    const { name, address } = addressValue;
+                                    const formatted = `${name}, ${address.line1}${address.line2 ? ' ' + address.line2 : ''}, ${address.city}, ${address.postal_code}, ${address.country}`;
+                                    setShippingAddress(formatted);
+                                    setCurrentStep(1);
+                                }}>
                                     Següent
                                 </button>
                             </div>

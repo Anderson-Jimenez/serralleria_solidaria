@@ -91,6 +91,8 @@ function OrderIndex() {
                 <th>ID</th>
                 <th>Client</th>
                 <th>Direcció</th>
+                <th>Enviament</th>
+                <th>Instal·lació</th>
                 <th>Observacions</th>
                 <th>Preu</th>
                 <th>Estat</th>
@@ -103,7 +105,9 @@ function OrderIndex() {
                   <tr key={order.id}>
                       <td>{order.id}</td>
                       <td>{order.user.username}</td>
-                      <td>Res de direccio de moment</td>
+                      <td>{order.detail.shipping_address}</td>
+                      <td>{order.detail.shipping ? "Si" : "No"}</td>
+                      <td>{order.detail.installation ? "Si" : "No"}</td>
                       <td>{order.observations}</td>
                       <td>{order.total_price}€</td>
                       <td>{order.status}</td>
