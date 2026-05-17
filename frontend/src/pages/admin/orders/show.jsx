@@ -17,15 +17,15 @@ function OrderShow() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [updating, setUpdating] = useState(false);
 
-  // Mapeo de estados a clases CSS (igual que en el SCSS que ya tienes)
+  // Mapeo corregido para usar las clases del SCSS unificado
   const getStatusClass = (status) => {
     const classes = {
-      pending:    "order-pending",     // o pendingStatus según definición
-      paid:       "order-paid",
-      processing: "order-processing",
-      shipped:    "order-shipped",
-      completed:  "order-completed",
-      cancelled:  "order-cancelled",
+      pending:    "statusPending",
+      paid:       "statusPaid",
+      processing: "statusProcessing",
+      shipped:    "statusShipped",
+      completed:  "statusCompleted",
+      cancelled:  "statusCancelled",
     };
     return classes[status] || "";
   };
@@ -33,7 +33,7 @@ function OrderShow() {
   const statusLabels = {
     pending:    "Pendent",
     paid:       "Pagat",
-    processing: "Processant",
+    processing: "En procés",
     shipped:    "Enviat",
     completed:  "Completat",
     cancelled:  "Cancel·lat",
@@ -77,15 +77,11 @@ function OrderShow() {
 
   if (!order) return <div className="loading">Carregant comanda...</div>;
 
-  // Datos del usuario
   const user = order.user || { name: "Usuari eliminat", email: "—", phone: "—" };
   const detail = order.detail || {};
 
-  // Calcular total de productos (si no confiamos en order.total_price)
-  const totalProductos = order.products?.reduce((sum, p) => sum + p.pivot.quantity, 0) || 0;
-
   return (
-    <section className="customSolutionDetails">  {/* reutilizamos la misma clase CSS */}
+    <section className="customSolutionDetails">
       <button className="backButton" onClick={() => navigate(-1)}>
         <ArrowLeft size={18} /> Tornar
       </button>
@@ -135,7 +131,7 @@ function OrderShow() {
         <div className="detailsPetition">
           <div className="petitionData">
             <h2 className="dataTitle"><User size={16} /> Client</h2>
-            <p className="dataContent">{user.name}</p>
+            <p className="dataContent">{user.username || user.name}</p>
           </div>
           <div className="petitionData">
             <h2 className="dataTitle"><Mail size={16} /> Email</h2>
@@ -148,10 +144,6 @@ function OrderShow() {
           <div className="petitionData">
             <h2 className="dataTitle"><MapPin size={16} /> Adreça d'enviament</h2>
             <p className="dataContent">{detail.shipping_address || "No especificada"}</p>
-          </div>
-          <div className="petitionData">
-            <h2 className="dataTitle"><Calendar size={16} /> Data sol·licitada</h2>
-            <p className="dataContent">{detail.requested_delivery_date || "—"}</p>
           </div>
           <div className="petitionData">
             <h2 className="dataTitle"><Truck size={16} /> Enviament</h2>
@@ -170,43 +162,53 @@ function OrderShow() {
         </div>
 
         {/* PRODUCTOS */}
-        <div className="petitionDocs" style={{ marginTop: "2rem" }}>
-          <h2 className="docsTitle"><Package size={18} /> Productes</h2>
-          <div style={{ overflowX: "auto" }}>
-            <table className="orderProductsTable">
-              <thead>
-                <tr>
-                  <th>Producte</th>
-                  <th>Quantitat</th>
-                  <th>Preu unitari</th>
-                  <th>Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.products?.map((product) => (
-                  <tr key={product.id}>
-                    <td>{product.name}</td>
-                    <td>{product.pivot.quantity}</td>
-                    <td>{product.pivot.unit_price} €</td>
-                    <td>{product.pivot.subtotal} €</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan="3" style={{ textAlign: "right" }}><strong>Total</strong></td>
-                  <td><strong>{order.total_price} €</strong></td>
-                </tr>
-              </tfoot>
-            </table>
+        <div className="orderProductsSection" style={{ marginTop: "2.5rem" }}>
+          <h2 className="docsTitle"><Package size={18} /> Productes inclosos</h2>
+          
+          <div className="orderProductsGrid">
+            {order.products?.map((product) => (
+              <div key={product.id} className="orderProductCard">
+                <div className="productCardHeader">
+                  <h4 className="productName">{product.name}</h4>
+                  <span className="productQty">x{product.pivot.quantity}</span>
+                </div>
+                
+                <div className="productCardBody">
+                  <div className="productInfoRow">
+                    <span className="infoLabel">Preu unitari</span>
+                    <span className="infoValue">{Number(product.pivot.unit_price).toFixed(2)} €</span>
+                  </div>
+                  <div className="productInfoRow subtotalRow">
+                    <span className="infoLabel">Subtotal</span>
+                    <span className="subtotalPrice">{Number(product.pivot.subtotal).toFixed(2)} €</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
 
-        {/* METADATOS ADICIONALES (opcional) */}
-        <div className="petitionDocs" style={{ marginTop: "1rem" }}>
-          <div style={{ display: "flex", gap: "2rem", fontSize: "0.85rem", color: "#666" }}>
-            <span><CreditCard size={14} /> Total pagat: {order.total_price}€</span>
-            <span>🕒 Última actualització: {new Date(order.updated_at).toLocaleString()}</span>
+          {/* TARJETA RESUMEN DEL TOTAL */}
+          <div className="orderSummaryWrapper">
+            <div className="orderTotalCard">
+              <div className="totalRowItem">
+                <span>Unitats totals:</span>
+                <strong>{order.products?.reduce((sum, p) => sum + p.pivot.quantity, 0) || 0} prod.</strong>
+              </div>
+              
+              {detail.installation ? (
+                <div className="totalRowItem feeRow">
+                  <span>Cost d'instal·lació:</span>
+                  <span>{Number(detail.installation_price || 0).toFixed(2)} €</span>
+                </div>
+              ) : null}
+
+              <hr className="totalSeparator" />
+              
+              <div className="totalRowItem finalTotal">
+                <span>Import Total:</span>
+                <span className="finalPrice">{Number(order.total_price).toFixed(2)} €</span>
+              </div>
+            </div>
           </div>
         </div>
 

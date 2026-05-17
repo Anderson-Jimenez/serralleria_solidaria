@@ -20,7 +20,7 @@ function OrderIndex() {
   const statusLabels = {
     pending: "Pendent",
     paid: "Pagat",
-    processing: "Processant",
+    processing: "En procés",
     shipped: "Enviat",
     completed: "Completat",
     cancelled: "Cancel·lat",
@@ -78,7 +78,7 @@ function OrderIndex() {
               <option value="all">Tots els estats</option>
               <option value="pending">Pendent</option>
               <option value="paid">Pagat</option>
-              <option value="processing">Processant</option>
+              <option value="processing">En procés</option>
               <option value="shipped">Enviat</option>
               <option value="completed">Completat</option>
               <option value="cancelled">Cancel·lat</option>
@@ -104,17 +104,7 @@ function OrderIndex() {
                 filteredOrders.map((order) => (
                   <tr key={order.id}>
                     <td>{order.id}</td>
-                    <td>
-                      {order.user ? (
-                        <>
-                          <strong>{order.user.name}</strong>
-                          <br />
-                          <small>{order.user.email}</small>
-                        </>
-                      ) : (
-                        "Usuari eliminat"
-                      )}
-                    </td>
+                    <td>{order.user.email}</td>
                     <td>{order.detail?.shipping_address || "—"}</td>
                     <td className="text-center">
                       {order.detail?.shipping ? "Sí" : "No"}
