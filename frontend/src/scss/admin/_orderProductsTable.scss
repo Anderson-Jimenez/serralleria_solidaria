@@ -1,0 +1,116 @@
+.orderProductsSection{
+    padding: 20px 32px;
+}
+.orderProductsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* Tarjeta de producto: Hereda la misma línea visual que .documentCard */
+.orderProductCard {
+  background: #f6f7f7;;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+  .productCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .productName {
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155; // Gris oscuro corporativo
+      margin: 0;
+    }
+
+    .productQty {
+      background: #f1f5f9; // Fondo neutro de administración
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+  }
+
+  .productCardBody {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 10px;
+
+    .productInfoRow {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 4px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .subtotalPrice {
+        font-weight: 600;
+        color: #1e293b;
+      }
+    }
+  }
+}
+
+/* Bloque del Total: Sigue la estructura limpia de la derecha */
+.orderSummaryWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Imita una sección interna destacada (como un .petitionData premium) */
+.orderTotalCard {
+  background: #f8fafc; // Fondo ligeramente gris para destacar que es el cierre
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  width: 100%;
+  max-width: 320px;
+
+  .totalRowItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 6px;
+
+    strong {
+      color: #334155;
+    }
+  }
+
+  .totalSeparator {
+    border: 0;
+    border-top: 1px dashed #cbd5e1; // Línea discontinua limpia
+    margin: 12px 0;
+  }
+
+  .finalTotal {
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+
+    .finalPrice {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a; // Mantiene la sobriedad sin colores chillones
+    }
+  }
+}
