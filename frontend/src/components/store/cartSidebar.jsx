@@ -126,7 +126,7 @@ function CartSidebar({ isOpen, onClose }) {
                       const imagePath = item.product?.primary_image?.path;
                       const imageUrl = imagePath
                         ? `http://localhost:8000/storage/${imagePath}`
-                        : '/placeholder.png';
+                        : 'no-image';
                       const sinStock =
                         item.product?.stock !== undefined &&
                         item.quantity >= item.product.stock;
@@ -137,7 +137,7 @@ function CartSidebar({ isOpen, onClose }) {
                             src={imageUrl}
                             alt={item.product?.name || 'Producto'}
                             onError={(e) => {
-                              e.currentTarget.src = '/placeholder.png';
+                              e.currentTarget.src = 'no-image';
                             }}
                           />
 

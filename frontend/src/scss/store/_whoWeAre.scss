@@ -1,130 +1,167 @@
 @use '../variables';
 
 .quiSom {
-    background: #f6f7f7;
-    padding: 7vh 8%;
-    position: relative;
-    overflow: hidden;
+  background: #f6f7f7;
+  // Padding adaptativo: mantiene el aire en PC y se ajusta en móviles
+  padding: clamp(2rem, 7vh, 5rem) clamp(1rem, 8%, 8%);
+  position: relative;
+  overflow: hidden;
 
-    .quiSomLabel {
-        color: variables.$color-accent;
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        margin-top: 0;
+  .quiSomLabel {
+    color: variables.$color-accent;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  .quiSomTitle {
+    color: #1a1a1a;
+    font-size: clamp(1.8rem, 4vw, 2.4rem); // Título fluido
+    font-weight: 300;
+    text-transform: uppercase;
+    margin: 0;
+
+    span {
+      font-weight: 700;
+      color: variables.$color-accent;
     }
+  }
 
-    .quiSomTitle {
-        color: #1a1a1a;
-        font-size: 2.4rem;
-        font-weight: 300;
-        text-transform: uppercase;
+  .quiSomDivider {
+    width: 48px;
+    height: 3px;
+    background: variables.$color-accent;
+    margin: 0.5rem 0 1.25rem;
+  }
+
+  .quiSomMainLayout {
+    display: flex;
+    justify-content: space-between;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: stretch;
+
+    .storeInfo {
+      color: #555;
+      font-size: clamp(0.9rem, 1.2vw, 0.95rem);
+      line-height: 1.85;
+      flex: 1 1 50%;
+
+      p {
         margin: 0;
+      }
 
-        span {
-            font-weight: 700;
-            color: variables.$color-accent;
+      .coolSentence {
+        color: #1a1a1a;
+        font-style: italic;
+        font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+        line-height: 1.6;
+        border-left: 3px solid variables.$color-accent;
+        padding-left: 1rem;
+        margin: 1.5rem 0 0 0;
+        display: block;
+      }
+    }
+
+    .quiSomData {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 1px;
+      background: #ddd;
+      border: 1px solid #ddd;
+      flex: 1 1 45%;
+      height: fit-content;
+
+      .quiSomStat {
+        background: #f6f7f7;
+        padding: clamp(1rem, 3vw, 1.5rem) clamp(0.8rem, 2vw, 1.25rem);
+        position: relative;
+        overflow: hidden;
+        transition: background 0.25s ease;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 3px;
+          height: 100%;
+          background: variables.$color-accent;
+          opacity: 0;
+          transition: opacity 0.25s ease;
         }
 
-    }
+        &:hover {
+          background: #fff;
 
-    .quiSomDivider {
-        width: 48px;
-        height: 3px;
-        background: variables.$color-accent;
-        margin: 0 0 1.25rem;
-    }
+          &::before {
+            opacity: 1;
+          }
 
+          .quiSomStatNum {
+            transform: translateY(-2px);
+          }
+        }
+
+        .quiSomStatNum {
+          font-size: clamp(1.5rem, 3vw, 2rem); // Números fluidos para pantallas medianas
+          font-weight: 700;
+          color: variables.$color-accent;
+          line-height: 1;
+          margin-bottom: 0.35rem;
+          transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+        }
+
+        .quiSomStatText {
+          font-size: 0.72rem;
+          color: #888;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          line-height: 1.3;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 920px) {
     .quiSomMainLayout {
+      flex-direction: column; // Pasamos de fila a columna
+      gap: 3rem;
 
-        display: flex;
-        justify-content: center;
-        gap: 4rem;
-        align-items: center;
-
-        .storeInfo {
-            color: #555;
-            font-size: 0.95rem;
-            line-height: 1.85;
-
-            p {
-                margin: 0;
-            }
-
-            .coolSentence {
-                color: #1a1a1a;
-                font-style: italic;
-                font-size: 1rem;
-                line-height: 1.6;
-                border-left: 3px solid variables.$color-accent;
-                border-radius: 0;
-                padding-left: 1rem;
-                margin: 1.5rem 0;
-
-            }
-        }
-
-        .quiSomData {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px;
-            background: #ddd;
-            border: 1px solid #ddd;
-
-            .quiSomStat {
-                background: #f6f7f7;
-                padding: 1.5rem 1.25rem;
-                position: relative;
-                overflow: hidden;
-                transition: background 0.25s ease;
-
-                // Línia taronja esquerra — apareix en hover
-                &::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 3px;
-                    height: 100%;
-                    background: variables.$color-accent;
-                    opacity: 0;
-                    transition: opacity 0.25s ease;
-                }
-
-                &:hover {
-                    background: #fff;
-
-                    &::before {
-                        opacity: 1;
-                    }
-
-                    .quiSomStatNum {
-                        transform: translateY(-2px);
-                    }
-                }
-
-                .quiSomStatNum {
-                    font-size: 2rem;
-                    font-weight: 700;
-                    color: variables.$color-accent;
-                    line-height: 1;
-                    margin-bottom: 0.35rem;
-                    transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
-
-                }
-
-                .quiSomStatText {
-                    font-size: 0.72rem;
-                    color: #888;
-                    text-transform: uppercase;
-                    letter-spacing: 0.1em;
-                }
-
-            }
-        }
+      .storeInfo, .quiSomData {
+        flex: 1 1 100%;
+        width: 100%;
+      }
     }
+  }
 
+  @media (max-width: 480px) {
+    .quiSomMainLayout {
+      .quiSomData {
+        grid-template-columns: 1fr; 
+        
+        .quiSomStat {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          padding: 1.25rem 1rem;
 
+          .quiSomStatNum {
+            margin-bottom: 0;
+            flex-shrink: 0;
+          }
 
+          .quiSomStatText {
+            text-align: right;
+            br {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -8,32 +8,52 @@
   z-index: 999;
 }
 
-// El panel lateral
+// Panel lateral responsive
 .sidebarCart {
   position: fixed;
   top: 0;
   right: 0;
-  width: 100%;
   height: 94%;
-  max-width: 25%;
   background: white;
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  padding: 2rem;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+
+  // Ancho fluido: 100% en móviles, hasta 500px en escritorio
+  width: 100%;
+  max-width: 100%;
+  
+  // Breakpoints con media queries
+  @media (min-width: 640px) {
+    max-width: 70%;
+    width: auto;
+  }
+  
+  @media (min-width: 1024px) {
+    max-width: 25%;
+    min-width: 320px;
+  }
+  
+  @media (min-width: 1440px) {
+    max-width: 500px;
+  }
+
+  // Padding adaptativo con clamp
+  padding: clamp(1rem, 5vw, 2rem);
 
   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    margin-bottom: clamp(1rem, 4vw, 2rem);
+    padding-bottom: clamp(0.5rem, 2vw, 1rem);
     border-bottom: 1px solid #eee;
 
     h2 {
       color: #333;
-      font-size: 1.5rem;
+      font-size: clamp(1.25rem, 5vw, 1.75rem);
       margin: 0;
     }
 
@@ -47,7 +67,10 @@
       padding: 8px;
       border-radius: 50%;
       transition: background 0.2s;
-      &:hover { background-color: #f5f5f5; }
+      
+      &:hover {
+        background-color: #f5f5f5;
+      }
     }
   }
 
@@ -55,79 +78,80 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden; // el scroll lo gestiona la lista
+    overflow: hidden;
   }
 
-  // ── Lista de items ─────────────────────────────────────────
+  // Lista de items con scroll interno
   .cart-items {
     list-style: none;
     padding: 0;
     margin: 0;
     flex: 1;
-    overflow-y: auto; // scroll si hay muchos productos
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: clamp(0.75rem, 3vw, 1.25rem);
   }
 
   .cart-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding-bottom: 1rem;
+    gap: clamp(0.5rem, 3vw, 1rem);
+    padding-bottom: clamp(0.5rem, 2vw, 1rem);
     border-bottom: 1px solid #f0f0f0;
 
     img {
-      width: 3.5rem;
-      height: 3.5rem;
+      // Tamaño de imagen responsive
+      width: clamp(2.5rem, 12vw, 4rem);
+      height: clamp(2.5rem, 12vw, 4rem);
       object-fit: cover;
       border-radius: 0.5rem;
       flex-shrink: 0;
-      background: #f5f5f5; // placeholder si no carga la imagen
+      background: #f5f5f5;
     }
   }
 
   .cart-item-info {
     flex: 1;
-    min-width: 0; // permite que el texto se trunque con overflow
+    min-width: 0;
 
     .cart-item-name {
       display: block;
-      font-size: 0.85rem;
       font-weight: 600;
       color: #222;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis; // "Clau de seguretat..."
+      text-overflow: ellipsis;
+      font-size: clamp(0.75rem, 3.5vw, 0.95rem);
     }
 
     .cart-item-price {
       display: block;
-      font-size: 0.9rem;
       font-weight: 700;
       color: variables.$color-accent;
       margin-top: 0.2rem;
+      font-size: clamp(0.8rem, 3vw, 1rem);
     }
   }
 
-  // ── Controles +/- ─────────────────────────────────────────
+  // Controles +/-
   .cart-item-qty {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: clamp(0.25rem, 2vw, 0.5rem);
     flex-shrink: 0;
 
     span {
-      font-size: 0.9rem;
       font-weight: 700;
       min-width: 1.2rem;
       text-align: center;
       color: #222;
+      font-size: clamp(0.8rem, 3.5vw, 1rem);
     }
 
     button {
-      width: 1.75rem;
-      height: 1.75rem;
+      width: clamp(1.5rem, 7vw, 2rem);
+      height: clamp(1.5rem, 7vw, 2rem);
       border-radius: 50%;
       border: 1.5px solid #e0e0e0;
       background: white;
@@ -139,13 +163,18 @@
       transition: all 0.2s ease;
       flex-shrink: 0;
 
+      // Aumentamos ligeramente el tamaño en táctil
+      @media (max-width: 640px) {
+        width: 2rem;
+        height: 2rem;
+      }
+
       &:hover {
         border-color: variables.$color-accent;
         color: variables.$color-accent;
         background: lighten(#e60023, 48%);
       }
 
-      // El botón de eliminar (icono papelera) se pone rojo
       &:first-child:hover {
         border-color: #e60023;
         color: #e60023;
@@ -154,40 +183,40 @@
     }
   }
 
-  // ── Total ──────────────────────────────────────────────────
+  // Total
   .cart-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 0 1rem;
+    padding: clamp(0.75rem, 4vw, 1.25rem) 0 clamp(0.5rem, 3vw, 1rem);
     border-top: 2px solid #eee;
     margin-top: 0.5rem;
 
     span:first-child {
-      font-size: 1rem;
       font-weight: 600;
       color: #555;
+      font-size: clamp(0.9rem, 4vw, 1.1rem);
     }
 
     span:last-child {
-      font-size: 1.3rem;
       font-weight: 900;
       color: #111;
+      font-size: clamp(1.1rem, 5vw, 1.5rem);
     }
   }
 
-  // ── Botón checkout ─────────────────────────────────────────
+  // Botón de checkout
   .cart-checkout-btn {
     width: 100%;
-    padding: 0.9rem;
+    padding: clamp(0.7rem, 4vw, 1rem);
     background: variables.$color-accent;
     color: white;
     border: none;
     border-radius: 0.6rem;
-    font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.2s ease, transform 0.15s ease;
+    font-size: clamp(0.85rem, 4vw, 1rem);
 
     &:hover {
       background: darken(#e60023, 8%);
@@ -199,11 +228,11 @@
     }
   }
 
-  // ── Carrito vacío ──────────────────────────────────────────
+  // Mensaje carrito vacío
   .cart-empty {
     color: #aaa;
-    font-size: 0.9rem;
     text-align: center;
     margin-top: 3rem;
+    font-size: clamp(0.8rem, 4vw, 1rem);
   }
 }
