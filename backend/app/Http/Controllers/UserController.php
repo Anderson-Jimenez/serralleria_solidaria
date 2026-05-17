@@ -24,10 +24,6 @@ class UserController extends Controller
     {
         //
     }
-    public function profile(Request $request)
-    {
-        return response()->json($request->user());
-    }
 
     public function store(Request $request)
     {

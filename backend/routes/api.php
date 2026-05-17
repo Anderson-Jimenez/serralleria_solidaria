@@ -53,6 +53,7 @@ Route::apiResource('characteristics', CharacteristicController::class);
 Route::get('/characteristics/changeState/{id}', [CharacteristicController::class, 'changeStatusCharacteristic']);
 Route::get('/characteristics/searchCharacteristic/{text}', [CharacteristicController::class, 'searchCharacteristic']);
 
+Route::post('/orders/checkout', [OrderController::class, 'checkout']);
 
 Route::apiResource('characteristic-types', CharacteristicTypeController::class);
 Route::get('/characteristicTypes/changeState/{id}', [CharacteristicTypeController::class, 'changeStatusTypeCharacteristic']);
@@ -95,8 +96,9 @@ Route::post('/signin', [AuthController::class, 'signin']);
 // Rutas protegidas — solo con token válido
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']);
-    Route::post('/orders/checkout', [OrderController::class, 'checkout']);
+    Route::get('/user/profile', [AuthController::class, 'profile']);
+    Route::get('/user/orders', [OrderController::class, 'userOrders']);
+    Route::get('/user/orders/{id}', [OrderController::class, 'showOrderDetails']);
     
     // Rutas solo para admin
     Route::middleware('can:admin')->group(function () {

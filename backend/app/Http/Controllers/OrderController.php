@@ -97,7 +97,6 @@ class OrderController extends Controller
 
         try {
             DB::transaction(function () use ($user, $orderId, $validated, $request) {
-                // ⭐ Buscar el carrito por ID y estado 'cart', sin importar user_id
                 $order = Order::where('id', $orderId)
                             ->where('status', 'cart')
                             ->lockForUpdate()
@@ -107,7 +106,6 @@ class OrderController extends Controller
                     throw new \Exception('Carrito no encontrado');
                 }
 
-                // ⭐ Si el carrito no tiene user_id (invitado), lo adoptamos
                 if (is_null($order->user_id)) {
                     $order->user_id = $user->id;
                     $order->save();
@@ -115,7 +113,6 @@ class OrderController extends Controller
                     throw new \Exception('Este carrito no te pertenece');
                 }
 
-                // Descontar stock (igual que antes)
                 foreach ($order->products as $orderProduct) {
                     $product = Product::lockForUpdate()->find($orderProduct->id);
                     if (!$product) throw new \Exception("Producto {$orderProduct->id} no encontrado");
@@ -125,7 +122,6 @@ class OrderController extends Controller
                     $product->save();
                 }
 
-                // Crear/actualizar OrderDetail
                 $detail = OrderDetail::updateOrCreate(
                     ['order_id' => $order->id],
                     [
@@ -138,14 +134,12 @@ class OrderController extends Controller
                     ]
                 );
 
-                // Actualizar pedido
                 $order->status = 'pending';
                 $order->observations = $validated['observations'] ?? null;
                 $order->total_price = $validated['total'];
                 $order->save();
                 $detail->save();
 
-                // Crear nuevo carrito vacío
                 $newCart = Order::create([
                     'user_id' => $user->id,
                     'status' => 'cart',
@@ -164,20 +158,27 @@ class OrderController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
-    /**
-     * Calcula el precio de instalación según el subtotal de productos instalables.
-     * @param float $subtotal
-     * @return int|null  Precio en euros o null si >1000€ (a consultar)
-     */
-    private function calculateInstallationPrice($subtotal)
+    public function userOrders(Request $request)
     {
-        if ($subtotal <= 250)
-            return 90;
-        if ($subtotal <= 500)
-            return 120;
-        if ($subtotal <= 1000)
-            return 180;
-        return null; // más de 1000€
+        $user = $request->user();
+        $orders = Order::with('products')  // o 'products' con los datos de producto
+                    ->where('user_id', $user->id)
+                    ->where('status', '!=', 'cart')  // excluir carrito activo
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10); // paginación para no cargar todo
+
+        return response()->json($orders);
+    }
+    public function showOrderDetails($id, Request $request)
+    {
+        $user = $request->user();
+        $order = Order::with(['products', 'detail'])  // detail es la tabla order_details
+                    ->where('user_id', $user->id)
+                    ->where('id', $id)
+                    ->where('status', '!=', 'cart')
+                    ->firstOrFail();
+
+        return response()->json($order);
     }
 
 }
