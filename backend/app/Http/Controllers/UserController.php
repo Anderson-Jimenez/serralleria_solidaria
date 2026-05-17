@@ -24,10 +24,11 @@ class UserController extends Controller
     {
         //
     }
+    public function profile(Request $request)
+    {
+        return response()->json($request->user());
+    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try{
