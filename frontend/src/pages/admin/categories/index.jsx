@@ -121,10 +121,6 @@ function Categories() {
                       <Power size={18} className="mr-8"/> {category.status === 1 ? "Desactivar" : "Activar"}
                     </button>
 
-                    <button className="action-icon delete">
-                      <Trash2 size={18}/>
-                    </button>
-
                   </td>
 
                 </tr>

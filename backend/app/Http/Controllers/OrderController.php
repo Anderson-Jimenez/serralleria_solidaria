@@ -41,7 +41,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        return Order::with('user', 'products', 'detail')->findOrFail($id);
+        return Order::with('user', 'products', 'detail')->findOrFail($id)->get();
 
         /*
         if ($order->user_id !== auth()->id() && auth()->user->userType !=='admin') {

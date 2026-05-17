@@ -189,7 +189,7 @@ function ProductsIndex() {
 
                     <td>{product.name}</td>
 
-                    <td>{product.sale_price}€</td>
+                    <td>{product.price}€</td>
 
                     <td>
                       <span className={product.stock < 5 ? "text-danger" : ""}>

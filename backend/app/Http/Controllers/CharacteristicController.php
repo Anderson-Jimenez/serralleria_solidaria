@@ -10,7 +10,7 @@ class CharacteristicController extends Controller
 {
 
     public function index()
-    {   
+    {
         $characteristics = Characteristic::with('type')->get();
 
         return response()->json([
@@ -38,13 +38,13 @@ class CharacteristicController extends Controller
             ]);
 
             $characteristic = Characteristic::create($validated);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $characteristic,
                 'message' => 'Caracteristica creada correctament'
             ], 201);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -75,7 +75,7 @@ class CharacteristicController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $characteristic = Characteristic::findOrFail($id); 
+        $characteristic = Characteristic::findOrFail($id);
 
         $characteristic->update($request->all());
 
@@ -94,18 +94,18 @@ class CharacteristicController extends Controller
     public function changeStatusCharacteristic($id)
     {
         try {
-            $characteristic = Characteristic::findOrFail($id); 
+            $characteristic = Characteristic::findOrFail($id);
             $characteristic->status = ($characteristic->status == 1) ? 0 : 1;
             $characteristic->save();
-            
-            $characteristic->load('type'); 
+
+            $characteristic->load('type');
 
             return response()->json([
                 'success' => true,
                 'characteristic' => $characteristic,
                 'message' => 'Canvi de estat fet'
             ], 200);
-        
+
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
@@ -114,27 +114,22 @@ class CharacteristicController extends Controller
     public function searchCharacteristic($text)
     {
         try {
-            if($text===""){
-                $characteristics = Characteristic::with('type')->get();
-            }
-            else{
-                //$characteristics = Characteristic::with('type')->join('characteristic_types', 'characteristic_types.id', '=', 'characteristic_types_id')->where('id','LIKE',$text)->orWhere('description','LIKE','%'.$text.'%')->orWhere('characteristic_types.type','LIKE','%'.$text.'%')->get(); 
-                
-                $characteristics = Characteristic::select('characteristics.id','characteristics.description','characteristics.characteristic_type_id')
-                    ->join('characteristic_types', 'characteristic_types.id', '=', 'characteristics.characteristic_type_id')
-                    ->where('characteristics.id', 'LIKE','%' . $text . '%')
-                    ->orWhere('characteristics.description', 'LIKE', '%' . $text . '%')
-                    ->orWhere('characteristic_types.type', 'LIKE', '%' . $text . '%')
-                    ->with('type')
-                    ->get();
-            }
-            
+            $characteristics = Characteristic::with('type')
+                ->where(function ($query) use ($text) {
+                    $query->where('id', 'LIKE', '%' . $text . '%')
+                        ->orWhere('description', 'LIKE', '%' . $text . '%')
+                        ->orWhereHas('type', function ($q) use ($text) {
+                            $q->where('type', 'LIKE', '%' . $text . '%');
+                        });
+                })
+                ->get();
+
             return response()->json([
                 'success' => true,
                 'characteristics' => $characteristics,
-                'message' => 'Caracteristicas passan'
-            ], 201);
-            
+                'message' => 'Caracteristiques trobades'
+            ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

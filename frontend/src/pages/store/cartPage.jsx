@@ -9,8 +9,6 @@ function CartPage() {
     const navigate = useNavigate();
     const { refreshCart, updateOrderId } = useCart(); // ← Funciones del contexto
 
-    const SHIPPING_PRICE = 9;
-
     // =====================================================
     // LOAD CART
     // =====================================================
@@ -117,11 +115,10 @@ function CartPage() {
         try {
             const orderId = localStorage.getItem('order_id');
             if (!orderId) return;
-            const totalFinal = total + SHIPPING_PRICE;
             await fetch(`http://localhost:8000/api/orders/${orderId}/total`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ total_price: totalFinal }),
+                body: JSON.stringify({ total_price: total }),
             });
             navigate('/checkout');
         } catch (err) {
@@ -271,16 +268,12 @@ function CartPage() {
                         <span>{items.length}</span>
                     </div>
                     <div className="summary-row">
-                        <span>Enviament</span>
-                        <span>9€</span>
-                    </div>
-                    <div className="summary-row">
                         <span>Subtotal</span>
                         <span>{total.toFixed(2)}€</span>
                     </div>
                     <div className="summary-row total">
                         <span>Total</span>
-                        <span>{(total + SHIPPING_PRICE).toFixed(2)}€</span>
+                        <span>{total.toFixed(2)}€</span>
                     </div>
                     <button className="checkout-btn" onClick={finalizarCompra}>
                         Finalitzar compra

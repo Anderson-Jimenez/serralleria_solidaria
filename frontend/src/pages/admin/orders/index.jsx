@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Plus, Pencil, Power, Trash2, FileText  } from "lucide-react";
+import { Search, Plus, Pencil, Power, Trash2, FileText, Eye } from "lucide-react";
 
 function OrderIndex() {
 
@@ -111,7 +111,12 @@ function OrderIndex() {
                       <td>{order.observations}</td>
                       <td>{order.total_price}€</td>
                       <td>{order.status}</td>
-                      <td><a className="action-icon" href={`/orders/pdf/${order.id}`}><FileText size={20}/></a></td>
+                      <td>
+                        <Link to={`/admin/orders/${order.id}`} className="action-icon edit" title="Veure Detalls">
+                          <Eye size={18} /> Veure Detalls
+                        </Link>
+                        <a className="action-icon" href={`/orders/pdf/${order.id}`}><FileText size={20}/></a>
+                      </td>
                   </tr>
                 ))}
             </tbody>
