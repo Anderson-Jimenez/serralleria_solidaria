@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../contexts/CartContext'; // ← Importa el contexto
+import { useCart } from '../../contexts/CartContext'; // ← contexto
 
 function CartSidebar({ isOpen, onClose }) {
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
-  const { refreshCart } = useCart(); // ← Obtiene la función para refrescar el contador
+  const { orderId, refreshCart } = useCart(); // ← obtener orderId del contexto
 
-  // Carga los productos del carrito
+  // Carga los productos del carrito usando el orderId del contexto
   const fetchCart = async () => {
-    const orderId = localStorage.getItem('order_id');
     if (!orderId) {
       setItems([]);
       return;
@@ -30,16 +29,16 @@ function CartSidebar({ isOpen, onClose }) {
   useEffect(() => {
     if (!isOpen) return;
     fetchCart();
-  }, [isOpen]);
+  }, [isOpen, orderId]); // ← depende de orderId, no de localStorage
 
-  // Escucha el evento 'cart-updated' para refrescar si otro componente modifica el carrito
+  // Escucha el evento 'cart-updated' (por si otra pestaña o componente modifica el carrito)
   useEffect(() => {
     const handleCartUpdate = () => {
       if (isOpen) fetchCart();
     };
     window.addEventListener('cart-updated', handleCartUpdate);
     return () => window.removeEventListener('cart-updated', handleCartUpdate);
-  }, [isOpen]);
+  }, [isOpen, orderId]); // también depende de orderId
 
   // Cambiar cantidad (+1 / -1) o eliminar
   async function cambiarCantidad(item, delta) {

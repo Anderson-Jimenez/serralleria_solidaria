@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderDetail;
+use App\Models\Product;
 use App\Models\OrderProduct;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -81,15 +83,6 @@ class OrderController extends Controller
         }
 
         $orderId = $request->input('order_id');
-        $order = Order::where('user_id', $user->id)
-            ->where('id', $orderId)
-            ->where('status', 'cart')
-            ->with('products') // para acceder a los productos y sus precios
-            ->first();
-
-        if (!$order) {
-            return response()->json(['error' => 'Carrito no encontrado'], 404);
-        }
 
         $validated = $request->validate([
             'shipping_address' => 'required|string',
@@ -102,47 +95,90 @@ class OrderController extends Controller
             'total' => 'required|numeric',
         ]);
 
-        // Crear o actualizar OrderDetail (guardando el precio de instalación)
-        $detail = OrderDetail::updateOrCreate(
-            ['order_id' => $order->id],
-            [
-                'shipping_address' => $validated['shipping_address'],
-                'requested_delivery_date' => $validated['requested_delivery_date'] ?? null,
-                'installation' => $validated['installation'] ?? false,
-                'shipping' => $validated['shipping'] ?? false,
-                'installation_price' => $validated['installation_price'] ?? false,
-                'observations' => $validated['observations']
-            ]
-        );
+        try {
+            DB::transaction(function () use ($user, $orderId, $validated, $request) {
+                $order = Order::where('id', $orderId)
+                            ->where('status', 'cart')
+                            ->lockForUpdate()
+                            ->first();
 
-        // Actualizar pedido
-        $order->status = 'pending';
-        $order->observations = $validated['observations'] ?? null;
-        $detail->observations = $validated['observations'] ?? null;
-        $order->total_price = $validated['total'];
-        $order->save();
-        $detail->save();
+                if (!$order) {
+                    throw new \Exception('Carrito no encontrado');
+                }
 
-        return response()->json([
-            'message' => 'Pedido realizado correctamente',
-            'order' => $order->load('detail', 'products'),
-        ], 200);
+                if (is_null($order->user_id)) {
+                    $order->user_id = $user->id;
+                    $order->save();
+                } elseif ($order->user_id !== $user->id) {
+                    throw new \Exception('Este carrito no te pertenece');
+                }
+
+                foreach ($order->products as $orderProduct) {
+                    $product = Product::lockForUpdate()->find($orderProduct->id);
+                    if (!$product) throw new \Exception("Producto {$orderProduct->id} no encontrado");
+                    $newStock = $product->stock - $orderProduct->pivot->quantity;
+                    if ($newStock < 0) throw new \Exception("Stock insuficiente para {$product->name}");
+                    $product->stock = $newStock;
+                    $product->save();
+                }
+
+                $detail = OrderDetail::updateOrCreate(
+                    ['order_id' => $order->id],
+                    [
+                        'shipping_address' => $validated['shipping_address'],
+                        'requested_delivery_date' => $validated['requested_delivery_date'] ?? null,
+                        'installation' => $validated['installation'] ?? false,
+                        'shipping' => $validated['shipping'] ?? false,
+                        'installation_price' => $validated['installation_price'] ?? 0,
+                        'observations' => $validated['observations'] ?? null,
+                    ]
+                );
+
+                $order->status = 'pending';
+                $order->observations = $validated['observations'] ?? null;
+                $order->total_price = $validated['total'];
+                $order->save();
+                $detail->save();
+
+                $newCart = Order::create([
+                    'user_id' => $user->id,
+                    'status' => 'cart',
+                    'total_price' => 0,
+                ]);
+
+                $request->merge(['new_cart_id' => $newCart->id]);
+            });
+
+            return response()->json([
+                'message' => 'Pedido realizado correctamente',
+                'new_cart_id' => $request->input('new_cart_id'),
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
-
-    /**
-     * Calcula el precio de instalación según el subtotal de productos instalables.
-     * @param float $subtotal
-     * @return int|null  Precio en euros o null si >1000€ (a consultar)
-     */
-    private function calculateInstallationPrice($subtotal)
+    public function userOrders(Request $request)
     {
-        if ($subtotal <= 250)
-            return 90;
-        if ($subtotal <= 500)
-            return 120;
-        if ($subtotal <= 1000)
-            return 180;
-        return null; // más de 1000€
+        $user = $request->user();
+        $orders = Order::with('products')  // o 'products' con los datos de producto
+                    ->where('user_id', $user->id)
+                    ->where('status', '!=', 'cart')  // excluir carrito activo
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10); // paginación para no cargar todo
+
+        return response()->json($orders);
+    }
+    public function showOrderDetails($id, Request $request)
+    {
+        $user = $request->user();
+        $order = Order::with(['products', 'detail'])  // detail es la tabla order_details
+                    ->where('user_id', $user->id)
+                    ->where('id', $id)
+                    ->where('status', '!=', 'cart')
+                    ->firstOrFail();
+
+        return response()->json($order);
     }
 
 }

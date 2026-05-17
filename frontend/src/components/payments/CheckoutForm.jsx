@@ -118,12 +118,16 @@ function CheckoutForm({ subtotal, cartItems, clientSecret }) {
                 const errorData = await res.json();
                 throw new Error(errorData.error || 'Error al processar la comanda');
             }
+            const data = await res.json();
+            if (data.new_cart_id) {
+                sessionStorage.setItem('new_cart_id', data.new_cart_id);
+            }
 
             // 4. Confirmar el pagament amb Stripe (redirigeix sol si va bé)
             const { error } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: `${window.location.origin}`,
+                    return_url: `${window.location.origin}/checkout/success`,
                 },
             });
 
