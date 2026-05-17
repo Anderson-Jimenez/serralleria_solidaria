@@ -99,8 +99,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/orders', [OrderController::class, 'userOrders']);
     Route::get('/user/orders/{id}', [OrderController::class, 'showOrderDetails']);
     Route::post('/orders/checkout', [OrderController::class, 'checkout']);
-
-    
     // Rutas solo para admin
     Route::middleware('can:admin')->group(function () {
         // Route::get('/admin/...', [...]);
