@@ -13,15 +13,35 @@ use App\Models\Product;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-            $cartItems = OrderProduct::with('product')
-                ->whereHas('order', function ($query) {
-                    $query->where('status', 'cart');
-                })
-                ->get();
-    
-            return response()->json($cartItems, 200);
+        // Obtener usuario desde token (igual que en store)
+        $userId = null;
+        if ($request->bearerToken()) {
+            $token = \Laravel\Sanctum\PersonalAccessToken::findToken($request->bearerToken());
+            if ($token) {
+                $userId = $token->tokenable_id;
+            }
+        }
+
+        if (!$userId) {
+            return response()->json([]); // Sin usuario, carrito vacío
+        }
+
+        // Buscar el carrito activo del usuario
+        $order = Order::where('user_id', $userId)
+                    ->where('status', 'cart')
+                    ->first();
+
+        if (!$order) {
+            return response()->json([]); // No hay carrito, vacío
+        }
+
+        $cartItems = OrderProduct::with('product')
+                    ->where('order_id', $order->id)
+                    ->get();
+
+        return response()->json($cartItems, 200);
     }
 
     public function create()
@@ -46,18 +66,25 @@ class CartController extends Controller
         ]);
 
         $itemResponse = null;
-
+        $order = null;
         try {
             if ($request->order_id) {
-                $order = Order::findOrFail($request->order_id);
-            } else {
+                $order = Order::where('id', $request->order_id)
+                      ->where('status', 'cart')
+                      ->first();
+            } 
+            if (!$order && $userId) {
+                $order = Order::where('user_id', $userId)
+                    ->where('status', 'cart')
+                    ->first();
+            }
+            if (!$order) {
                 $order = Order::create([
                     'user_id'     => $userId,
                     'status'      => 'cart',
                     'total_price' => 0,
                 ]);
             }
-
             DB::transaction(function () use ($request, &$order, &$itemResponse) {
                 $product = Product::lockForUpdate()->findOrFail($request->product_id);
                 $price = $product->price;
@@ -215,5 +242,18 @@ class CartController extends Controller
             'message' => 'Total actualitzat',
             'order' => $order,
         ]);
+    }
+    public function destroy(string $id){
+
+        $item = OrderProduct::findOrFail($id);
+        $order = $item->order;
+
+        $item->delete();
+
+        $order->update([
+            'total_price' => $order->products()->sum('subtotal'),
+        ]);
+
+        return response()->json(['message' => 'Producto eliminado del carrito'], 200);
     }
 }

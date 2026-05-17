@@ -123,9 +123,17 @@ class OrderController extends Controller
         $order->save();
         $detail->save();
 
+        $newCart = Order::create([
+            'user_id' => $user->id,
+            'status' => 'cart',
+            'total_price' => 0,
+            'observations' => null,
+        ]);
+
         return response()->json([
             'message' => 'Pedido realizado correctamente',
             'order' => $order->load('detail', 'products'),
+            'new_cart_id' => $newCart->id,
         ], 200);
     }
 

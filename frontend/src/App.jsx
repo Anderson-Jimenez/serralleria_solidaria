@@ -46,6 +46,8 @@ import CustomSolutionPetitions from "./pages/admin/customSolutions/index";
 import CustomSolutionDetails from "./pages/admin/customSolutions/show";
 import AdminRoute from './components/AdminRoute';
 import AuthRoute from './components/AuthRoute';
+
+import CheckoutSuccess from "./components/payments/CheckoutSuccess";
 function App() {
   return (
     <Routes>
@@ -65,6 +67,7 @@ function App() {
               <CheckoutPage />
           </AuthRoute>
         } />
+        <Route path="checkout/success" element={<CheckoutSuccess />} />
       </Route>
 
 
