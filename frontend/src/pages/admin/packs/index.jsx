@@ -31,7 +31,7 @@ function Packs() {
                         <input
                             type="text"
                             placeholder="Cerca per nom, codi o descripció..."
-                            /*onChange={searchPacks}*/
+                        /*onChange={searchPacks}*/
                         />
 
                         <select>
@@ -69,9 +69,9 @@ function Packs() {
 
                                     <tr key={pack.id}>
                                         <td className="img">
-                                            {pack.primaryImage ? (
+                                            {pack.primary_image ? (
                                                 <img
-                                                    src={`http://localhost:8000/storage/${pack.primaryImage.path}`}
+                                                    src={`http://localhost:8000/storage/${pack.primary_image.path}`}
                                                     alt={pack.name}
                                                 />
                                             ) : (

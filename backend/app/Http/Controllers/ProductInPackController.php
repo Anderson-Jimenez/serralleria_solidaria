@@ -38,6 +38,8 @@ class ProductInPackController extends Controller
                 'discount_ends_at'    => 'nullable|date|after_or_equal:discount_starts_at',
                 'category_id'         => 'nullable',
                 'product_type'        => 'required|string',
+                'int_size' => 'nullable|string|max:255',
+                'ext_size' => 'nullable|string|max:255',
             ]);
 
             $packItemIds = $validated['product_ids'];
@@ -137,7 +139,9 @@ class ProductInPackController extends Controller
         }
     }
 
-    public function edit(string $id) {}
+    public function edit(string $id) {
+        
+    }
 
     public function update(Request $request, $id)
     {

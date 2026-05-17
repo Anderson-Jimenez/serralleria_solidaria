@@ -15,8 +15,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
 
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
-    //const [minWeight, setMinWeight] = useState("");
-    //const [maxWeight, setMaxWeight] = useState("");
+    const [productTypes, setProductTypes] = useState([]);
 
     const [añadidos, setAñadidos] = useState(new Set());
     const [sinStock, setSinStock] = useState(new Set());
@@ -29,7 +28,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
         if (!product?.discount_percentage) return false;
         const now = new Date();
         const afterStart = !product.discount_starts_at || new Date(product.discount_starts_at) <= now;
-        const beforeEnd  = !product.discount_ends_at   || new Date(product.discount_ends_at)   >= now;
+        const beforeEnd = !product.discount_ends_at || new Date(product.discount_ends_at) >= now;
         return afterStart && beforeEnd;
     };
 
@@ -58,7 +57,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
         }
 
         setSavedFilters(updatedFilters);
-        searchProductsInStore(savedText, updatedFilters, dinamicFilters, minPrice, maxPrice);
+        searchProductsInStore(savedText, updatedFilters, dinamicFilters, minPrice, maxPrice, productTypes);
     };
 
     const handleSelectChange = (e) => {
@@ -66,10 +65,22 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
         let updatedFilters = { ...dinamicFilters, [name]: value };
         if (value === "") delete updatedFilters[name];
         setDinamicFilters(updatedFilters);
-        searchProductsInStore(savedText, savedFilters, updatedFilters, minPrice, maxPrice);
+        searchProductsInStore(savedText, savedFilters, updatedFilters, minPrice, maxPrice, productTypes);
     };
 
-    const searchProductsInStore = (text = savedText, filters = savedFilters, selectFilters = dinamicFilters, minimumPrice = minPrice, maximumPrice = maxPrice) => {
+    const handleProductTypeChange = (e) => {
+        const value = e.target.value;
+        let updated;
+        if (productTypes.includes(value)) {
+            updated = productTypes.filter(t => t !== value);
+        } else {
+            updated = [...productTypes, value];
+        }
+        setProductTypes(updated);
+        searchProductsInStore(savedText, savedFilters, dinamicFilters, minPrice, maxPrice, updated);
+    };
+
+    const searchProductsInStore = (text = savedText, filters = savedFilters, selectFilters = dinamicFilters, minimumPrice = minPrice, maximumPrice = maxPrice, types = productTypes) => {
         fetch(`http://localhost:8000/api/products/searchProductsInStore`, {
             method: 'POST',
             headers: { "Content-Type": "application/json", "Accept": "application/json" },
@@ -80,14 +91,15 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                 category: title,
                 minPrice: minimumPrice,
                 maxPrice: maximumPrice,
+                productTypes: types,
             })
         })
-        .then(async response => {
-            const data = await response.json();
-            if (!response.ok) { console.error("Error del servidor:", data); return; }
-            if (data.success) setProductsFiltrats(data.products);
-        })
-        .catch(error => console.error('Error en la petició:', error));
+            .then(async response => {
+                const data = await response.json();
+                if (!response.ok) { console.error("Error del servidor:", data); return; }
+                if (data.success) setProductsFiltrats(data.products);
+            })
+            .catch(error => console.error('Error en la petició:', error));
     };
 
     async function handleAddToCart(e, product) {
@@ -105,8 +117,8 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                 },
                 body: JSON.stringify({
                     product_id: product.id,
-                    quantity:   1,
-                    order_id:   localStorage.getItem('order_id') ?? null,
+                    quantity: 1,
+                    order_id: localStorage.getItem('order_id') ?? null,
                 }),
             });
 
@@ -160,7 +172,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                     <h2>Filtres</h2>
                     <div className="allFilters">
 
-                        <div className="uniqueCharacteristic" key="sale_price">
+                        <div className="uniqueCharacteristic" key="price">
                             <h3>Preu</h3>
                             <div className="rangeFilter">
                                 <input type="number" placeholder="Mínim" min="0" value={minPrice}
@@ -171,6 +183,25 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                                     onChange={(e) => { setMaxPrice(e.target.value); searchProductsInStore(savedText, savedFilters, dinamicFilters, minPrice, e.target.value); }}
                                 />€
                             </div>
+                        </div>
+
+                        <div className="uniqueCharacteristic" key="product_type">
+                            <h3>Tipus</h3>
+                            <div className='checkboxFilter'>
+                                <div>
+                                    <input className='checkmark' type="checkbox" id="simple" value="simple"
+                                        checked={productTypes.includes("simple")}
+                                        onChange={handleProductTypeChange} />
+                                    <label className='checkmarkLabel' htmlFor="simple">Producte</label>
+                                </div>
+                                <div>
+                                    <input className='checkmark' type="checkbox" id="pack" value="pack"
+                                        checked={productTypes.includes("pack")}
+                                        onChange={handleProductTypeChange} />
+                                    <label className='checkmarkLabel' htmlFor="pack">Pack</label>
+                                </div>
+                            </div>
+
                         </div>
 
                         {characteristics.map((characteristic) => (
@@ -209,10 +240,10 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
 
                     <div className='searchDisplayResult'>
                         {productsFiltrats.map((product) => {
-                            const estaAñadido  = añadidos.has(product.id);
+                            const estaAñadido = añadidos.has(product.id);
                             const estaSinStock = sinStock.has(product.id) || product.stock === 0;
                             const discountActive = isDiscountActive(product);
-                            const finalPrice     = getFinalPrice(product);
+                            const finalPrice = getFinalPrice(product);
 
                             return (
                                 <div className="card" key={product.id} onClick={() => handleProductClick(product.id)}>
@@ -232,7 +263,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                                     </div>
 
                                     <div className="info">
-                                        <span className="cat-label">{product.category.name}</span>
+                                        <span className="cat-label">{product.product_type === "pack" ? "Pack" : product.category.name}</span>
                                         <h4>{product.name}</h4>
                                         <p className="desc">{product.description}</p>
 

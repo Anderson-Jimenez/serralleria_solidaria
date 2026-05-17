@@ -15,6 +15,7 @@ function productDisplaySearch({ products, characteristics, title }) {
 
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [productTypes, setProductTypes] = useState([]);
 
   const [añadidos, setAñadidos] = useState(new Set());
   const [sinStock, setSinStock] = useState(new Set());
@@ -62,7 +63,7 @@ function productDisplaySearch({ products, characteristics, title }) {
     }
 
     setSavedFilters(updatedFilters);
-    searchProductsInStore(savedText, updatedFilters, dinamicFilters, minPrice, maxPrice);
+    searchProductsInStore(savedText, updatedFilters, dinamicFilters, minPrice, maxPrice, productTypes);
   };
 
   const handleSelectChange = (e) => {
@@ -70,10 +71,22 @@ function productDisplaySearch({ products, characteristics, title }) {
     let updatedFilters = { ...dinamicFilters, [name]: value };
     if (value === "") delete updatedFilters[name];
     setDinamicFilters(updatedFilters);
-    searchProductsInStore(savedText, savedFilters, updatedFilters, minPrice, maxPrice);
+    searchProductsInStore(savedText, savedFilters, updatedFilters, minPrice, maxPrice, productTypes);
   };
 
-  const searchProductsInStore = (text = savedText, filters = savedFilters, selectFilters = dinamicFilters, minimumPrice = minPrice, maximumPrice = maxPrice) => {
+  const handleProductTypeChange = (e) => {
+    const value = e.target.value;
+    let updated;
+    if (productTypes.includes(value)) {
+      updated = productTypes.filter(t => t !== value);
+    } else {
+      updated = [...productTypes, value];
+    }
+    setProductTypes(updated);
+    searchProductsInStore(savedText, savedFilters, dinamicFilters, minPrice, maxPrice, updated);
+  };
+
+  const searchProductsInStore = (text = savedText, filters = savedFilters, selectFilters = dinamicFilters, minimumPrice = minPrice, maximumPrice = maxPrice, types = productTypes) => {
     fetch(`http://localhost:8000/api/products/searchAllProductsInStore`, {
       method: 'POST',
       headers: {
@@ -86,6 +99,7 @@ function productDisplaySearch({ products, characteristics, title }) {
         selectFilters: selectFilters,
         minPrice: minimumPrice,
         maxPrice: maximumPrice,
+        productTypes: types,
       })
     })
       .then(async response => {
@@ -179,6 +193,25 @@ function productDisplaySearch({ products, characteristics, title }) {
               </div>
             </div>
 
+            <div className="uniqueCharacteristic" key="product_type">
+              <h3>Tipus</h3>
+              <div className='checkboxFilter'>
+                <div>
+                  <input className='checkmark' type="checkbox" id="simple" value="simple"
+                    checked={productTypes.includes("simple")}
+                    onChange={handleProductTypeChange} />
+                  <label className='checkmarkLabel' htmlFor="simple">Producte</label>
+                </div>
+                <div>
+                  <input className='checkmark' type="checkbox" id="pack" value="pack"
+                    checked={productTypes.includes("pack")}
+                    onChange={handleProductTypeChange} />
+                  <label className='checkmarkLabel' htmlFor="pack">Pack</label>
+                </div>
+              </div>
+
+            </div>
+
             {characteristics.map((characteristic) => (
               <div className="uniqueCharacteristic" key={characteristic.id}>
                 <h3>{characteristic.type}</h3>
@@ -238,7 +271,7 @@ function productDisplaySearch({ products, characteristics, title }) {
                   </div>
 
                   <div className="info">
-                    <span className="cat-label">{product.category.name}</span>
+                    <span className="cat-label">{product.product_type === "pack" ? "Pack" : product.category.name}</span>
                     <h4>{product.name}</h4>
                     <p className="desc">{product.description}</p>
 

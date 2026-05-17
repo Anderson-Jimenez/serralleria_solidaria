@@ -21,7 +21,9 @@ function PacksEdit() {
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
-  const [discount, setDiscount] = useState(0);
+  const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [discountStartsAt, setDiscountStartsAt] = useState("");
+  const [discountEndsAt, setDiscountEndsAt] = useState("");
   const [description, setDescription] = useState("");
   const [code, setCode] = useState("");
   const [stock, setStock] = useState(0);
@@ -40,21 +42,34 @@ function PacksEdit() {
     fetch(`http://localhost:8000/api/packs/${id}`)
       .then(res => res.json())
       .then(data => {
+        console.log("RESPOSTA PACK:", data);
+        console.log("packItems:", data.product?.packItems);
+
+        if (data.product?.packItems) {
+          const seleccionats = data.product.packItems.map(item => item.product);
+          console.log("Productes seleccionats:", seleccionats);
+          setProductsInPack(seleccionats);
+        }
+
         if (data.success) {
           const product = data.product;
           setName(product.name);
-          setPrice(product.sale_price);
-          setDiscount(product.discount || 0);
+          setPrice(product.price);
+          setDiscountPercentage(product.discount_percentage || 0);
+          setDiscountStartsAt(product.discount_starts_at
+            ? new Date(product.discount_ends_at).toISOString().slice(0, 16)
+            : "");
+          setDiscountEndsAt(product.discount_ends_at
+            ? new Date(product.discount_ends_at).toISOString().slice(0, 16)
+            : "");
           setDescription(product.description || "");
           setCode(product.code);
           setStock(product.stock);
           setCategoryId(product.category_id || "");
           setHighlighted(product.highlighted ? 1 : 0);
 
-          if (product.pack) {
-            product.pack.forEach(prod => {
-              setProductsInPack(prevProducts => prevProducts.concat(prod.product));
-            });
+          if (product.pack_items) {
+            setProductsInPack(product.pack_items.map(item => item.product));
           }
 
           // Cargar imágenes existentes
@@ -78,15 +93,12 @@ function PacksEdit() {
       .then(res => res.json())
       .then(data => setCategories(data.categories ?? data));
 
-    fetch("http://localhost:8000/api/characteristic-types")
-      .then(res => res.json())
-      .then(data => setTypes(data));
 
     fetch("http://localhost:8000/api/products")
       .then(res => res.json())
       .then(data => {
-        setProducts(data);
-        console.log(products)
+        setProducts(data.products);
+        console.log("TOTS ELS PRODUCTES:", data);
       });
 
   }, []);
@@ -128,6 +140,10 @@ function PacksEdit() {
     }
   };
 
+  const removeExistingImage = (index) => {
+    setExistingImages(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -142,26 +158,20 @@ function PacksEdit() {
       formData.append("product_ids[]", product.id);
     });
 
-    formData.append("sale_price", price);
+    formData.append("price", price);
     formData.append("stock", stock);
-    formData.append("discount", discount);
+    formData.append("discount_percentage", discountPercentage);
+    formData.append("discount_starts_at", discountStartsAt);
+    formData.append("discount_ends_at", discountEndsAt);
     formData.append("highlighted", highlighted ? 1 : 0);
     formData.append("category_id", categoryId);
     formData.append("product_type", "pack");
     formData.append("primary_image_index", primaryImageIndex);
 
+    formData.append("existing_images", JSON.stringify(existingImages.map(img => img.id)));
+
     let charIndex = 0;
 
-    /*
-    for (let typeId in selectedCharacteristics) {
-      const val = selectedCharacteristics[typeId];
-      if (val !== "" && val !== null) {
-        formData.append(`characteristics[${charIndex}][type_id]`, typeId);
-        formData.append(`characteristics[${charIndex}][value]`, val);
-        charIndex++;
-      }
-    }
-    */
     images.forEach((file) => formData.append("images[]", file));
 
     fetch(`http://localhost:8000/api/packs/${id}`, {
@@ -210,7 +220,6 @@ function PacksEdit() {
               <li className={activeTab === "productes" ? "active" : ""} onClick={() => setActiveTab("productes")}><KeySquare size={18} /> <span>Productes</span></li>
               <li className={activeTab === "inventario" ? "active" : ""} onClick={() => setActiveTab("inventario")}><Box size={18} /> <span>Inventari</span></li>
               <li className={activeTab === "avanzado" ? "active" : ""} onClick={() => setActiveTab("avanzado")}><Settings size={18} /> <span>Avançat</span></li>
-              {/*<li className={activeTab === "caracteristics" ? "active" : ""} onClick={() => setActiveTab("caracteristics")}><LayoutList size={18} /> <span>Característiques</span></li>*/}
               <li className={activeTab === "imagenes" ? "active" : ""} onClick={() => setActiveTab("imagenes")}><ImageIcon size={18} /> <span>Imatges</span></li>
             </ul>
           </nav>
@@ -222,7 +231,9 @@ function PacksEdit() {
               <section className="tab-panel">
                 <div className="form-group"><label>Nom</label><input value={name} onChange={e => setName(e.target.value)} /></div>
                 <div className="form-group"><label>Preu (€)</label><input type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
-                <div className="form-group"><label>Descompte (%)</label><input type="number" value={discount} onChange={e => setDiscount(e.target.value)} /></div>
+                <div className="form-group"><label>Descompte (%)</label><input type="number" min="0" max="100" value={discountPercentage} onChange={e => setDiscountPercentage(e.target.value)} /></div>
+                <div className="form-group"><label>Inici descompte</label><input type="datetime-local" value={discountStartsAt} onChange={e => setDiscountStartsAt(e.target.value)} /></div>
+                <div className="form-group"><label>Fi descompte</label><input type="datetime-local" value={discountEndsAt} onChange={e => setDiscountEndsAt(e.target.value)} /></div>
                 <div className="form-group"><label>Descripció</label><textarea value={description} onChange={e => setDescription(e.target.value)} /></div>
               </section>
             )}
@@ -247,18 +258,19 @@ function PacksEdit() {
                     <table>
                       <thead>
                         <tr>
+                          <th width="40"></th>
                           <th>Codi</th>
                           <th>Nom</th>
                           <th>Preu</th>
                         </tr>
                       </thead>
                       <tbody id="productsTable">
-                        {products.products.map(product => (
+                        {products.map(product => (
                           <tr onClick={() => handleProductsInPack(product)} style={{ cursor: 'pointer' }}>
                             <td><input type="checkbox" readOnly checked={productsInPack.some(p => p.id === product.id)} value={product} onClick={(e) => e.stopPropagation()} /></td>
                             <td>{product.code}</td>
                             <td>{product.name}</td>
-                            <td>{product.sale_price}</td>
+                            <td>{product.price}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -298,89 +310,6 @@ function PacksEdit() {
                 </div>
               </section>
             )}
-            {/*activeTab === "caracteristics" && (
-              <section className="tab-panel">
-                <div className="panel-header">
-                  <h3>Atributs i Característiques</h3>
-                  <p>Configura els detalls tècnics d'aquest pack.</p>
-                </div>
-
-                <div className="characteristics-grid">
-                  {types.map(type => (
-                    <div key={type.id} className="char-item">
-                      <label className="char-label">{type.type}</label>
-
-                      <div className="char-field-wrapper">
-                        {type.type === "Doble Embrague" && (
-                          <label className="checkbox-label">
-                            <input
-                              type="checkbox"
-                              checked={selectedCharacteristics[type.id] || false}
-                              onChange={(e) => handleCharacteristicChange(type.id, e.target.checked)}
-                            />
-                            <span>Incloure doble embragatge</span>
-                          </label>
-                        )}
-
-                        {type.type === "Pes" && (
-                          <div className="input-with-unit">
-                            <input
-                              type="number"
-                              placeholder="0"
-                              value={selectedCharacteristics[type.id] || ""}
-                              onChange={(e) => handleCharacteristicChange(type.id, e.target.value)}
-                            />
-                            <span className="unit-tag">Kg</span>
-                          </div>
-                        )}
-
-                        {type.type === "Duplicat de clau" && (
-                          <div className="extra-group">
-                            <label className="checkbox-label">
-                              <input
-                                type="checkbox"
-                                checked={extraValues[type.id]?.enabled || false}
-                                onChange={(e) => handleExtraValueChange(type.id, "enabled", e.target.checked)}
-                              />
-                              <span>Incloure preu extra</span>
-                            </label>
-
-                            {extraValues[type.id]?.enabled && (
-                              <div className="input-with-unit mt-10">
-                                <input
-                                  type="number"
-                                  placeholder="Preu"
-                                  value={extraValues[type.id]?.price || ""}
-                                  onChange={(e) => handleExtraValueChange(type.id, "price", e.target.value)}
-                                />
-                                <span className="unit-tag">€</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        {type.type !== "Doble Embrague" &&
-                          type.type !== "Pes" &&
-                          type.type !== "Duplicat de clau" && (
-                            <select
-                              className="full-select"
-                              value={selectedCharacteristics[type.id] || ""}
-                              onChange={(e) => handleCharacteristicChange(type.id, e.target.value)}
-                            >
-                              <option value="">Selecciona...</option>
-                              {type.characteristic?.map(char => (
-                                <option key={char.id} value={char.id}>
-                                  {char.description}
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )*/}
 
             {/* IMÁGENES */}
             {activeTab === "imagenes" && (
@@ -394,44 +323,44 @@ function PacksEdit() {
                     <label className={`drag-zone ${isDragging ? 'dragging' : ''}`}
                       onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
                       onDragLeave={() => setIsDragging(false)}
-                      onDrop={e => {
-                        e.preventDefault();
-                        setIsDragging(false);
-                        handleFiles(e.dataTransfer.files);
-                      }}>
-                      <input type="file" multiple accept="image/*"
-                        onChange={e => handleFiles(e.target.files)} hidden />
-                      <div className="upload-info">
-                        <Upload size={24} />
-                        <span>Pujar o arrossegar</span>
-                      </div>
+                      onDrop={e => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}>
+                      <input type="file" multiple accept="image/*" onChange={e => handleFiles(e.target.files)} hidden />
+                      <div className="upload-info"><Upload size={24} /> <span>Pujar o arrossegar</span></div>
                     </label>
                   </div>
-
                   <div className="previews-grid">
-                    {previews.map((url, index) => (
-                      <div key={index} className={`preview-item ${primaryImageIndex === index ? 'is-primary' : ''}`}>
-                        <img src={url} alt="" onClick={() => setPrimaryImageIndex(index)} />
-
+                    {existingImages.map((image, idx) => (
+                      <div key={image.id} className={`preview-item ${primaryImageIndex === idx ? 'is-primary' : ''}`}>
+                        <img src={`http://localhost:8000/storage/${image.path}`} alt="" onClick={() => setPrimaryImageIndex(idx)} />
                         <div className="preview-actions">
-                          <button type="button"
-                            className={`star-btn ${primaryImageIndex === index ? 'active' : ''}`}
-                            onClick={() => setPrimaryImageIndex(index)}>
-                            <Star size={14} fill={primaryImageIndex === index ? "currentColor" : "none"} />
+                          <button type="button" className={`star-btn ${primaryImageIndex === idx ? 'active' : ''}`} onClick={() => setPrimaryImageIndex(idx)}>
+                            <Star size={14} fill={primaryImageIndex === idx ? "currentColor" : "none"} />
                           </button>
-
-                          <button type="button"
-                            className="remove-btn"
-                            onClick={() => removeImage(index)}>
+                          <button type="button" className="remove-btn" onClick={() => removeExistingImage(idx)}>
                             <X size={14} />
                           </button>
                         </div>
-
-                        {primaryImageIndex === index && (
-                          <div className="primary-label">Principal</div>
-                        )}
+                        {primaryImageIndex === idx && <div className="primary-label">Principal</div>}
                       </div>
                     ))}
+
+                    {previews.map((url, idx) => {
+                      const globalIndex = existingImages.length + idx;
+                      return (
+                        <div key={`new_${idx}`} className={`preview-item ${primaryImageIndex === globalIndex ? 'is-primary' : ''}`}>
+                          <img src={url} alt="" onClick={() => setPrimaryImageIndex(globalIndex)} />
+                          <div className="preview-actions">
+                            <button type="button" className={`star-btn ${primaryImageIndex === globalIndex ? 'active' : ''}`} onClick={() => setPrimaryImageIndex(globalIndex)}>
+                              <Star size={14} fill={primaryImageIndex === globalIndex ? "currentColor" : "none"} />
+                            </button>
+                            <button type="button" className="remove-btn" onClick={() => removeImage(idx)}>
+                              <X size={14} />
+                            </button>
+                          </div>
+                          {primaryImageIndex === globalIndex && <div className="primary-label">Principal</div>}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </section>
