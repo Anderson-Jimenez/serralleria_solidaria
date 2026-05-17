@@ -490,7 +490,7 @@ class ProductSeeder extends Seeder
                 'int_size' => '-',
                 'ext_size' => '-',
                 'status' => true,
-            ],
+            ],/*
             [
                 'code' => 'pack 001',
                 'name' => 'Super pack de cilindres',
@@ -506,7 +506,7 @@ class ProductSeeder extends Seeder
                 'int_size' => '',
                 'ext_size' => '',
                 'status' => true,
-            ],
+            ],*/
         ]);
     }
 }

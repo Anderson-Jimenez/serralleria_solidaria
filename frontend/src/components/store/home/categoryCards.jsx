@@ -8,66 +8,58 @@ function CategoryCards() {
   return (
     <section className="categoryCards">
 
-      <div className="categoryHeader">
-        <span className="categorySubtitle">EL NOSTRE CATÀLEG</span>
-        <h2 className="categoryTitle">
-          EXPLORA PER <span>CATEGORIA</span>
-        </h2>
+      <div className="categorySelectionHeader">
+        <span className="categorySelectionLabel">EL NOSTRE CATÀLEG</span>
+        <h1 className='categorySelectionTitle'>El nostre <span>Cataleg</span></h1>
+        <div className='categorySelectionDivider' />
       </div>
 
       <div className="categoryGrid">
-
-        <div className="categoryItem teal" onClick={() => navigate('/productes')}>
-          <div className="categoryIcon">
-            <KeyRound size={44} strokeWidth={1.3} />
+        <div className="categorySelectionCategory" onClick={() => navigate('/products/Cilindres')}>
+          <div className="categoryLeft">
+            <KeyRound size={36} strokeWidth={1.3} />
+            <div className="categoryText">
+              <span>Seguretat</span>
+              <h2>Cilindres</h2>
+              <p>Alta resistència al punxament i al gir per a portes d'entrada.</p>
+              <span className="categoryCta">Veure productes →</span>
+            </div>
           </div>
-          <div className="categoryInfo">
-            <span className="categoryLabel">Seguretat</span>
-            <h3 className="categoryName">Cilindres</h3>
-            <p className="categoryDesc">Alta resistència al punxament i al gir per a portes d'entrada.</p>
+          <div className="categoryRight">
+            <span className="categoryNumber">01</span>
           </div>
-          <span className="categoryCta">Veure productes →</span>
         </div>
 
-        <div className="categoryItem blue" onClick={() => navigate('/productes')}>
-          <div className="categoryIcon">
-            <ShieldCheck size={44} strokeWidth={1.3} />
+        <div className="categorySelectionCategory" onClick={() => navigate('/products/Escut')}>
+          <div className="categoryLeft">
+            <ShieldCheck size={36} strokeWidth={1.3} />
+            <div className="categoryText">
+              <span>Protecció</span>
+              <h2>Escuts</h2>
+              <p>Plaques anti-taladre per reforçar l'entorn del pany.</p>
+              <span className="categoryCta">Veure productes →</span>
+            </div>
           </div>
-          <div className="categoryInfo">
-            <span className="categoryLabel">Protecció</span>
-            <h3 className="categoryName">Escuts</h3>
-            <p className="categoryDesc">Plaques anti-taladre per reforçar l'entorn del pany.</p>
+          <div className="categoryRight">
+            <span className="categoryNumber">02</span>
           </div>
-          <span className="categoryCta">Veure productes →</span>
         </div>
 
-        <div className="categoryItem amber" onClick={() => navigate('/productes')}>
-          <div className="categoryIcon">
-            <Lock size={44} strokeWidth={1.3} />
+        <div className="categorySelectionCategory" onClick={() => navigate('/products/Segon Pany')}>
+          <div className="categoryLeft">
+            <Lock size={36} strokeWidth={1.3} />
+            <div className="categoryText">
+              <span>Doble tancament</span>
+              <h2>Segon Pany</h2>
+              <p>Afegeix una segona capa de seguretat a la teva porta principal.</p>
+              <span className="categoryCta">Veure productes →</span>
+            </div>
           </div>
-          <div className="categoryInfo">
-            <span className="categoryLabel">Doble tancament</span>
-            <h3 className="categoryName">Segon Pany</h3>
-            <p className="categoryDesc">Afegeix una segona capa de seguretat a la teva porta principal.</p>
+          <div className="categoryRight">
+            <span className="categoryNumber">03</span>
           </div>
-          <span className="categoryCta">Veure productes →</span>
         </div>
-
       </div>
-
-      <div className="packBanner" onClick={() => navigate('/productes')}>
-        <div className="packIcon">
-          <Package size={52} strokeWidth={1.2} />
-        </div>
-        <div className="packInfo">
-          <span className="categoryLabel">Oferta especial</span>
-          <h3 className="packName">Packs de Productes</h3>
-          <p className="packDesc">Combina cilindre + escut + segon pany al millor preu. Solucions completes per a cada tipus de porta.</p>
-          <span className="categoryCta">Descobrir packs →</span>
-        </div>
-        <span className="packBadge">NOU</span>
-      </div>
-
     </section>
   );
 }

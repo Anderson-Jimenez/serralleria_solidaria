@@ -335,7 +335,7 @@ class ProductController extends Controller
                 'selectFilters' => 'nullable|present|array',
                 'minPrice' => 'nullable|integer',
                 'maxPrice' => 'nullable|integer',
-
+                'productTypes' => 'nullable|array',
             ]);
 
             $text = $validated['searchText'];
@@ -351,9 +351,18 @@ class ProductController extends Controller
                     $filterId = (int) $filter;
                     $query->orWhereHas('characteristics', function ($q) use ($filterId) {
                         $q->where('characteristic_id', $filterId);
+                    })
+                    ->orWhereHas('packItems.product.characteristics', function ($q2) use ($filterId) {
+                        $q2->where('characteristic_id', $filterId);
                     });
 
                 }
+            }
+
+            // 1.2.5. Per tipus
+
+            if (!empty($validated['productTypes'])) {
+                $query->whereIn('product_type', $validated['productTypes']);
             }
 
             // 1.5. Filtre per preu i pes
@@ -376,6 +385,9 @@ class ProductController extends Controller
                     if (!empty($id)) {
                         $query->whereHas('characteristics', function ($q) use ($id) {
                             $q->where('characteristic_id', $id);
+                        })
+                        ->orWhereHas('packItems.product.characteristics', function ($q2) use ($id) {
+                            $q2->where('characteristic_id', $id);
                         });
                     }
                 }
@@ -411,6 +423,7 @@ class ProductController extends Controller
                 'category' => 'required|string|max:100',
                 'minPrice' => 'nullable|integer',
                 'maxPrice' => 'nullable|integer',
+                'productTypes' => 'nullable|array',
             ]);
 
             $category = $validated['category'];
@@ -424,6 +437,12 @@ class ProductController extends Controller
             $query->whereHas('category', function ($q) use ($category) {
                 $q->where('name', 'LIKE', $category);
             });
+
+            // 1.2.5. Per tipus
+
+            if (!empty($validated['productTypes'])) {
+                $query->whereIn('product_type', $validated['productTypes']);
+            }
 
             // 1.5. Filtre per preu i pes
 
@@ -445,6 +464,9 @@ class ProductController extends Controller
                         $filterId = (int) $filter;
                         $q->orWhereHas('characteristics', function ($q2) use ($filterId) {
                             $q2->where('characteristic_id', $filterId);
+                        })
+                        ->orWhereHas('packItems.product.characteristics', function ($q2) use ($filterId) {
+                            $q2->where('characteristic_id', $filterId);
                         });
                     }
                 });
@@ -455,6 +477,9 @@ class ProductController extends Controller
                     if (!empty($id)) {
                         $query->whereHas('characteristics', function ($q) use ($id) {
                             $q->where('characteristic_id', $id);
+                        })
+                        ->orWhereHas('packItems.product.characteristics', function ($q2) use ($id) {
+                            $q2->where('characteristic_id', $id);
                         });
                     }
                 }
