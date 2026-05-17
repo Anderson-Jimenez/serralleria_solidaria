@@ -37,11 +37,11 @@ class CharacteristicTypeSeeder extends Seeder
             [
                 'type' => 'Tarjeta',
                 'filterType' => 'checkbox',
-            ],/*
+            ],
             [
                 'type' => 'Pes',
                 'filterType' => 'moreLess',
-            ],*/
+            ],
             [
                 'type' => 'Nivell de Seguretat',
                 'filterType' => 'checkbox',
