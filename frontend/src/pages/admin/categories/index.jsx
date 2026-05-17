@@ -6,6 +6,28 @@ function Categories() {
 
   const [categories, setCategories] = useState([]);
 
+  const changeStatusCategory = (id) => {
+    fetch(`http://localhost:8000/api/categories/changeState/${id}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setCategories(prevCategory =>
+            prevCategory.map(item =>
+              item.id === id ? data.category : item
+            )
+          );
+        } else {
+          console.error('Error en la lògica del servidor:', data.message);
+        }
+      })
+      .catch(error => console.error('Error en la petició:', error));      
+  }
 
   const searchCategories = (e) => {
     let text = e.target.value;
@@ -117,7 +139,7 @@ function Categories() {
                       <Pencil size={18}/>
                     </Link>
 
-                    <button className="action-icon power">
+                    <button className="action-icon power" onClick={() => changeStatusCategory(category.id)}>
                       <Power size={18} className="mr-8"/> {category.status === 1 ? "Desactivar" : "Activar"}
                     </button>
 

@@ -30,7 +30,7 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
 Route::apiResource('categories', CategoryController::class);
 Route::get('/categories/searchCategories/{text}', [CategoryController::class, 'searchCategories']);
-
+Route::get('/categories/changeState/{id}', [CategoryController::class, 'changeStatusCategory']);
 
 
 Route::apiResource('products', ProductController::class);

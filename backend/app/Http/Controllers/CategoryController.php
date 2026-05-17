@@ -27,13 +27,13 @@ class CategoryController extends Controller
             ]);
 
             $category = Category::create($validated);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $category,
                 'message' => 'Categoria creada correctament'
             ], 201);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -77,17 +77,34 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);
-        $category->delete();    
+        $category->delete();
+    }
+
+    public function changeStatusCategory($id)
+    {
+        try {
+            $category = Category::findOrFail($id);
+            $category->status = ($category->status == 1) ? 0 : 1;
+            $category->save();
+
+            return response()->json([
+                'success' => true,
+                'category' => $category,
+                'message' => 'Canvi de estat fet'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
     }
 
     public function searchCategories($text)
     {
         try {
-            if($text===""){
+            if ($text === "") {
                 $categories = Category::all();
-            }
-            else{
-                $categories = Category::where('name', 'LIKE','%' . $text . '%')->orWhere('description', 'LIKE', '%' . $text . '%')->get();
+            } else {
+                $categories = Category::where('name', 'LIKE', '%' . $text . '%')->orWhere('description', 'LIKE', '%' . $text . '%')->get();
             }
 
             return response()->json([
@@ -95,7 +112,7 @@ class CategoryController extends Controller
                 'categories' => $categories,
                 'message' => 'Productes passan',
             ], 201);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
