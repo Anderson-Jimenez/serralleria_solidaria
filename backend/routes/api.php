@@ -96,6 +96,8 @@ Route::post('/signin', [AuthController::class, 'signin']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user/profile', [AuthController::class, 'profile']);
+    Route::get('/me', [AuthController::class, 'me']);
+
     Route::get('/user/orders', [OrderController::class, 'userOrders']);
     Route::get('/user/orders/{id}', [OrderController::class, 'showOrderDetails']);
     Route::post('/orders/checkout', [OrderController::class, 'checkout']);
