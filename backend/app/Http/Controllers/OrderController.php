@@ -19,7 +19,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Order::with('user', 'products', 'detail')->get();
+        return Order::with('user', 'products', 'detail')->where('status', '!=', 'cart')->get();
     }
 
     /**
@@ -38,18 +38,10 @@ class OrderController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        return Order::with('user', 'products', 'detail')->findOrFail($id)->get();
-
-        /*
-        if ($order->user_id !== auth()->id() && auth()->user->userType !=='admin') {
-            return response()->json(['error' => 'No autoritzat'], 403);
-        }
-        */
+        $order = Order::with(['user', 'products', 'detail'])->findOrFail($id);
+        return response()->json($order);
     }
 
     /**
@@ -65,7 +57,13 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $order = Order::findOrFail($id);
+        $validated = $request->validate([
+            'status' => 'required|in:cart,pending,paid,processing,shipped,completed,cancelled'
+        ]);
+        $order->status = $validated['status'];
+        $order->save();
+        return response()->json(['success' => true, 'order' => $order]);
     }
 
     /**
@@ -97,7 +95,6 @@ class OrderController extends Controller
 
         try {
             DB::transaction(function () use ($user, $orderId, $validated, $request) {
-                // ⭐ Buscar el carrito por ID y estado 'cart', sin importar user_id
                 $order = Order::where('id', $orderId)
                             ->where('status', 'cart')
                             ->lockForUpdate()

@@ -1,130 +1,167 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Search, Plus, Pencil, Power, Trash2, FileText, Eye } from "lucide-react";
+import { Eye, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function OrderIndex() {
+  const [orders, setOrders] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
-  const [orders, setOrders] = useState([]); 
-  
-  const searchOrders = (e) => {
-    let text = e.target.value;
+  // Mapatge d'estats a classes CSS i etiquetes (com al CustomSolutionPetitions)
+  const statusClasses = {
+    pending: "statusPending",
+    paid: "statusPaid",
+    processing: "statusProcessing",
+    shipped: "statusShipped",
+    completed: "statusCompleted",
+    cancelled: "statusCancelled",
+  };
 
-    if(text===""){
-      fetch("http://localhost:8000/api/orders", {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        }
-      })
-      .then(response => response.json()) 
-      .then(data => setUsers(data))
-      .catch(error => console.error('Error en la petició:', error));
-    }
-    else{
-      fetch(`http://localhost:8000/api/users/searchUsers/${text}`, {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        }
-      })
-      .then(response => response.json()) 
-      .then(data => {
-        if (data.success) {
-          setUsers(data.users)
-        } else {
-          console.error('Error en la lògica del servidor:', data.message);
-        }
-      })
-      .catch(error => console.error('Error en la petició:', error));
-    }
-  }
+  const statusLabels = {
+    pending: "Pendent",
+    paid: "Pagat",
+    processing: "Processant",
+    shipped: "Enviat",
+    completed: "Completat",
+    cancelled: "Cancel·lat",
+  };
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/orders`)
-      .then(response => response.json())
-      .then(data => {
-        setOrders(data);
-        console.log(data);
-      })
-      .catch(error => console.error(error));
-
+    fetchOrders();
   }, []);
 
-  return (
-    <div className="dashboard-content">
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/api/orders", {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      if (!res.ok) throw new Error("Error carregant comandes");
+      const data = await res.json();
+      setOrders(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const filteredOrders =
+    statusFilter === "all"
+      ? orders
+      : orders.filter((order) => order.status === statusFilter);
+
+  if (loading) {
+    return (
+      <div className="dashboard-caracteristics">
+        <p>Carregant comandes...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="dashboard-caracteristics">
       <h1 className="dashboard-title">Gestió de comandes</h1>
       <h3 className="dashboard-subtitle">Administra les comandes</h3>
 
       <div className="caracteristics-content">
         <div className="table-container">
-
           <div className="tableFilters">
-            <input
-              type="text"
-              placeholder="Cerca per nom, codi o descripció..."
-            /*onChange={searchOrders}*/
-            />
-
             <select
-            /*value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}*/
+              className="status-filter"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option value="">Totes les categories</option>
-
-              {/*categories.map(category => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))*/}
-
+              <option value="all">Tots els estats</option>
+              <option value="pending">Pendent</option>
+              <option value="paid">Pagat</option>
+              <option value="processing">Processant</option>
+              <option value="shipped">Enviat</option>
+              <option value="completed">Completat</option>
+              <option value="cancelled">Cancel·lat</option>
             </select>
           </div>
 
-          <table>
-
+          <table className="data-table">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Client</th>
-                <th>Direcció</th>
+                <th>Adreça enviament</th>
                 <th>Enviament</th>
                 <th>Instal·lació</th>
                 <th>Observacions</th>
-                <th>Preu</th>
+                <th>Total</th>
                 <th>Estat</th>
-                <th className="text-center">Accions</th>
+                <th>Accions</th>
               </tr>
             </thead>
-
             <tbody>
-                {orders.map(order => (
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((order) => (
                   <tr key={order.id}>
-                      <td>{order.id}</td>
-                      <td>{order.user.username}</td>
-                      <td>{order.detail.shipping_address}</td>
-                      <td>{order.detail.shipping ? "Si" : "No"}</td>
-                      <td>{order.detail.installation ? "Si" : "No"}</td>
-                      <td>{order.observations}</td>
-                      <td>{order.total_price}€</td>
-                      <td>{order.status}</td>
-                      <td>
-                        <Link to={`/admin/orders/${order.id}`} className="action-icon edit" title="Veure Detalls">
-                          <Eye size={18} /> Veure Detalls
-                        </Link>
-                        <a className="action-icon" href={`/orders/pdf/${order.id}`}><FileText size={20}/></a>
-                      </td>
+                    <td>{order.id}</td>
+                    <td>
+                      {order.user ? (
+                        <>
+                          <strong>{order.user.name}</strong>
+                          <br />
+                          <small>{order.user.email}</small>
+                        </>
+                      ) : (
+                        "Usuari eliminat"
+                      )}
+                    </td>
+                    <td>{order.detail?.shipping_address || "—"}</td>
+                    <td className="text-center">
+                      {order.detail?.shipping ? "Sí" : "No"}
+                    </td>
+                    <td className="text-center">
+                      {order.detail?.installation ? "Sí" : "No"}
+                    </td>
+                    <td>{order.observations || "—"}</td>
+                    <td className="text-right">
+                      {Number(order.total_price).toFixed(2)} €
+                    </td>
+                    <td>
+                      <span className={statusClasses[order.status] || ""}>
+                        {statusLabels[order.status] || order.status}
+                      </span>
+                    </td>
+                    <td className="actions">
+                      <Link
+                        to={`/admin/orders/${order.id}`}
+                        className="action-icon view"
+                        title="Veure detalls"
+                      >
+                        <Eye size={18} /> Veure
+                      </Link>
+                      <a
+                        href={`/orders/pdf/${order.id}`}
+                        className="action-icon pdf"
+                        title="Descarregar PDF"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FileText size={18} /> PDF
+                      </a>
+                    </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9" style={{ textAlign: "center", padding: "20px" }}>
+                    No hi ha comandes disponibles.
+                  </td>
+                </tr>
+              )}
             </tbody>
-
           </table>
         </div>
       </div>
-
     </div>
   );
 }

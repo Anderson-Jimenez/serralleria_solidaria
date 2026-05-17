@@ -16,11 +16,11 @@
 }
 
 /* ---------- BASE STATUS BADGE ---------- */
-.pendingStatus,
-.inProgressStatus,
-.sentStatus,
-.solvedStatus,
-.rejectedStatus {
+.pendingStatus, .statusPending,
+.inProgressStatus, .statusProcessing, .statusPaid,
+.sentStatus, .statusShipped,
+.solvedStatus, .statusCompleted,
+.rejectedStatus, .statusCancelled {
   gap: 8px;
 
   padding: 7px 14px;
@@ -37,11 +37,11 @@
 }
 
 /* Puntito */
-.pendingStatus::before,
-.inProgressStatus::before,
-.sentStatus::before,
-.solvedStatus::before,
-.rejectedStatus::before {
+.pendingStatus::before, .statusPending::before,
+.inProgressStatus::before, .statusProcessing::before, .statusPaid::before,
+.sentStatus::before, .statusShipped::before,
+.solvedStatus::before, .statusCompleted::before,
+.rejectedStatus::before, .statusCancelled::before {
   content: "";
   width: 9px;
   height: 9px;
@@ -50,61 +50,61 @@
 }
 
 /* ---------- PENDING ---------- */
-.pendingStatus {
+.pendingStatus, .statusPending {
   background: #fff7db;
   color: #8a6d00;
   border-color: #ffe08a;
 }
 
-.pendingStatus::before {
+.pendingStatus::before, .statusPending::before {
   background: #facc15;
   box-shadow: 0 0 8px rgba(250, 204, 21, 0.8);
 }
 
 /* ---------- IN PROGRESS ---------- */
-.inProgressStatus {
+.inProgressStatus, .statusProcessing, .statusPaid {
   background: #e8f1ff;
   color: #1d4ed8;
   border-color: #93c5fd;
 }
 
-.inProgressStatus::before {
+.inProgressStatus::before, .statusProcessing::before, .statusPaid::before {
   background: #3b82f6;
   box-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
 }
 
 /* ---------- SENT ---------- */
-.sentStatus {
+.sentStatus, .statusShipped {
   background: #f1ebff;
   color: #6d28d9;
   border-color: #c4b5fd;
 }
 
-.sentStatus::before {
+.sentStatus::before, .statusShipped::before {
   background: #8b5cf6;
   box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
 }
 
 /* ---------- SOLVED ---------- */
-.solvedStatus {
+.solvedStatus, .statusCompleted {
   background: #e8fff0;
   color: #15803d;
   border-color: #86efac;
 }
 
-.solvedStatus::before {
+.solvedStatus::before, .statusCompleted::before {
   background: #22c55e;
   box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
 }
 
 /* ---------- REJECTED ---------- */
-.rejectedStatus {
+.rejectedStatus, .statusCancelled {
   background: #ffeaea;
   color: #b91c1c;
   border-color: #fca5a5;
 }
 
-.rejectedStatus::before {
+.rejectedStatus::before, .statusCancelled::before {
   background: #ef4444;
   box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
 }

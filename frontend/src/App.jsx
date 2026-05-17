@@ -38,6 +38,7 @@ import UsersEdit from "./pages/admin/users/edit";
 
 import OrdersIndex from "./pages/admin/orders/index";
 import OrdersPDF from "./pages/admin/orders/orderPDF";
+import OrderShow from "./pages/admin/orders/show";
 import CartPage from "./pages/store/cartPage";
 import CheckoutPage from "./pages/store/checkoutPage";
 
@@ -106,16 +107,18 @@ function App() {
         </Route>
         <Route path="orders">
           <Route index element={<OrdersIndex />} />
+          <Route path="orders/:id" element={<OrderShow />} />
         </Route>
         <Route path="users">
           <Route index element={<UsersIndex />} />
           <Route path="create" element={<UsersCreate />} />
-          <Route path="edit/:id" element={<UsersEdit />} />
+          <Route path=":id" element={<UsersEdit />} />
         </Route>
         <Route path="solucionsPersonalitzades" element={<CustomSolutionPetitions />} />
       </Route>
 
       <Route path="/orders/pdf/:id" element={<OrdersPDF />} />
+      
 
     </Routes>
   );
