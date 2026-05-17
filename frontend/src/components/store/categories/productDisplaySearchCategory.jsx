@@ -1,11 +1,9 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../../contexts/CartContext';
 
-function productDisplaySearchCategory({ products, characteristics, title }) {
-
+function ProductDisplaySearchCategory({ products, characteristics, title }) {
     const [productsFiltrats, setProductsFiltrats] = useState([]);
     const [savedFilters, setSavedFilters] = useState([]);
     const [dinamicFilters, setDinamicFilters] = useState({});
@@ -94,12 +92,12 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                 productTypes: types,
             })
         })
-            .then(async response => {
-                const data = await response.json();
-                if (!response.ok) { console.error("Error del servidor:", data); return; }
-                if (data.success) setProductsFiltrats(data.products);
-            })
-            .catch(error => console.error('Error en la petició:', error));
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok) { console.error("Error del servidor:", data); return; }
+            if (data.success) setProductsFiltrats(data.products);
+        })
+        .catch(error => console.error('Error en la petició:', error));
     };
 
     async function handleAddToCart(e, product) {
@@ -155,7 +153,6 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
 
     return (
         <section className='categoryProductDisplay'>
-
             <div className="section-header">
                 <div className="title-group">
                     <span className="subtitle">CATÀLEG</span>
@@ -167,12 +164,10 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
             </div>
 
             <div id='categoryProductDisplayAll'>
-
                 <div className='displayFilters'>
                     <h2>Filtres</h2>
                     <div className="allFilters">
-
-                        <div className="uniqueCharacteristic" key="price">
+                        <div className="uniqueCharacteristic">
                             <h3>Preu</h3>
                             <div className="rangeFilter">
                                 <input type="number" placeholder="Mínim" min="0" value={minPrice}
@@ -185,7 +180,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                             </div>
                         </div>
 
-                        <div className="uniqueCharacteristic" key="product_type">
+                        <div className="uniqueCharacteristic">
                             <h3>Tipus</h3>
                             <div className='checkboxFilter'>
                                 <div>
@@ -201,7 +196,6 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                                     <label className='checkmarkLabel' htmlFor="pack">Pack</label>
                                 </div>
                             </div>
-
                         </div>
 
                         {characteristics.map((characteristic) => (
@@ -210,7 +204,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
 
                                 {characteristic.filterType === 'checkbox' ? (
                                     <div className='checkboxFilter'>
-                                        {characteristic.characteristics && characteristic.characteristics.map((char) => (
+                                        {characteristic.characteristics?.map((char) => (
                                             <div key={char.id}>
                                                 <input className='checkmark' type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
                                                 <label className='checkmarkLabel' htmlFor={`check-${char.id}`}>{char.description}</label>
@@ -220,7 +214,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                                 ) : (
                                     <select name={characteristic.id} onChange={handleSelectChange}>
                                         <option value="">Selecciona...</option>
-                                        {characteristic.characteristic?.map((char) => (
+                                        {(characteristic.characteristics || characteristic.characteristic)?.map((char) => (
                                             <option value={`${char.id}`} key={char.id}>{char.description}</option>
                                         ))}
                                     </select>
@@ -247,7 +241,6 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
 
                             return (
                                 <div className="card" key={product.id} onClick={() => handleProductClick(product.id)}>
-
                                     {discountActive ? (
                                         <span className="badge-discount">-{product.discount_percentage}% DTO</span>
                                     ) : product.is_new ? (
@@ -263,7 +256,7 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
                                     </div>
 
                                     <div className="info">
-                                        <span className="cat-label">{product.product_type === "pack" ? "Pack" : product.category.name}</span>
+                                        <span className="cat-label">{product.product_type === "pack" ? "Pack" : product.category?.name}</span>
                                         <h4>{product.name}</h4>
                                         <p className="desc">{product.description}</p>
 
@@ -294,4 +287,4 @@ function productDisplaySearchCategory({ products, characteristics, title }) {
     );
 }
 
-export default productDisplaySearchCategory;
+export default ProductDisplaySearchCategory;
