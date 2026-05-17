@@ -82,7 +82,9 @@ Route::get('/peticions/countPetitions', [ContactController::class, 'countPetitio
 
 
 Route::post('/payment/intent', [ PaymentController::class, 'createIntent' ]);
-Route::post('/payment/updateIntent', [ PaymentController::class, 'updateIntent' ]);
+Route::put('/payment/updateIntent', [ PaymentController::class, 'updateIntent' ]);
+
+Route::apiResource('orders', OrderController::class);
 
 //Log In
 
@@ -95,7 +97,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/orders/checkout', [OrderController::class, 'checkout']);
-    Route::apiResource('orders', OrderController::class);
     
     // Rutas solo para admin
     Route::middleware('can:admin')->group(function () {

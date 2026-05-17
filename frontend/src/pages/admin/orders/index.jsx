@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Plus, Pencil, Power, Trash2, FileText  } from "lucide-react";
+import { Search, Plus, Pencil, Power, Trash2, FileText, Eye } from "lucide-react";
 
 function OrderIndex() {
 
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]); 
-
-  console.log(orders);
-
+  
   const searchOrders = (e) => {
     let text = e.target.value;
 
@@ -47,7 +45,10 @@ function OrderIndex() {
   useEffect(() => {
     fetch(`http://localhost:8000/api/orders`)
       .then(response => response.json())
-      .then(data => setOrders(data))
+      .then(data => {
+        setOrders(data);
+        console.log(data);
+      })
       .catch(error => console.error(error));
 
   }, []);
@@ -90,6 +91,8 @@ function OrderIndex() {
                 <th>ID</th>
                 <th>Client</th>
                 <th>Direcció</th>
+                <th>Enviament</th>
+                <th>Instal·lació</th>
                 <th>Observacions</th>
                 <th>Preu</th>
                 <th>Estat</th>
@@ -102,11 +105,18 @@ function OrderIndex() {
                   <tr key={order.id}>
                       <td>{order.id}</td>
                       <td>{order.user.username}</td>
-                      <td>Res de direccio de moment</td>
+                      <td>{order.detail.shipping_address}</td>
+                      <td>{order.detail.shipping ? "Si" : "No"}</td>
+                      <td>{order.detail.installation ? "Si" : "No"}</td>
                       <td>{order.observations}</td>
                       <td>{order.total_price}€</td>
                       <td>{order.status}</td>
-                      <td><a className="action-icon" href={`/orders/pdf/${order.id}`}><FileText size={20}/></a></td>
+                      <td>
+                        <Link to={`/admin/orders/${order.id}`} className="action-icon edit" title="Veure Detalls">
+                          <Eye size={18} /> Veure Detalls
+                        </Link>
+                        <a className="action-icon" href={`/orders/pdf/${order.id}`}><FileText size={20}/></a>
+                      </td>
                   </tr>
                 ))}
             </tbody>

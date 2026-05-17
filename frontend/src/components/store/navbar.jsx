@@ -103,7 +103,7 @@ function Navbar() {
           </li>
           <li className="dropdown">
             <a href="/packs">
-              Packs <ChevronDown size={14} />
+              Packs
             </a>
           </li>
           <li>
@@ -113,9 +113,6 @@ function Navbar() {
 
         {/* ICONOS */}
         <div className="navbar-icons">
-          <button>
-            <Search size={20} />
-          </button>
 
           {/* CARRITO */}
           <button className="cart-btn-nav" onClick={() => setCartOpen(true)}>

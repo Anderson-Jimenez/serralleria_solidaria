@@ -9,18 +9,28 @@ class Product extends Model
     protected $table = "products";
 
     protected $fillable = [
-        'code', 'name', 'description', 'price', 'stock',
-        'discount_percentage', 'discount_starts_at', 'discount_ends_at',
-        'highlighted', 'category_id', 'product_type',
-        'int_size', 'ext_size', 'status',
+        'code',
+        'name',
+        'description',
+        'price',
+        'stock',
+        'discount_percentage',
+        'discount_starts_at',
+        'discount_ends_at',
+        'highlighted',
+        'category_id',
+        'product_type',
+        'int_size',
+        'ext_size',
+        'status',
     ];
 
     protected $casts = [
-        'price'              => 'decimal:2',
-        'highlighted'        => 'boolean',
-        'status'             => 'boolean',
+        'price' => 'decimal:2',
+        'highlighted' => 'boolean',
+        'status' => 'boolean',
         'discount_starts_at' => 'datetime',
-        'discount_ends_at'   => 'datetime',
+        'discount_ends_at' => 'datetime',
     ];
 
     // ------------RELACIONES------------- //
@@ -53,5 +63,12 @@ class Product extends Model
     public function primaryImage()
     {
         return $this->hasOne(ProductImg::class, 'product_id')->where('is_primary', 1);
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_products', 'product_id', 'order_id')
+            ->using(OrderProduct::class)
+            ->withPivot('quantity', 'unit_price', 'subtotal');
     }
 }

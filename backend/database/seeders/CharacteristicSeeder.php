@@ -99,6 +99,18 @@ class CharacteristicSeeder extends Seeder
                 'description' => 'MOLT ALTA SEGURETAT',
                 'characteristic_type_id' => 8,
             ],
+            [
+                'description' => '30x30',
+                'characteristic_type_id' => 9,
+            ],
+            [
+                'description' => '32x32',
+                'characteristic_type_id' => 9,
+            ],
+            [
+                'description' => '30x40',
+                'characteristic_type_id' => 9,
+            ],
         ]);
 
     }
