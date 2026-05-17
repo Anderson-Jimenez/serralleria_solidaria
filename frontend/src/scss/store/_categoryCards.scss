@@ -1,0 +1,185 @@
+@use '../variables';
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(1.25rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.categoryCards {
+  padding: 7vh 6%;
+  background-color: variables.$bg-light;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.categoryHeader {
+  border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1.5vh;
+  margin-bottom: 2.5vh;
+}
+
+.categorySubtitle {
+  display: block;
+  color: variables.$color-accent;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.4rem;
+}
+
+.categoryTitle {
+  font-size: clamp(1.2rem, 2.5vw, 2.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin: 0;
+
+  span {
+    font-weight: 300;
+    color: #666;
+  }
+}
+
+// ── Grid de 3 categories ─────────────────────────────────────────────────────
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.categoryItem {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2rem 1.5rem 1.5rem;
+  gap: 1rem;
+  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1),
+              box-shadow 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  &:hover {
+    transform: translateY(-0.2rem);
+    box-shadow: 0 0.6rem 1.8rem rgba(0, 0, 0, 0.09);
+  }
+
+  &.teal  { background: #E1F5EE; .categoryIcon { color: #0F6E56; } .categoryLabel { color: #0F6E56; } .categoryCta { color: #0F6E56; } .categoryName { color: #04342C; } }
+  &.blue  { background: #E6F1FB; .categoryIcon { color: #185FA5; } .categoryLabel { color: #185FA5; } .categoryCta { color: #185FA5; } .categoryName { color: #042C53; } }
+  &.amber { background: #FAEEDA; .categoryIcon { color: #854F0B; } .categoryLabel { color: #854F0B; } .categoryCta { color: #854F0B; } .categoryName { color: #412402; } }
+}
+
+.categoryIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.categoryInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.categoryLabel {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.categoryName {
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+  margin: 0.15rem 0 0.25rem;
+  line-height: 1.2;
+}
+
+.categoryDesc {
+  font-size: 0.78rem;
+  color: #555;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.categoryCta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-top: auto;
+}
+
+// ── Pack banner ──────────────────────────────────────────────────────────────
+
+.packBanner {
+  background: #FAECE7;
+  border-radius: 0.75rem;
+  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
+  padding: 2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1),
+              box-shadow 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  &:hover {
+    transform: translateY(-0.2rem);
+    box-shadow: 0 0.6rem 1.8rem rgba(0, 0, 0, 0.09);
+  }
+
+  .packIcon {
+    color: #993C1D;
+    flex-shrink: 0;
+  }
+
+  .categoryLabel { color: #993C1D; }
+  .categoryCta   { color: #993C1D; }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.packInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.packName {
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-weight: 700;
+  color: #4A1B0C;
+  margin: 0.15rem 0 0.3rem;
+}
+
+.packDesc {
+  font-size: 0.85rem;
+  color: #7a3a22;
+  line-height: 1.55;
+  margin: 0 0 0.5rem;
+}
+
+.packBadge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #993C1D;
+  color: #FAECE7;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+}

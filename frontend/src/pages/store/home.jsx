@@ -3,7 +3,7 @@ import PrincipalPanell from "../../components/store/home/principalPanel";
 import FeaturedProducts from "../../components/store/home/featuredProducts";
 import WhoWeAre from "../../components/store/quiSom";
 import CustomSolutionSeparator from "../../components/store/customSolutionsSeparator";
-
+import CategoryCards from "../../components/store/home/categoryCards";
 function Home() {
   const [data, setData] = useState({ products: [], featured_products: [] });
 
@@ -27,6 +27,7 @@ function Home() {
       <FeaturedProducts products={data.featured_products} title={"Productes"}/>
       <CustomSolutionSeparator /> 
       <WhoWeAre />
+      <CategoryCards />
       
     </div>
   );
