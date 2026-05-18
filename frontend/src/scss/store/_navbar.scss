@@ -1,35 +1,67 @@
 @import '../variables';
+
 .navbar {
   z-index: 10;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 1.5rem 2rem;
+  padding: clamp(0.75rem, 3vw, 1.5rem) clamp(1rem, 4vw, 2rem);
   background: $color-bg-container;
   border-bottom: 1px solid $color-border;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  flex-wrap: wrap;
 
   .navbar-brand {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: clamp(4px, 2vw, 8px);
     font-weight: 800;
     color: $color-title;
     text-transform: uppercase;
     letter-spacing: 1px;
+    cursor: pointer;
+
+    svg {
+      width: clamp(20px, 5vw, 24px);
+      height: auto;
+    }
+
+    .brand-name {
+      font-size: clamp(0.85rem, 4vw, 1.1rem);
+    }
   }
 
   .nav-links {
     display: flex;
     list-style: none;
-    gap: 1.5rem;
+    gap: clamp(0.8rem, 3vw, 1.5rem);
     margin: 0;
+
+    @media (max-width: 768px) {
+      position: fixed;
+      top: 70px;
+      left: -100%;
+      width: 80%;
+      height: calc(100vh - 70px);
+      background: white;
+      flex-direction: column;
+      padding: 2rem 1rem;
+      gap: 1rem;
+      transition: left 0.3s ease;
+      z-index: 99;
+
+      &.mobile-open {
+        left: 0;
+      }
+    }
 
     li a {
       text-decoration: none;
       color: $color-text-header;
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
       display: flex;
       align-items: center;
       gap: 4px;
@@ -38,16 +70,19 @@
       &:hover { color: $color-accent; }
     }
 
-    // Dropdown simple
     .dropdown {
       position: relative;
-      padding-bottom: 10px; // Margen para no perder el hover
-      margin-bottom: -10px;
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
 
       &:hover .dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
+        @media (min-width: 769px) {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
       }
 
       .dropdown-menu {
@@ -55,21 +90,39 @@
         top: 100%;
         left: 0;
         background: white;
-        border: 1px solid $border-color;
         list-style: none;
         padding: 0.5rem 0;
         min-width: 160px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         z-index: 50;
-        // Animación suave
         opacity: 0;
         visibility: hidden;
         transform: translateY(10px);
         transition: all 0.2s ease;
 
+        @media (max-width: 768px) {
+          position: static;
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+          box-shadow: none;
+          padding-left: 1rem;
+          display: none;
+
+          &.open {
+            display: block;
+          }
+        }
+
         li a {
           padding: 0.6rem 1.2rem;
           color: $color-text-body;
+          white-space: nowrap;
+
+          @media (max-width: 768px) {
+            white-space: normal;
+          }
+
           &:hover { background: $bg-light; color: $color-accent; }
         }
       }
@@ -79,7 +132,7 @@
   .navbar-icons {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: clamp(0.8rem, 3vw, 1.2rem);
     color: $color-text-header;
 
     button {
@@ -89,68 +142,121 @@
       color: inherit;
       cursor: pointer;
       display: flex;
+      align-items: center;
+
       &:hover { color: $color-accent; }
     }
 
-    .cart-container {
+    .cart-btn-nav {
       position: relative;
-      cursor: pointer;
+
       .badge {
         position: absolute;
         top: -8px;
-        right: -8px;
+        right: -12px;
         background: $color-accent;
         color: white;
-        font-size: 0.65rem;
+        font-size: clamp(0.6rem, 2vw, 0.65rem);
         font-weight: bold;
         padding: 2px 5px;
         border-radius: 50%;
+        min-width: 18px;
+        text-align: center;
       }
     }
-  }
 
-  .dropdown {
-    position: relative;
-    display: inline-block;
+    .dropdown.user-dropdown {
+      position: relative;
 
-    button {
-        background: none;
-        border: none;
-        cursor: pointer;
-    }
+      .user-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: clamp(0.8rem, 3vw, 0.9rem);
 
-    .dropdown-menu {
-        position: absolute;  // 👈 clau perquè no mogui res
+        @media (max-width: 640px) {
+          .username {
+            display: none;
+          }
+        }
+      }
+
+      .dropdown-menu {
+        position: absolute;
         top: 100%;
         right: 0;
         z-index: 100;
-        
         background: white;
-        border: 1px solid #eee;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         min-width: 150px;
         list-style: none;
         padding: 6px 0;
         margin: 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: all 0.2s ease;
+
+        &.open {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
 
         li {
-            a, button {
-                display: block;
-                width: 100%;
-                padding: 8px 16px;
-                text-align: left;
-                background: none;
-                border: none;
-                cursor: pointer;
-                text-decoration: none;
-                color: #333;
+          a, button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            font-size: clamp(0.8rem, 2.5vw, 0.85rem);
 
-                &:hover {
-                    background: #f5f5f5;
-                }
+            &:hover {
+              background: #f5f5f5;
             }
+          }
         }
+      }
     }
-}
+  }
+
+  // Botón hamburguesa
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 26px;
+    height: 20px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    z-index: 20;
+
+    @media (max-width: 768px) {
+      display: flex;
+    }
+
+    .bar {
+      width: 100%;
+      height: 2px;
+      background-color: $color-text-header;
+      transition: all 0.2s ease;
+    }
+
+    &.open .bar:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    &.open .bar:nth-child(2) {
+      opacity: 0;
+    }
+    &.open .bar:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+  }
 }
