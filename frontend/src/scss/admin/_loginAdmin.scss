@@ -1,24 +1,13 @@
 @use '../_variables';
 
 .logInContainer {
+    width: 15%;
     position: absolute;
     background-color: white;
     border-radius: 0px 0px 5px 5px;
     overflow: hidden;
     right: 5vw;
     top: 100%;
-    width: 90%;
-    max-width: 400px;
-
-    @media (min-width: 640px) {
-        width: 380px;
-        right: 2rem;
-    }
-
-    @media (min-width: 1024px) {
-        width: 450px;
-        right: 4rem;
-    }
 
     opacity: 0;
     visibility: hidden;
@@ -31,51 +20,34 @@
         transform: translateY(0);
     }
 
-    .close-login {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        z-index: 10;
-        color: #666;
-        padding: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover {
-            color: #000;
-        }
-    }
-
     .loginContent {
         transition: opacity 0.3s ease;
 
-        &.fadeIn { opacity: 1; }
-        &.fadeOut { opacity: 0; }
+        &.fadeIn { 
+            opacity: 1; 
+        }
+        
+        &.fadeOut { 
+            opacity: 0; 
+        }
     }
 
     .logInHalf {
         color: black;
-        padding: clamp(1rem, 5vw, 1.5rem);
+        padding: 20px;
         text-align: center;
 
         h3 { 
-            margin-bottom: clamp(1rem, 4vw, 1.25rem); 
-            font-size: clamp(1.2rem, 5vw, 1.5rem); 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
         }
 
         a { 
-            color: variables.$color-accent;
-            font-size: clamp(0.75rem, 3vw, 0.85rem);
-            display: inline-block;
-            margin-top: 0.5rem;
+            color: variables.$color-accent; 
         }
 
         form {
-            padding-bottom: clamp(1rem, 4vw, 1.25rem);
+            padding-bottom: 20px;
 
             .loginCredentials {
                 margin: 4px 0px;
@@ -85,40 +57,41 @@
 
                 input {
                     border: none;
-                    background: none;
-                    padding: clamp(0.5rem, 2vw, 0.6rem) clamp(0.3rem, 2vw, 0.5rem);
+                    background:none;
+                    padding: 8px 5px;
                     width: 100%;
-                    font-size: clamp(0.8rem, 3vw, 0.9rem);
 
-                    &:focus {
+                    &:focus{
                         outline: none;
                     }
                 }
 
-                svg {
+                label { 
+                    display: none; 
+                }
+
+                svg{
                     cursor: pointer;
                     padding-right: 5px;
-                    flex-shrink: 0;
                 }
             }
 
             button {
-                font-size: clamp(0.85rem, 3vw, 1rem);
+                font-size: 1rem;
                 display: flex;
-                margin-top: clamp(1rem, 4vw, 1.25rem);
+                margin-top: 20px;
                 background-color: variables.$color-accent;
                 color: white;
                 border: none;
-                padding: clamp(0.6rem, 2vw, 0.7rem) clamp(0.8rem, 3vw, 1rem);
+                padding: 9.5px 14px;
                 width: 100%;
                 border-radius: 8px;
                 font-weight: 700;
                 align-items: center;
                 justify-content: center;
-                gap: 0.5rem;
 
                 svg { 
-                    flex-shrink: 0;
+                    padding-right: 5px; 
                 }
             }
         }
@@ -127,35 +100,32 @@
     .signInHalf {
         background-color: variables.$color-accent;
         color: white;
-        padding: clamp(1rem, 5vw, 1.5rem);
+        padding: 20px;
 
         h3 { 
             margin-bottom: 5px; 
-            font-size: clamp(1rem, 4vw, 1.2rem);
         }
 
         p { 
-            line-height: 1.4;
-            font-size: clamp(0.8rem, 3vw, 0.9rem);
+            line-height: 20px; 
         }
 
         a {
-            font-size: clamp(0.85rem, 3vw, 1rem);
+            font-size: 1rem;
             display: flex;
-            margin-top: clamp(1rem, 4vw, 1.25rem);
+            margin-top: 20px;
             background-color: white;
             color: variables.$color-accent;
             border: none;
-            padding: clamp(0.5rem, 2vw, 0.6rem) clamp(0.8rem, 3vw, 1rem);
+            padding: 6px 14px;
             border-radius: 8px;
             font-weight: 700;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            gap: 0.5rem;
 
             svg { 
-                flex-shrink: 0;
+                padding-right: 5px; 
             }
         }
     }
@@ -163,26 +133,24 @@
     .registerHalf {
         background-color: variables.$color-accent;
         color: white;
-        padding: clamp(1rem, 5vw, 1.5rem);
+        padding: 20px;
         text-align: center;
 
         h3 { 
-            margin-bottom: clamp(1rem, 4vw, 1.25rem); 
-            font-size: clamp(1.2rem, 5vw, 1.5rem); 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
             color: white; 
         }
 
         a { 
             color: white; 
             cursor: pointer; 
-            display: inline-block; 
-            text-decoration: underline;
-            font-size: clamp(0.8rem, 3vw, 0.9rem);
-            margin-top: 0.5rem;
+            display: block; 
+            text-decoration: underline; 
         }
 
         form {
-            padding-bottom: clamp(1rem, 4vw, 1.25rem);
+            padding-bottom: 20px;
 
             .loginCredentials {
                 margin: 4px 0px;
@@ -192,13 +160,12 @@
 
                 input {
                     border: none;
-                    padding: clamp(0.5rem, 2vw, 0.6rem) clamp(0.3rem, 2vw, 0.5rem);
+                    padding: 8px 5px;
                     width: 100%;
                     color: white;
                     background: none;
-                    font-size: clamp(0.8rem, 3vw, 0.9rem);
 
-                    &:focus {
+                    &:focus{
                         outline: none;
                     }
 
@@ -207,30 +174,28 @@
                     }
                 }
 
-                svg {
+                svg{
                     cursor: pointer;
                     padding-right: 5px;
-                    flex-shrink: 0;
                 }
             }
 
             button {
-                font-size: clamp(0.85rem, 3vw, 1rem);
+                font-size: 1rem;
                 display: flex;
-                margin-top: clamp(1rem, 4vw, 1.25rem);
+                margin-top: 20px;
                 background-color: white;
                 color: variables.$color-accent;
                 border: none;
-                padding: clamp(0.6rem, 2vw, 0.7rem) clamp(0.8rem, 3vw, 1rem);
+                padding: 9.5px 14px;
                 width: 100%;
                 border-radius: 8px;
                 font-weight: 700;
                 align-items: center;
                 justify-content: center;
-                gap: 0.5rem;
 
                 svg { 
-                    flex-shrink: 0;
+                    padding-right: 5px; 
                 }
             }
         }
