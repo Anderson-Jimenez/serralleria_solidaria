@@ -180,7 +180,7 @@ function FeaturedProducts({ products, title }) {
                   </div>
 
                   <div className="small-info">
-                    <span className="small-cat">CATEGORIA</span>
+                    <span className="small-cat">{product.product_type === "pack" ? "Pack" : product.category.name}</span>
                     <h4 className="small-name">{product.name}</h4>
                     <p className="small-desc">{product.description}</p>
 

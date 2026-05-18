@@ -59,18 +59,21 @@ class ProductController extends Controller
                         ProductCharacteristic::create([
                             'product_id' => $product->id,
                             'characteristic_id' => null,
+                            'type_id' => $typeId,
                             'value' => $value
                         ]);
                     } elseif ($type->type === 'Duplicat de clau') {
                         ProductCharacteristic::create([
                             'product_id' => $product->id,
                             'characteristic_id' => $value,
+                            'type_id' => $typeId,
                             'value' => $extraValue
                         ]);
                     } else {
                         ProductCharacteristic::create([
                             'product_id' => $product->id,
                             'characteristic_id' => $value,
+                            'type_id' => $typeId,
                             'value' => null
                         ]);
                     }
@@ -152,27 +155,38 @@ class ProductController extends Controller
             $product->update($validated);
 
             if ($request->has('characteristics')) {
+                // Borrar todas las anteriores y reinsertarlas, igual que el store
+                ProductCharacteristic::where('product_id', $product->id)->delete();
+
                 foreach ($request->characteristics as $char) {
-                    $typeId = $char['type_id'];
-                    $value = $char['value'];
+                    $typeId     = $char['type_id'];
+                    $value      = $char['value'];
+                    $extraValue = $char['extra_value'] ?? null;
 
-                    $existingChar = ProductCharacteristic::where('product_id', $product->id)
-                        ->where('characteristic_id', $typeId)
-                        ->first();
+                    $type = CharacteristicType::find($typeId);
+                    if (!$type) continue;
 
-                    if ($value === '' || $value === null || $value === false) {
-                        if ($existingChar)
-                            $existingChar->delete();
+                    if ($type->type === 'Pes') {
+                        ProductCharacteristic::create([
+                            'product_id'        => $product->id,
+                            'characteristic_id' => null,
+                            'type_id'           => $typeId,
+                            'value'             => $value
+                        ]);
+                    } elseif ($type->type === 'Duplicat de clau') {
+                        ProductCharacteristic::create([
+                            'product_id'        => $product->id,
+                            'characteristic_id' => $value,
+                            'type_id'           => $typeId,
+                            'value'             => $extraValue
+                        ]);
                     } else {
-                        if ($existingChar) {
-                            $existingChar->update(['value' => $value]);
-                        } else {
-                            ProductCharacteristic::create([
-                                'product_id' => $product->id,
-                                'characteristic_id' => $typeId,
-                                'value' => $value
-                            ]);
-                        }
+                        ProductCharacteristic::create([
+                            'product_id'        => $product->id,
+                            'characteristic_id' => $value,
+                            'type_id'           => $typeId,
+                            'value'             => null
+                        ]);
                     }
                 }
             }
