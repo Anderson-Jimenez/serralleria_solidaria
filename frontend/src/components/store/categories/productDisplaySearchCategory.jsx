@@ -152,12 +152,11 @@ function ProductDisplaySearchCategory({ products, characteristics, title }) {
     }
 
     return (
-        // ♿ aria-label identifica la sección para lectores de pantalla
-        <section className='categoryProductDisplay' aria-label={`Catàleg de ${title}`}>
+        <section className='categoryProductDisplay' aria-labelledby="category-title">
             <div className="section-header">
                 <div className="title-group">
-                    <span className="subtitle">CATÀLEG</span>
-                    <h2 className="main-title">
+                    <span className="subtitle" id="category-subtitle">CATÀLEG</span>
+                    <h2 className="main-title" id="category-title">
                         Tots els<br />
                         <span>{title}</span>
                     </h2>
@@ -165,32 +164,29 @@ function ProductDisplaySearchCategory({ products, characteristics, title }) {
             </div>
 
             <div id='categoryProductDisplayAll'>
-                {/* ♿ role="search" marca semánticamente la zona de filtros + búsqueda */}
-                <div className='displayFilters' role="search" aria-label="Filtres de productes">
-                    {/* ♿ aria-level correcto: si h2 ya existe arriba, aquí usamos h3 visualmente igual */}
-                    <h3 aria-level="2">Filtres</h3>
-                    <div className="allFilters">
+                <div className='displayFilters' aria-label="Filtros de productos">
+                    <h2 id="filters-heading">Filtres</h2>
+                    <div className="allFilters" role="group" aria-labelledby="filters-heading">
                         <div className="uniqueCharacteristic">
-                            <h3>Preu</h3>
-                            <div className="rangeFilter">
-                                {/* ♿ labels visualmente ocultos pero presentes para lectores */}
-                                <label htmlFor="minPrice" className="sr-only">Preu mínim</label>
-                                <input
-                                    id="minPrice"
-                                    type="number"
-                                    placeholder="Mínim"
-                                    min="0"
+                            <h3 id="price-filter-label">Preu</h3>
+                            <div className="rangeFilter" role="group" aria-labelledby="price-filter-label">
+                                <label htmlFor="min-price-input" className="sr-only">Preu mínim</label>
+                                <input 
+                                    id="min-price-input"
+                                    type="number" 
+                                    placeholder="Mínim" 
+                                    min="0" 
                                     value={minPrice}
                                     aria-label="Preu mínim en euros"
                                     onChange={(e) => { setMinPrice(e.target.value); searchProductsInStore(savedText, savedFilters, dinamicFilters, e.target.value, maxPrice); }}
                                 />€
                                 <span className="rangeSeparator" aria-hidden="true">—</span>
-                                <label htmlFor="maxPrice" className="sr-only">Preu màxim</label>
-                                <input
-                                    id="maxPrice"
-                                    type="number"
-                                    placeholder="Màxim"
-                                    min="0"
+                                <label htmlFor="max-price-input" className="sr-only">Preu màxim</label>
+                                <input 
+                                    id="max-price-input"
+                                    type="number" 
+                                    placeholder="Màxim" 
+                                    min="0" 
                                     value={maxPrice}
                                     aria-label="Preu màxim en euros"
                                     onChange={(e) => { setMaxPrice(e.target.value); searchProductsInStore(savedText, savedFilters, dinamicFilters, minPrice, e.target.value); }}
@@ -198,50 +194,67 @@ function ProductDisplaySearchCategory({ products, characteristics, title }) {
                             </div>
                         </div>
 
-                        {/* ♿ role="group" + aria-labelledby agrupa checkboxes semánticamente */}
                         <div className="uniqueCharacteristic">
-                            <h3 id="label-tipus">Tipus</h3>
-                            <div className='checkboxFilter' role="group" aria-labelledby="label-tipus">
+                            <h3 id="type-filter-label">Tipus</h3>
+                            <div className='checkboxFilter' role="group" aria-labelledby="type-filter-label">
                                 <div>
-                                    <input className='checkmark' type="checkbox" id="simple" value="simple"
+                                    <input 
+                                        className='checkmark' 
+                                        type="checkbox" 
+                                        id="simple" 
+                                        value="simple"
                                         checked={productTypes.includes("simple")}
-                                        onChange={handleProductTypeChange} />
+                                        onChange={handleProductTypeChange}
+                                        aria-label="Filtrar per productes simples" />
                                     <label className='checkmarkLabel' htmlFor="simple">Producte</label>
                                 </div>
                                 <div>
-                                    <input className='checkmark' type="checkbox" id="pack" value="pack"
+                                    <input 
+                                        className='checkmark' 
+                                        type="checkbox" 
+                                        id="pack" 
+                                        value="pack"
                                         checked={productTypes.includes("pack")}
-                                        onChange={handleProductTypeChange} />
+                                        onChange={handleProductTypeChange}
+                                        aria-label="Filtrar per packs" />
                                     <label className='checkmarkLabel' htmlFor="pack">Pack</label>
                                 </div>
                             </div>
                         </div>
 
-                        {characteristics.map((characteristic) => (
+                        {characteristics.map((characteristic, index) => (
                             <div className="uniqueCharacteristic" key={characteristic.id}>
-                                <h3 id={`label-char-${characteristic.id}`}>{characteristic.type}</h3>
+                                <h3 id={`char-label-${characteristic.id}`}>{characteristic.type}</h3>
 
                                 {characteristic.filterType === 'checkbox' ? (
-                                    <div className='checkboxFilter' role="group" aria-labelledby={`label-char-${characteristic.id}`}>
+                                    <div className='checkboxFilter' role="group" aria-labelledby={`char-label-${characteristic.id}`}>
                                         {characteristic.characteristics?.map((char) => (
                                             <div key={char.id}>
-                                                <input className='checkmark' type="checkbox" id={`check-${char.id}`} value={`${char.id}`} onChange={saveFilter} />
+                                                <input 
+                                                    className='checkmark' 
+                                                    type="checkbox" 
+                                                    id={`check-${char.id}`} 
+                                                    value={`${char.id}`} 
+                                                    onChange={saveFilter}
+                                                    aria-label={`Filtrar per ${char.description}`} />
                                                 <label className='checkmarkLabel' htmlFor={`check-${char.id}`}>{char.description}</label>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
-                                    // ♿ aria-labelledby conecta el select con su h3
-                                    <select
-                                        name={characteristic.id}
-                                        aria-labelledby={`label-char-${characteristic.id}`}
-                                        onChange={handleSelectChange}
-                                    >
-                                        <option value="">Selecciona...</option>
-                                        {(characteristic.characteristics || characteristic.characteristic)?.map((char) => (
-                                            <option value={`${char.id}`} key={char.id}>{char.description}</option>
-                                        ))}
-                                    </select>
+                                    <>
+                                        <label htmlFor={`select-${characteristic.id}`} className="sr-only">{characteristic.type}</label>
+                                        <select 
+                                            id={`select-${characteristic.id}`}
+                                            name={characteristic.id} 
+                                            onChange={handleSelectChange}
+                                            aria-label={`Seleccionar ${characteristic.type}`}>
+                                            <option value="">Selecciona...</option>
+                                            {(characteristic.characteristics || characteristic.characteristic)?.map((char) => (
+                                                <option value={`${char.id}`} key={char.id}>{char.description}</option>
+                                            ))}
+                                        </select>
+                                    </>
                                 )}
                             </div>
                         ))}
@@ -249,23 +262,17 @@ function ProductDisplaySearchCategory({ products, characteristics, title }) {
                 </div>
 
                 <div className='searchDisplay'>
-                    {/* ♿ label visible (sr-only) para el input de búsqueda */}
-                    <label htmlFor="searchInput" className="sr-only">Buscar {title}</label>
+                    <label htmlFor="search-input" className="sr-only">Buscar {title}</label>
                     <input
-                        id="searchInput"
-                        type="search"
+                        id="search-input"
+                        type="text"
                         placeholder={`Buscar ${title}...`}
                         aria-label={`Buscar ${title}`}
                         onChange={(e) => setSavedText(e.target.value)}
                         onKeyUp={(e) => searchProductsInStore(e.target.value, savedFilters, dinamicFilters, minPrice, maxPrice)}
                     />
 
-                    {/* ♿ aria-live anuncia cambios en la lista a lectores de pantalla */}
-                    <div
-                        className='searchDisplayResult'
-                        aria-live="polite"
-                        aria-label={`Resultats: ${productsFiltrats.length} productes`}
-                    >
+                    <div className='searchDisplayResult' role="region" aria-label={`Productes de ${title}`}>
                         {productsFiltrats.map((product) => {
                             const estaAñadido = añadidos.has(product.id);
                             const estaSinStock = sinStock.has(product.id) || product.stock === 0;
@@ -273,34 +280,34 @@ function ProductDisplaySearchCategory({ products, characteristics, title }) {
                             const finalPrice = getFinalPrice(product);
 
                             return (
-                                // ♿ role="article" + tabIndex + onKeyDown permiten navegación por teclado
-                                <div
-                                    className="card"
-                                    key={product.id}
+                                <div 
+                                    className="card" 
+                                    key={product.id} 
                                     onClick={() => handleProductClick(product.id)}
-                                    role="article"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            handleProductClick(product.id);
+                                        }
+                                    }}
+                                    role="button"
                                     tabIndex={0}
-                                    aria-label={`Producte: ${product.name}`}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleProductClick(product.id)}
+                                    aria-label={`Veure detalls de ${product.name}, preu ${finalPrice} euros`}
                                 >
                                     {discountActive ? (
-                                        // ♿ aria-label describe el badge en vez de solo mostrarlo visualmente
-                                        <span className="badge-discount" aria-label={`Descompte del ${product.discount_percentage}%`}>
-                                            -{product.discount_percentage}% DTO
-                                        </span>
+                                        <span className="badge-discount" aria-label={`Descompte del ${product.discount_percentage} per cent`}>-{product.discount_percentage}% DTO</span>
                                     ) : product.is_new ? (
                                         <span className="badge-new" aria-label="Producte nou">Nou</span>
                                     ) : null}
 
-                                    {/* ♿ aria-hidden en el contenedor de imagen porque el alt del img ya lo describe */}
-                                    <div className="imageContainer" aria-hidden="true">
+                                    <div className="imageContainer">
                                         {product.primary_image ? (
-                                            <img
-                                                src={`http://localhost:8000/storage/${product.primary_image.path}`}
-                                                alt={product.name}
+                                            <img 
+                                                src={`http://localhost:8000/storage/${product.primary_image.path}`} 
+                                                alt={product.name} 
                                             />
                                         ) : (
-                                            <div className="noImage" aria-hidden="true">No Image</div>
+                                            <div className="noImage" aria-label="No hi ha imatge disponible">No Image</div>
                                         )}
                                     </div>
 
@@ -311,29 +318,17 @@ function ProductDisplaySearchCategory({ products, characteristics, title }) {
 
                                         <div className="bottom">
                                             <div className="priceGroup">
-                                                {/* ♿ aria-label en precios para que el lector diga "12,50 euros" */}
-                                                <span className="currentPrice" aria-label={`Preu: ${finalPrice} euros`}>
-                                                    {finalPrice}€
-                                                </span>
+                                                <span className="currentPrice" aria-label={`Preu final: ${finalPrice} euros`}>{finalPrice}€</span>
                                                 {discountActive && (
-                                                    <span className="oldPrice" aria-label={`Preu original: ${parseFloat(product.price).toFixed(2)} euros`}>
-                                                        {parseFloat(product.price).toFixed(2)}€
-                                                    </span>
+                                                    <span className="oldPrice" aria-label={`Preu original: ${parseFloat(product.price).toFixed(2)} euros`}>{parseFloat(product.price).toFixed(2)}€</span>
                                                 )}
                                             </div>
 
-                                            {/* ♿ aria-label describe la acción, aria-disabled refleja estado */}
                                             <button
                                                 className={`cartBtn ${estaAñadido ? 'added' : ''} ${estaSinStock ? 'no-stock' : ''}`}
                                                 onClick={(e) => handleAddToCart(e, product)}
                                                 disabled={estaSinStock}
-                                                aria-label={
-                                                    estaSinStock
-                                                        ? `${product.name} - Sense estoc`
-                                                        : estaAñadido
-                                                        ? `${product.name} afegit al carret`
-                                                        : `Afegir ${product.name} al carret`
-                                                }
+                                                aria-label={estaSinStock ? `${product.name}, no disponible` : `Afegir ${product.name} al carretó`}
                                                 aria-disabled={estaSinStock}
                                             >
                                                 <ShoppingCart size={18} color="white" aria-hidden="true" />

@@ -133,7 +133,17 @@ $color-bg-base: #3d3a37;
     padding: clamp(1rem, 3vw, 1.5rem) clamp(0.75rem, 2.5vw, 1.25rem);
     background: #fff;
     height: fit-content;
-
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
     @media (min-width: 768px) {
       width: 280px;
     }
