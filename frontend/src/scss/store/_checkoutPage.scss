@@ -6,7 +6,6 @@
   border-radius: clamp(1rem, 4vw, 1.5rem);
   padding: clamp(1.2rem, 4vw, 2rem);
   box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.05);
-  border: 0.0625rem solid rgba(0, 0, 0, 0.04);
 }
 
 @mixin btn-base {
@@ -27,7 +26,6 @@
 
   &:hover:not(:disabled) {
     transform: translateY(-0.1rem);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -53,11 +51,11 @@
     gap: clamp(1rem, 3vw, 2rem);
     align-items: start;
 
-    &>.checkout-form {
+    & > .checkout-form {
       flex: 2 1 300px;
     }
 
-    &>.order-summary {
+    & > .order-summary {
       flex: 1 1 260px;
     }
   }
@@ -83,16 +81,8 @@
         width: 100%;
         padding: clamp(0.7rem, 2vw, 0.85rem) clamp(0.8rem, 2vw, 1rem);
         border-radius: 0.8rem;
-        border: 0.0625rem solid #e2e2e2;
-        background: #fefefe;
         font-size: clamp(0.8rem, 2vw, 0.9rem);
         transition: 0.2s ease;
-
-        &:focus {
-          outline: none;
-          border-color: variables.$color-accent;
-          box-shadow: 0 0 0 3px rgba(variables.$color-accent, 0.1);
-        }
       }
 
       textarea {
@@ -112,7 +102,6 @@
         width: 1.2rem;
         height: 1.2rem;
         cursor: pointer;
-        accent-color: variables.$color-accent;
         flex-shrink: 0;
       }
 
@@ -129,30 +118,24 @@
     .installation-cost {
       display: inline-block;
       padding: 0.5rem 1rem;
-      background: #eef6ee;
       border-radius: 0.8rem;
       font-size: clamp(0.8rem, 2.5vw, 0.9rem);
       font-weight: 600;
-      color: #2b6e2b;
     }
 
     .installation-warning {
       display: block;
       margin-top: 0.5rem;
       padding: 0.6rem 1rem;
-      background: #fff3e0;
       border-radius: 0.8rem;
       font-size: clamp(0.75rem, 2.5vw, 0.85rem);
       font-weight: 600;
-      color: #d97a00;
-      border-left: 3px solid #d97a00;
     }
 
     .paymentFormButton {
       @include btn-base;
       background: variables.$color-accent;
       color: white;
-      border: none;
 
       &:hover:not(:disabled) {
         background: #ff4b1a;
@@ -163,7 +146,6 @@
       @include btn-base;
       background: none;
       color: #5b5653;
-      border: 2px solid #5b5653;
     }
   }
 
@@ -172,6 +154,13 @@
     display: flex;
     align-items: flex-start;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
 
     &-step {
       display: flex;
@@ -179,6 +168,12 @@
       align-items: center;
       position: relative;
       flex: 1;
+
+      @media (max-width: 480px) {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 0.75rem;
+      }
 
       &.active,
       &.completed {
@@ -199,8 +194,8 @@
     }
 
     &-circle {
-      width: 36px;
-      height: 36px;
+      width: clamp(32px, 8vw, 36px);
+      height: clamp(32px, 8vw, 36px);
       border-radius: 50%;
       background: #e0e0e0;
       color: #888;
@@ -208,16 +203,21 @@
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
       z-index: 1;
       transition: all 0.3s ease;
     }
 
     &-label {
-      font-size: 0.75rem;
+      font-size: clamp(0.65rem, 2.5vw, 0.75rem);
       margin-top: 6px;
       color: #888;
       text-align: center;
+
+      @media (max-width: 480px) {
+        margin-top: 0;
+        text-align: left;
+      }
     }
 
     &-line {
@@ -228,6 +228,10 @@
       height: 2px;
       background: #e0e0e0;
       z-index: 0;
+
+      @media (max-width: 480px) {
+        display: none;
+      }
     }
   }
 
@@ -236,6 +240,16 @@
     justify-content: space-between;
     gap: 1rem;
     margin-top: 1.5rem;
+    flex-wrap: wrap;
+
+    button {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+    }
   }
 
   // ─── Resum ──────────────────────────────────────────────
@@ -244,6 +258,10 @@
     position: sticky;
     top: clamp(5rem, 8vh, 7rem);
     align-self: flex-start;
+
+    @media (max-width: 768px) {
+      position: static;
+    }
 
     h2 {
       font-size: clamp(1.3rem, 5vw, 1.75rem);
@@ -256,7 +274,8 @@
       list-style: none;
       margin: 0 0 1.5rem;
       padding: 0;
-      border-bottom: 0.0625rem solid #ececec;
+      max-height: 300px;
+      overflow-y: auto;
 
       li {
         display: flex;
@@ -264,9 +283,17 @@
         font-size: clamp(0.8rem, 2.5vw, 0.9rem);
         padding: 0.6rem 0;
         color: #3a3a3a;
+        gap: 0.5rem;
+        flex-wrap: wrap;
 
-        &:not(:last-child) {
-          border-bottom: 0.0625rem dashed #f0f0f0;
+        span:first-child {
+          font-weight: 500;
+          flex: 1;
+        }
+
+        span:last-child {
+          font-weight: 600;
+          white-space: nowrap;
         }
       }
     }
@@ -277,6 +304,8 @@
       margin: 0.75rem 0;
       font-size: clamp(0.85rem, 2.5vw, 0.95rem);
       color: #2c2c2c;
+      gap: 0.5rem;
+      flex-wrap: wrap;
 
       strong {
         font-weight: 800;
@@ -286,16 +315,12 @@
 
     hr {
       margin: 1rem 0;
-      border: none;
-      height: 0.0625rem;
-      background: #ececec;
     }
 
     .total-row {
       margin-top: 1rem;
       font-size: clamp(1rem, 4vw, 1.2rem);
       font-weight: 900;
-      border-top: 0.125rem solid #eaeaea;
       padding-top: 1rem;
     }
   }

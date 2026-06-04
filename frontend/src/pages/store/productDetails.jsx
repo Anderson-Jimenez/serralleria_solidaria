@@ -83,7 +83,6 @@ function ProductDetails() {
         refreshCart();
       }
 
-      // 🔥 Disparar evento por si otros componentes lo escuchan
       window.dispatchEvent(new Event('cart-updated'));
 
       // Feedback visual
@@ -185,7 +184,10 @@ function ProductDetails() {
               <ul>
                 {product.characteristics.map((char, index) => (
                   <li key={index}>
-                    <strong>{char.name}:</strong> {char.value}
+                    <strong>
+                      {char.characteristic?.type?.type ?? char.characteristic?.name ?? 'N/A'}:
+                    </strong>{' '}
+                    {char.description ?? char.characteristic?.description ?? '—'}
                   </li>
                 ))}
               </ul>

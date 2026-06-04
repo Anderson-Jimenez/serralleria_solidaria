@@ -42,7 +42,7 @@
     .dropdown {
       position: relative;
       padding-bottom: 10px; // Margen para no perder el hover
-      margin-bottom: -10px;
+      margin-bottom: -10px;      
 
       &:hover .dropdown-menu {
         opacity: 1;
