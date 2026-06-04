@@ -41,14 +41,12 @@ function CustomSolutionPetitions() {
   return (
     <div className="dashboard-caracteristics">
       <h1 className="dashboard-title">Peticions de Solucions Personalitzades</h1>
-      {/* ♿ h3 sense h2 previ salta nivell de heading — canviat a h2 */}
       <h2 className="dashboard-subtitle">Administra totes les peticions</h2>
 
       <div className="caracteristics-content">
         <div className="table-container">
 
           <div className="tableFilters">
-            {/* ♿ select sense label associat */}
             <label htmlFor="statusFilter" className="sr-only">Filtrar per estat</label>
             <select
               id="statusFilter"
@@ -66,14 +64,9 @@ function CustomSolutionPetitions() {
             </select>
           </div>
 
-          {/* ♿ caption descriu la taula per a lectores de pantalla */}
-          {/* ♿ aria-live anuncia canvis quan es filtra */}
+
           <table aria-label="Llistat de peticions de solucions personalitzades">
-            <caption className="sr-only">
-              Peticions de solucions personalitzades — {filteredData.length} resultats
-            </caption>
             <thead>
-              {/* ♿ scope="col" identifica les columnes per a lectores de pantalla */}
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Usuari</th>

@@ -152,74 +152,249 @@ function ProductsCreate() {
     };
 
     return (
-        <div className="dashboard-content">
+        <div className="dashboard-content" role="main" aria-label="Crear nou producte">
             {alert.show && (
-                <div className={`alert-toast ${alert.type}`}>
-                    {alert.type === "success" ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+                <div 
+                    className={`alert-toast ${alert.type}`} 
+                    role="alert"
+                    aria-live="polite"
+                >
+                    {alert.type === "success" ? <CheckCircle size={18} aria-hidden="true" /> : <AlertCircle size={18} aria-hidden="true" />}
                     <p>{alert.message}</p>
-                    <X size={16} className="close-alert" onClick={() => setAlert({ ...alert, show: false })} />
+                    <X 
+                        size={16} 
+                        className="close-alert" 
+                        onClick={() => setAlert({ ...alert, show: false })}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Tancar alerta"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                setAlert({ ...alert, show: false });
+                            }
+                        }}
+                    />
                 </div>
             )}
 
             <div className="space-between mb-10">
-                <h1 className="dashboard-title">Crear nou producte</h1>
-                <button type="button" className="action-icon" onClick={() => navigate("/admin/products")}>
-                    <ArrowLeft size={18} /> Tornar
+                <h1 className="dashboard-title" id="create-product-title">Crear nou producte</h1>
+                <button 
+                    type="button" 
+                    className="action-icon" 
+                    onClick={() => navigate("/admin/products")}
+                    aria-label="Tornar a la llista de productes"
+                >
+                    <ArrowLeft size={18} aria-hidden="true" /> Tornar
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="product-data-box">
+            <form onSubmit={handleSubmit} className="product-data-box" aria-labelledby="create-product-title">
                 <div className="data-box-header">
                     <div className="title-section">
                         <h2>Dades del producte</h2>
-                        <select disabled><option>Producte simple</option></select>
+                        <select disabled aria-label="Tipus de producte (fix)">
+                            <option>Producte simple</option>
+                        </select>
                     </div>
                 </div>
 
                 <div className="data-box-body">
-                    <nav className="data-sidebar">
-                        <ul>
-                            <li className={activeTab === "general" ? "active" : ""} onClick={() => setActiveTab("general")}><Info size={18} /> <span>General</span></li>
-                            <li className={activeTab === "inventario" ? "active" : ""} onClick={() => setActiveTab("inventario")}><Box size={18} /> <span>Inventari</span></li>
-                            <li className={activeTab === "avanzado" ? "active" : ""} onClick={() => setActiveTab("avanzado")}><Settings size={18} /> <span>Avançat</span></li>
-                            <li className={activeTab === "caracteristics" ? "active" : ""} onClick={() => setActiveTab("caracteristics")}><LayoutList size={18} /> <span>Característiques</span></li>
-                            <li className={activeTab === "imagenes" ? "active" : ""} onClick={() => setActiveTab("imagenes")}><ImageIcon size={18} /> <span>Imatges</span></li>
+                    <nav className="data-sidebar" aria-label="Seccions del formulari">
+                        <ul role="tablist" aria-label="Pestanyes de formulari">
+                            <li 
+                                className={activeTab === "general" ? "active" : ""} 
+                                onClick={() => setActiveTab("general")}
+                                role="tab"
+                                tabIndex={activeTab === "general" ? 0 : -1}
+                                aria-selected={activeTab === "general"}
+                                aria-controls="general-panel"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        setActiveTab("general");
+                                    }
+                                }}
+                            ><Info size={18} aria-hidden="true" /> <span>General</span></li>
+                            <li 
+                                className={activeTab === "inventario" ? "active" : ""} 
+                                onClick={() => setActiveTab("inventario")}
+                                role="tab"
+                                tabIndex={activeTab === "inventario" ? 0 : -1}
+                                aria-selected={activeTab === "inventario"}
+                                aria-controls="inventario-panel"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        setActiveTab("inventario");
+                                    }
+                                }}
+                            ><Box size={18} aria-hidden="true" /> <span>Inventari</span></li>
+                            <li 
+                                className={activeTab === "avanzado" ? "active" : ""} 
+                                onClick={() => setActiveTab("avanzado")}
+                                role="tab"
+                                tabIndex={activeTab === "avanzado" ? 0 : -1}
+                                aria-selected={activeTab === "avanzado"}
+                                aria-controls="avanzado-panel"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        setActiveTab("avanzado");
+                                    }
+                                }}
+                            ><Settings size={18} aria-hidden="true" /> <span>Avançat</span></li>
+                            <li 
+                                className={activeTab === "caracteristics" ? "active" : ""} 
+                                onClick={() => setActiveTab("caracteristics")}
+                                role="tab"
+                                tabIndex={activeTab === "caracteristics" ? 0 : -1}
+                                aria-selected={activeTab === "caracteristics"}
+                                aria-controls="caracteristics-panel"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        setActiveTab("caracteristics");
+                                    }
+                                }}
+                            ><LayoutList size={18} aria-hidden="true" /> <span>Característiques</span></li>
+                            <li 
+                                className={activeTab === "imagenes" ? "active" : ""} 
+                                onClick={() => setActiveTab("imagenes")}
+                                role="tab"
+                                tabIndex={activeTab === "imagenes" ? 0 : -1}
+                                aria-selected={activeTab === "imagenes"}
+                                aria-controls="imagenes-panel"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        setActiveTab("imagenes");
+                                    }
+                                }}
+                            ><ImageIcon size={18} aria-hidden="true" /> <span>Imatges</span></li>
                         </ul>
                     </nav>
 
                     <div className="data-content flex">
                         {activeTab === "general" && (
-                            <section className="tab-panel">
-                                <div className="form-group"><label>Nom</label><input value={name} onChange={e => setName(e.target.value)} /></div>
-                                <div className="form-group"><label>Preu (€)</label><input type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
-                                <div className="form-group"><label>Descompte (%)</label><input type="number" min="0" max="100" value={discountPercentage} onChange={e => setDiscountPercentage(e.target.value)} /></div>
-                                <div className="form-group"><label>Inici descompte</label><input type="datetime-local" value={discountStartsAt} onChange={e => setDiscountStartsAt(e.target.value)} /></div>
-                                <div className="form-group"><label>Fi descompte</label><input type="datetime-local" value={discountEndsAt} onChange={e => setDiscountEndsAt(e.target.value)} /></div>
-                                <div className="form-group"><label>Descripció</label><textarea value={description} onChange={e => setDescription(e.target.value)} /></div>
+                            <section 
+                                className="tab-panel" 
+                                id="general-panel"
+                                role="tabpanel"
+                                aria-labelledby="general-tab"
+                            >
+                                <div className="form-group">
+                                    <label htmlFor="product-name">Nom</label>
+                                    <input 
+                                        id="product-name"
+                                        value={name} 
+                                        onChange={e => setName(e.target.value)} 
+                                        aria-required="true"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="product-price">Preu (€)</label>
+                                    <input 
+                                        id="product-price"
+                                        type="number" 
+                                        value={price} 
+                                        onChange={e => setPrice(e.target.value)}
+                                        aria-required="true"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="product-discount">Descompte (%)</label>
+                                    <input 
+                                        id="product-discount"
+                                        type="number" 
+                                        min="0" 
+                                        max="100" 
+                                        value={discountPercentage} 
+                                        onChange={e => setDiscountPercentage(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="discount-start">Inici descompte</label>
+                                    <input 
+                                        id="discount-start"
+                                        type="datetime-local" 
+                                        value={discountStartsAt} 
+                                        onChange={e => setDiscountStartsAt(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="discount-end">Fi descompte</label>
+                                    <input 
+                                        id="discount-end"
+                                        type="datetime-local" 
+                                        value={discountEndsAt} 
+                                        onChange={e => setDiscountEndsAt(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="product-description">Descripció</label>
+                                    <textarea 
+                                        id="product-description"
+                                        value={description} 
+                                        onChange={e => setDescription(e.target.value)} 
+                                    />
+                                </div>
                             </section>
                         )}
 
                         {activeTab === "inventario" && (
-                            <section className="tab-panel">
-                                <div className="form-group"><label>Codi</label><input value={code} onChange={e => setCode(e.target.value)} /></div>
-                                <div className="form-group"><label>Stock</label><input type="number" value={stock} onChange={e => setStock(e.target.value)} /></div>
-                                <div className="form-group"><label>Mida interior</label><input value={intSize} onChange={e => setIntSize(e.target.value)} /></div>
-                                <div className="form-group"><label>Mida exterior</label><input value={extSize} onChange={e => setExtSize(e.target.value)} /></div>
+                            <section 
+                                className="tab-panel" 
+                                id="inventario-panel"
+                                role="tabpanel"
+                                aria-labelledby="inventario-tab"
+                            >
+                                <div className="form-group">
+                                    <label htmlFor="product-code">Codi</label>
+                                    <input id="product-code" value={code} onChange={e => setCode(e.target.value)} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="product-stock">Stock</label>
+                                    <input 
+                                        id="product-stock"
+                                        type="number" 
+                                        value={stock} 
+                                        onChange={e => setStock(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="int-size">Mida interior</label>
+                                    <input id="int-size" value={intSize} onChange={e => setIntSize(e.target.value)} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="ext-size">Mida exterior</label>
+                                    <input id="ext-size" value={extSize} onChange={e => setExtSize(e.target.value)} />
+                                </div>
                             </section>
                         )}
 
                         {activeTab === "avanzado" && (
-                            <section className="tab-panel">
+                            <section 
+                                className="tab-panel" 
+                                id="avanzado-panel"
+                                role="tabpanel"
+                                aria-labelledby="avanzado-tab"
+                            >
                                 <div className="form-group">
-                                    <label>Categoria</label>
-                                    <select value={categoryId} onChange={e => setCategoryId(e.target.value)} required>
+                                    <label htmlFor="product-category">Categoria</label>
+                                    <select 
+                                        id="product-category"
+                                        value={categoryId} 
+                                        onChange={e => setCategoryId(e.target.value)} 
+                                        required
+                                        aria-required="true"
+                                    >
                                         <option value="">Sense categoria</option>
                                         {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                                     </select>
                                 </div>
                                 <div className="form-group">
-                                    <label>Destacat</label>
-                                    <select value={highlighted} onChange={e => setHighlighted(e.target.value)}>
+                                    <label htmlFor="product-highlighted">Destacat</label>
+                                    <select 
+                                        id="product-highlighted"
+                                        value={highlighted} 
+                                        onChange={e => setHighlighted(e.target.value)}
+                                    >
                                         <option value="0">No</option>
                                         <option value="1">Sí</option>
                                     </select>
@@ -228,7 +403,12 @@ function ProductsCreate() {
                         )}
 
                         {activeTab === "caracteristics" && (
-                            <section className="tab-panel">
+                            <section 
+                                className="tab-panel" 
+                                id="caracteristics-panel"
+                                role="tabpanel"
+                                aria-labelledby="caracteristics-tab"
+                            >
                                 <div className="panel-header">
                                     <h3>Atributs i Característiques</h3>
                                     <p>Configura els detalls tècnics d'aquest producte.</p>
@@ -236,36 +416,62 @@ function ProductsCreate() {
                                 <div className="characteristics-grid">
                                     {types.map(type => (
                                         <div key={type.id} className="char-item">
-                                            <label className="char-label">{type.type}</label>
-                                            <div className="char-field-wrapper">
+                                            <label className="char-label" id={`char-label-${type.id}`}>{type.type}</label>
+                                            <div className="char-field-wrapper" aria-labelledby={`char-label-${type.id}`}>
                                                 {type.type === "Doble Embrague" && (
                                                     <label className="checkbox-label">
-                                                        <input type="checkbox" checked={selectedCharacteristics[type.id] || false} onChange={(e) => handleCharacteristicChange(type.id, e.target.checked)} />
-                                                        <span>Incloure doble embragatge</span>
+                                                        <input 
+                                                            type="checkbox" 
+                                                            checked={selectedCharacteristics[type.id] || false} 
+                                                            onChange={(e) => handleCharacteristicChange(type.id, e.target.checked)}
+                                                            aria-describedby={`char-desc-${type.id}`}
+                                                        />
+                                                        <span id={`char-desc-${type.id}`}>Incloure doble embragatge</span>
                                                     </label>
                                                 )}
                                                 {type.type === "Pes" && (
                                                     <div className="input-with-unit">
-                                                        <input type="number" placeholder="0" value={selectedCharacteristics[type.id] || ""} onChange={(e) => handleCharacteristicChange(type.id, e.target.value)} />
-                                                        <span className="unit-tag">Kg</span>
+                                                        <input 
+                                                            type="number" 
+                                                            placeholder="0" 
+                                                            value={selectedCharacteristics[type.id] || ""} 
+                                                            onChange={(e) => handleCharacteristicChange(type.id, e.target.value)}
+                                                            aria-label={`Pes en quilograms per a ${type.type}`}
+                                                        />
+                                                        <span className="unit-tag" aria-hidden="true">Kg</span>
                                                     </div>
                                                 )}
                                                 {type.type === "Duplicat de clau" && (
                                                     <div className="extra-group">
                                                         <label className="checkbox-label">
-                                                            <input type="checkbox" checked={extraValues[type.id]?.enabled || false} onChange={(e) => handleExtraValueChange(type.id, "enabled", e.target.checked)} />
+                                                            <input 
+                                                                type="checkbox" 
+                                                                checked={extraValues[type.id]?.enabled || false} 
+                                                                onChange={(e) => handleExtraValueChange(type.id, "enabled", e.target.checked)}
+                                                            />
                                                             <span>Permet duplicat de clau</span>
                                                         </label>
                                                         {extraValues[type.id]?.enabled && (
                                                             <div className="input-with-unit mt-10">
-                                                                <input type="number" placeholder="Preu per còpia" value={extraValues[type.id]?.price || ""} onChange={(e) => handleExtraValueChange(type.id, "price", e.target.value)} />
-                                                                <span className="unit-tag">€</span>
+                                                                <input 
+                                                                    type="number" 
+                                                                    placeholder="Preu per còpia" 
+                                                                    value={extraValues[type.id]?.price || ""} 
+                                                                    onChange={(e) => handleExtraValueChange(type.id, "price", e.target.value)}
+                                                                    aria-label="Preu per còpia de clau en euros"
+                                                                />
+                                                                <span className="unit-tag" aria-hidden="true">€</span>
                                                             </div>
                                                         )}
                                                     </div>
                                                 )}
                                                 {type.type !== "Doble Embrague" && type.type !== "Pes" && type.type !== "Duplicat de clau" && (
-                                                    <select className="full-select" value={selectedCharacteristics[type.id] || ""} onChange={(e) => handleCharacteristicChange(type.id, e.target.value)}>
+                                                    <select 
+                                                        className="full-select" 
+                                                        value={selectedCharacteristics[type.id] || ""} 
+                                                        onChange={(e) => handleCharacteristicChange(type.id, e.target.value)}
+                                                        aria-label={`Seleccionar ${type.type}`}
+                                                    >
                                                         <option value="">Selecciona...</option>
                                                         {type.characteristics?.map(char => <option key={char.id} value={char.id}>{char.description}</option>)}
                                                     </select>
@@ -278,32 +484,68 @@ function ProductsCreate() {
                         )}
 
                         {activeTab === "imagenes" && (
-                            <section className="tab-panel">
+                            <section 
+                                className="tab-panel" 
+                                id="imagenes-panel"
+                                role="tabpanel"
+                                aria-labelledby="imagenes-tab"
+                            >
                                 <div className="panel-header">
                                     <h3>Galeria de fotos</h3>
                                     <p>Puja les imatges i selecciona la principal amb la estrella.</p>
                                 </div>
                                 <div className="images-layout">
                                     <div className="upload-container">
-                                        <label className={`drag-zone ${isDragging ? 'dragging' : ''}`}
+                                        <label 
+                                            className={`drag-zone ${isDragging ? 'dragging' : ''}`}
                                             onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
                                             onDragLeave={() => setIsDragging(false)}
-                                            onDrop={e => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}>
-                                            <input type="file" multiple accept="image/*" onChange={e => handleFiles(e.target.files)} hidden />
-                                            <div className="upload-info"><Upload size={24} /> <span>Pujar o arrossegar</span></div>
+                                            onDrop={e => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}
+                                            aria-label="Arrossega imatges o fes clic per seleccionar"
+                                        >
+                                            <input 
+                                                type="file" 
+                                                multiple 
+                                                accept="image/*" 
+                                                onChange={e => handleFiles(e.target.files)} 
+                                                hidden 
+                                            />
+                                            <div className="upload-info" aria-hidden="true">
+                                                <Upload size={24} /> <span>Pujar o arrossegar</span>
+                                            </div>
                                         </label>
                                     </div>
-                                    <div className="previews-grid">
+                                    <div className="previews-grid" role="list" aria-label="Vista prèvia d'imatges">
                                         {previews.map((url, index) => (
-                                            <div key={index} className={`preview-item ${primaryImageIndex === index ? 'is-primary' : ''}`}>
-                                                <img src={url} alt="" onClick={() => setPrimaryImageIndex(index)} />
+                                            <div 
+                                                key={index} 
+                                                className={`preview-item ${primaryImageIndex === index ? 'is-primary' : ''}`}
+                                                role="listitem"
+                                            >
+                                                <img 
+                                                    src={url} 
+                                                    alt={`Vista prèvia de la imatge ${index + 1}`} 
+                                                    onClick={() => setPrimaryImageIndex(index)}
+                                                />
                                                 <div className="preview-actions">
-                                                    <button type="button" className={`star-btn ${primaryImageIndex === index ? 'active' : ''}`} onClick={() => setPrimaryImageIndex(index)}>
-                                                        <Star size={14} fill={primaryImageIndex === index ? "currentColor" : "none"} />
+                                                    <button 
+                                                        type="button" 
+                                                        className={`star-btn ${primaryImageIndex === index ? 'active' : ''}`} 
+                                                        onClick={() => setPrimaryImageIndex(index)}
+                                                        aria-label={primaryImageIndex === index ? "Imatge principal actual" : "Marcar com a imatge principal"}
+                                                    >
+                                                        <Star size={14} fill={primaryImageIndex === index ? "currentColor" : "none"} aria-hidden="true" />
                                                     </button>
-                                                    <button type="button" className="remove-btn" onClick={() => removeImage(index)}><X size={14} /></button>
+                                                    <button 
+                                                        type="button" 
+                                                        className="remove-btn" 
+                                                        onClick={() => removeImage(index)}
+                                                        aria-label={`Eliminar imatge ${index + 1}`}
+                                                    >
+                                                        <X size={14} aria-hidden="true" />
+                                                    </button>
                                                 </div>
-                                                {primaryImageIndex === index && <div className="primary-label">Principal</div>}
+                                                {primaryImageIndex === index && <div className="primary-label" aria-label="Imatge principal">Principal</div>}
                                             </div>
                                         ))}
                                     </div>
@@ -314,8 +556,8 @@ function ProductsCreate() {
                 </div>
 
                 <div className="data-box-footer">
-                    <button type="submit" className="save-button">
-                        <Save size={18} /> Guardar producte
+                    <button type="submit" className="save-button" aria-label="Guardar producte">
+                        <Save size={18} aria-hidden="true" /> Guardar producte
                     </button>
                 </div>
             </form>

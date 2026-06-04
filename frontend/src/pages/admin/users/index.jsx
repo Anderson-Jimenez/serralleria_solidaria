@@ -61,10 +61,6 @@ function Users() {
           <div className="tableFilters">
             <input type="text" name="" id="" placeholder="Buscar Usuaris..." onChange={buscarUsuari}/>
 
-            <select name="" id="">
-
-            </select>
-
             <Link to="/admin/users/create">Afegir Usuari +</Link>
 
           </div>

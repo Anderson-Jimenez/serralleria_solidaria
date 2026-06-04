@@ -101,10 +101,6 @@ function Characteristics() {
           <div className="tableFilters">
             <input type="text" name="" id="" placeholder="Buscar Tipus de Caracteristiques..." onChange={buscarTipus}/>
 
-            <select name="" id="">
-
-            </select>
-
             <Link to="/admin/types/create">Afegir Tipus +</Link>
 
           </div>

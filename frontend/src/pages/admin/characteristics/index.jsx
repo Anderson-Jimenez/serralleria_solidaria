@@ -101,10 +101,6 @@ function Characteristics() {
           <div className="tableFilters">
             <input type="text" name="" id="" placeholder="Buscar Caracteristiques..." onChange={searchCharacteristic}/>
 
-            <select name="" id="">
-
-            </select>
-
             <Link to="/admin/characteristics/create">Afegir Caracteristica +</Link>
 
           </div>

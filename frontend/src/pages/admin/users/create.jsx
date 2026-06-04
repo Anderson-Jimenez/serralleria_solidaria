@@ -73,30 +73,30 @@ function UsersCreate() {
               <section className="tab-panel">
 
                 <div className="form-group">
-                  <label htmlFor="code">Nom del usuari: </label>
-                  <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required/>
+                  <label htmlFor="code" for="username">Nom del usuari: </label>
+                  <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required/>
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="code">Correu elèctronic: </label>
-                  <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                  <label htmlFor="code" for="email">Correu elèctronic: </label>
+                  <input type="text" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="code">Num. Telèfon: </label>
-                  <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                  <label htmlFor="code" for="phone">Num. Telèfon: </label>
+                  <input type="text" id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="code">Tipus d'usuari: </label>
-                  <select name="userType" onChange={(e) => setUserType(e.target.value)} value={userType} required>
+                  <label htmlFor="code" for="userType">Tipus d'usuari: </label>
+                  <select name="userType" id="userType" onChange={(e) => setUserType(e.target.value)} value={userType} required>
                     <option value="user">Usari Basic</option>
                     <option value="admin">Administrador</option>
                   </select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="code">Contrasenya: </label>
-                  <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                  <label htmlFor="code" for="password">Contrasenya: </label>
+                  <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
                 </div>
               </section>
             )}

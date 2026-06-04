@@ -70,8 +70,8 @@ function CharacteristicsCreate() {
                   <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="code">Tipus de filtratje: </label>
-                  <select name="filterType" onChange={(e) => setFilterType(e.target.value)} >
+                  <label htmlFor="code" for="filterType">Tipus de filtratje: </label>
+                  <select name="filterType" id="filterType" onChange={(e) => setFilterType(e.target.value)} >
                     <option value="checkbox">Checkbox</option>
                     <option value="select">Select</option>
                     <option value="moreLess">More or Less</option>
