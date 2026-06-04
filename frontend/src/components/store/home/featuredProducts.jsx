@@ -149,10 +149,10 @@ function FeaturedProducts({ products, title }) {
 
         <div className="carousel-side">
           <div className="carousel-controls">
-            <button onClick={prevSlide} disabled={currentIndex === 0}>
+            <button onClick={prevSlide} disabled={currentIndex === 0} aria-label="Navegar a la esquerra Productes destacats">
               <ChevronLeft size={20} />
             </button>
-            <button onClick={nextSlide} disabled={currentIndex === maxIndex}>
+            <button onClick={nextSlide} disabled={currentIndex === maxIndex} aria-label="Navegar a la dreta Productes destacats">
               <ChevronRight size={20} />
             </button>
           </div>

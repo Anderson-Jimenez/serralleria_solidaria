@@ -17,10 +17,10 @@ function Footer() {
             Especialistes en serralleria i seguretat amb més de 25 anys d'experiència al servei dels nostres clients.
           </p>
           <div className="social-icons">
-            <a href="#" className="social-btn"><Facebook size={18} /></a>
-            <a href="#" className="social-btn"><Instagram size={18} /></a>
-            <a href="#" className="social-btn"><Twitter size={18} /></a>
-            <a href="#" className="social-btn"><Linkedin size={18} /></a>
+            <a href="#" className="social-btn" aria-label="Entrar a la nostre pàgina de Facebook"><Facebook size={18} /></a>
+            <a href="#" className="social-btn" aria-label="Entrar a la nostre pàgina de Instagram"><Instagram size={18} /></a>
+            <a href="#" className="social-btn" aria-label="Entrar a la nostre pàgina de Twitter"><Twitter size={18} /></a>
+            <a href="#" className="social-btn" aria-label="Entrar a la nostre pàgina de Linkedin"><Linkedin size={18} /></a>
           </div>
         </div>
 

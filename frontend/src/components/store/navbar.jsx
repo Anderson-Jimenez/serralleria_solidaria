@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import {
-  Search,
   ShoppingCart,
   ChevronDown,
   KeyRound,
@@ -9,7 +8,7 @@ import {
 import LogInView from "../logIn";
 import { apiFetch } from "../../hooks/apiUtils";
 import CartSidebar from "./cartSidebar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useCart } from "../../contexts/CartContext";
 
 function Navbar() {
@@ -26,11 +25,10 @@ function Navbar() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  // Al montar y cuando cambie location.state, abrimos el login si corresponde
   useEffect(() => {
     if (location.state?.openLogin) {
       setLoginOpen(true);
-      window.history.replaceState({}, document.title); // limpia el state
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
@@ -47,11 +45,7 @@ function Navbar() {
     };
 
     window.addEventListener("storage", handleStorage);
-    // Ya no necesitamos el listener de 'open-login'
-
-    return () => {
-      window.removeEventListener("storage", handleStorage);
-    };
+    return () => window.removeEventListener("storage", handleStorage);
   }, [refreshCart]);
 
   const logOut = async (e) => {
@@ -73,41 +67,35 @@ function Navbar() {
     <div className="navbar-container">
       <nav className="navbar">
         {/* LOGO */}
-        <div
-          className="navbar-brand"
-          onClick={() => navigate("/")}
-          style={{ cursor: "pointer" }}
-        >
+        <Link className="navbar-brand" to="/">
           <KeyRound size={24} color="#ff6b35" />
           <span className="brand-name">Serralleria Solidaria</span>
-        </div>
+        </Link>
 
         {/* LINKS */}
         <ul className="nav-links">
           <li>
-            <a href="/">Inici</a>
+            <Link to="/">Inici</Link>
           </li>
           <li className="dropdown">
-            <a href="#">
+            <button className="dropdown-trigger" aria-label="Veure categories de productes">
               Productes <ChevronDown size={14} />
-            </a>
+            </button>
             <ul className="dropdown-menu">
               {categories.map((category) => (
                 <li key={category.id}>
-                  <a onClick={() => navigate(`/products/${category.name}`)}>
+                  <Link to={`/products/${encodeURIComponent(category.name)}`}>
                     {category.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </li>
-          <li className="dropdown">
-            <a href="/packs">
-              Packs
-            </a>
+          <li>
+            <Link to="/packs">Packs</Link>
           </li>
           <li>
-            <a href="/solucions_personalitzades">Solucions Personalitzades</a>
+            <Link to="/solucions_personalitzades">Solucions Personalitzades</Link>
           </li>
         </ul>
 
@@ -115,7 +103,7 @@ function Navbar() {
         <div className="navbar-icons">
 
           {/* CARRITO */}
-          <button className="cart-btn-nav" onClick={() => setCartOpen(true)}>
+          <button className="cart-btn-nav" onClick={() => setCartOpen(true)} aria-label="Obrir carret de la compra">
             <ShoppingCart size={20} />
             {cartCount > 0 && <span className="badge">{cartCount}</span>}
           </button>
@@ -134,22 +122,16 @@ function Navbar() {
               </button>
               {userOpen && (
                 <ul className="dropdown-menu">
-                  <li>
-                    <a href="/profile">Perfil</a>
-                  </li>
-                  <li>
-                    <button onClick={logOut}>Tancar Sessió</button>
-                  </li>
+                  <li><Link to="/profile">Perfil</Link></li>
+                  <li><button onClick={logOut}>Tancar Sessió</button></li>
                 </ul>
               )}
             </div>
           ) : (
             <>
-              {/* Botón de usuario siempre visible, ahora controla directamente el estado */}
-              <button onClick={() => setLoginOpen(true)}>
+              <button onClick={() => setLoginOpen(true)} aria-label="Iniciar sessió">
                 <User size={20} />
               </button>
-              {/* El modal del login */}
               <LogInView
                 isOpen={loginOpen}
                 onClose={() => setLoginOpen(false)}
@@ -159,7 +141,6 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* SIDEBAR DEL CARRITO */}
       <CartSidebar isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );

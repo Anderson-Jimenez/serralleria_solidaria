@@ -1,21 +1,18 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ShieldCheck, Lock, KeyRound, Package } from 'lucide-react';
 
 function CategoryCards() {
-  const navigate = useNavigate();
-
   return (
     <section className="categoryCards">
-
       <div className="categorySelectionHeader">
         <span className="categorySelectionLabel">EL NOSTRE CATÀLEG</span>
         <h1 className='categorySelectionTitle'>El nostre <span>Cataleg</span></h1>
         <div className='categorySelectionDivider' />
       </div>
-
       <div className="categoryGrid">
-        <div className="categorySelectionCategory" onClick={() => navigate('/products/Cilindres')}>
+
+        <Link className="categorySelectionCategory" to="/products/Cilindres">
           <div className="categoryLeft">
             <KeyRound size={36} strokeWidth={1.3} />
             <div className="categoryText">
@@ -28,9 +25,9 @@ function CategoryCards() {
           <div className="categoryRight">
             <span className="categoryNumber">01</span>
           </div>
-        </div>
+        </Link>
 
-        <div className="categorySelectionCategory" onClick={() => navigate('/products/Escut')}>
+        <Link className="categorySelectionCategory" to="/products/Escut">
           <div className="categoryLeft">
             <ShieldCheck size={36} strokeWidth={1.3} />
             <div className="categoryText">
@@ -43,9 +40,9 @@ function CategoryCards() {
           <div className="categoryRight">
             <span className="categoryNumber">02</span>
           </div>
-        </div>
+        </Link>
 
-        <div className="categorySelectionCategory" onClick={() => navigate('/products/Segon Pany')}>
+        <Link className="categorySelectionCategory" to="/products/Segon Pany">
           <div className="categoryLeft">
             <Lock size={36} strokeWidth={1.3} />
             <div className="categoryText">
@@ -58,7 +55,8 @@ function CategoryCards() {
           <div className="categoryRight">
             <span className="categoryNumber">03</span>
           </div>
-        </div>
+        </Link>
+
       </div>
     </section>
   );
